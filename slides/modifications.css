@@ -1,0 +1,26 @@
+.reveal .title {
+    font-size: 2.75em;
+}
+
+.reveal .author {
+    font-size: 1.5em;
+}
+
+.reveal .date {
+    font-size: 1.2em;
+}
+
+.reveal pre {
+    font-size: 0.75em;
+}
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+    display: block;
+    text-align: left;
+    margin: 0 0 0 1em; }
+
+.reveal p {
+    text-align: left;
+}

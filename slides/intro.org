@@ -1,0 +1,289 @@
+# How to make it work with Spacemacs
+# 1. Add the following to .spacemacs file
+# (org :variables
+#      org-enable-github-support t
+#      org-enable-reveal-js-support t)
+# 2. Use M-x org-reveal-export-to-html-and-browse
+#
+# see also http://jr0cket.co.uk/2013/10/create-cool-slides--Org-mode-Revealjs.html
+
+#+TITLE: Introduction to program verification
+#+AUTHOR: Anton Trunov (Zilliqa Research)
+#+DATE: 11.03.2021
+#+EMAIL: https://github.com/anton-trunov
+#+OPTIONS: num:nil toc:nil timestamp:nil
+#+REVEAL_TRANS: none
+# none | fade | slide | convex | concave | zoom
+#+REVEAL_THEME: beige
+# default | beige | sky | night | serif | simple | moon
+# /League/Sky/Beige/Simple/Serif/Blood/Night/Moon/Solarized
+#+REVEAL_EXTRA_CSS: ./modifications.css
+
+* Course administrivia
+- ~ 10 lectures
+- ~ 10 seminars
+- There will be homework!
+* Course administrivia
+- You need to install and use Coq and Mathcomp
+- You need to have a laptop to bring to class
+- Prerequisites: it'd be nice if you were familiar with
+  + Basic functional programming
+  + Basic logic
+* Communication
+- Let's make this interactive
+- Ask questions as we go
+- Help steering the course
+- Course chat
+* Course reading
+#+ATTR_REVEAL: :frag roll-in
+- [[https://ilyasergey.net/pnp/][Programs and Proofs]]: Mechanizing Mathematics with Dependent Types - I. Sergey
+#+ATTR_REVEAL: :frag roll-in
+- [[https://math-comp.github.io/mcb/][Mathematical Components book]] - A. Mahboubi, E. Tassi
+#+ATTR_REVEAL: :frag roll-in
+- More: https://github.com/coq/coq/wiki#coq-books-and-tutorials
+* Course outline
+- Proof engineering with just the right amount of theory
+- Focus on verification of functional algorithms
+- SSReflect/Mathcomp architecture
+* What is formal program verification?
+- A technique providing means of increasing assurance for the correctness of software
+  by proving its correctness with respect to a certain formal specification, using formal methods of mathematics
+#+ATTR_REVEAL: :frag roll-in
+- Formal ~ have a syntax and may be given semantics
+* Why is verification important?
+#+ATTR_REVEAL: :frag roll-in
+- Ensure systems are bug-free
+  #+ATTR_REVEAL: :frag roll-in
+  + Therac-25
+  #+ATTR_REVEAL: :frag roll-in
+  + Ariane 5 Disaster, Mars Climate Orbiter, Mariner 1, Patriot missile
+  #+ATTR_REVEAL: :frag roll-in
+  + The Pentium bug
+  #+ATTR_REVEAL: :frag roll-in
+  + The DAO Attack
+  + ...
+* Why is verification important?
+- Gain an insight about the system at hand
+* Components of formal verification
+- Specification
+- Implementation
+- Formal proof
+- Checker
+* Formal specification
+- A means to describe a system
+- Specifying systems is hard and is a form of art!
+* Formal proof
+#+ATTR_REVEAL: :frag roll-in
+- A formal proof is a proof in which every logical inference has been checked all the way back to the fundamental axioms (A definition by T.C. Hales)
+#+ATTR_REVEAL: :frag roll-in
+- All the intermediate logical steps are supplied, without exception
+#+ATTR_REVEAL: :frag roll-in
+- No appeal is made to intuition, even if the translation from intuition to logic is routine
+#+ATTR_REVEAL: :frag roll-in
+- A formal proof is less intuitive, and yet less susceptible to logical errors
+* There is lots of formal systems
+#+ATTR_REVEAL: :frag roll-in
+- Not all formalizms are created equal
+#+ATTR_REVEAL: :frag roll-in
+- E.g. to expand the definition of the number =1= fully in terms of Bourbaki primitives requires over 4 trillion symbols
+#+ATTR_REVEAL: :frag roll-in
+- With formal proofs one wants as much help as one can get
+* Formal methods techniques
+The land of formal methods includes
+#+ATTR_REVEAL: :frag roll-in
+- Interactive theorem provers (e.g. Coq)
+#+ATTR_REVEAL: :frag roll-in
+- Automated theorem provers (SAT/SMT solvers, ...)
+#+ATTR_REVEAL: :frag roll-in
+- Specification languages & Model checking
+#+ATTR_REVEAL: :frag roll-in
+- Program Logics
+#+ATTR_REVEAL: :frag roll-in
+- ...
+- Want to learn more? Join [[https://t.me/practical_fm][Formal Verification chat]]
+* What is Coq?
+Coq is a formal proof management system.
+It provides
+#+ATTR_REVEAL: :frag roll-in
+- a language to write mathematical definitions,
+#+ATTR_REVEAL: :frag roll-in
+- executable algorithms,
+#+ATTR_REVEAL: :frag roll-in
+- theorems (specifications),
+#+ATTR_REVEAL: :frag roll-in
+- environment for interactive development of machine-checked proofs.
+* Related systems
+- Lean prover (similar to Coq)
+- F* (used to verify crypto code in Firefox)
+- Isabelle/HOL (simple type theory, seL4)
+- Idris (honed towards programming)
+- Agda
+* Why Coq?
+- Expressive
+- Industrial adoption
+- Mature and battle-tested
+- Lots of books and tutorials
+- Lots of libraries
+- Excellent community
+* What do people use Coq for?
+#+ATTR_REVEAL: :frag roll-in
+- Formalization of mathematics:
+  + Four color theorem
+  + Feit-Thompson theorem
+  + Homotopy type theory
+#+ATTR_REVEAL: :frag roll-in
+- Education: it's a proof _assistant_.
+#+ATTR_REVEAL: :frag roll-in
+- Industry: Compcert (at Airbus)
+* 
+:PROPERTIES:
+:reveal_background: images/deepspec.png
+:reveal_background_size: 1000px
+:reveal_background_trans: slide
+:END:
+* More examples
+#+ATTR_REVEAL: :frag roll-in
+- Coq-generated crypto code in Chrome
+#+ATTR_REVEAL: :frag roll-in
+- [[https://github.com/mit-pdos/fscq][FSCQ]]: a file system written and verified in Coq
+#+ATTR_REVEAL: :frag roll-in
+- [[https://github.com/mit-pdos/armada][Armada]]: verifying concurrent storage systems
+#+ATTR_REVEAL: :frag roll-in
+- Cryptocurrencies (e.g. Tezos, Zilliqa)
+* 
+:PROPERTIES:
+:reveal_background: images/scilla-coq.jpg
+:reveal_background_size: 1000px
+:reveal_background_trans: slide
+:END:
+* Coq, its ecosystem and community
+- open source (https://github.com/coq/coq)
+- written in OCaml
+- has a standard library (and several overlay stdlibs)
+- lots of packages available on opam & Nix
+- community-driven projects: https://github.com/coq-community
+* Coq, its ecosystem and community
+- Official forum: https://coq.discourse.group
+- Russian subforum https://coq.discourse.group/c/coq-in-russian
+- Stackoverflow: =[coq]= tag
+- Coq Club mailing list
+* Coq repo stats (LoC)
+|--------------+-------+--------|
+| Language     | files |   code |
+|--------------+-------+--------|
+| OCaml        |   949 | 203230 |
+| Coq          |  1970 | 196057 |
+| TeX          |    26 |   5270 |
+| Markdown     |    22 |   3362 |
+| Bourne Shell |   107 |   2839 |
+| ...          |       |        |
+* Mathcomp stats (LoC)
+|----------------+-------+--------|
+| Language       | files |   code |
+|----------------+-------+--------|
+| HTML        :) |   377 | 299260 |
+| Coq            |    92 |  83726 |
+| JavaScript     |    13 |  34363 |
+| CSS            |     6 |   1199 |
+| ...            |       |        |
+* 
+:PROPERTIES:
+:reveal_background: images/fscq-bug.png
+:reveal_background_size: 800px
+:reveal_background_trans: slide
+:END:
+* Proofs _and_ Tests
+- =@vj_chidambaram=: Even verified file systems have unverified parts :)
+- FSCQ had a buggy optimization in the Haskell-C bindings
+- CompCert is known to also have bugs in the non-verified parts, invalid axioms and "out of verification scope" bugs
+* Proofs _and_ Tests
+- QuickChick shows an amazing applicability of randomized testing in the context of theorem proving
+- Real-world verification projects have assumptions that might not be true
+* FSCQ stats (LoC)
+|----------+-------+-------|
+| Language | files |  code |
+|----------+-------+-------|
+| Coq      |    98 | 81049 |
+| C        |    36 |  4132 |
+| Haskell  |     8 |  1091 |
+| OCaml    |    10 |   687 |
+| Python   |     9 |   643 |
+| ...      |       |       |
+* CompCert C Compiler stats (LoC)
+|--------------+-------+--------|
+| Language     | files |   code |
+|--------------+-------+--------|
+| Coq          |   223 | 146226 |
+| C            |   223 |  65053 |
+| OCaml        |   147 |  28381 |
+| C/C++ Header |    86 |   7834 |
+| Assembly     |    59 |   1542 |
+| ...          |       |        |
+* What is Coq based on?
+_*Calculus of Inductive Constructions*_
+
+Just some keywords:
+- Higher-order constructivist logic
+- Dependent types (expressivity!)
+- Curry-Howard Correspondence
+* Curry-Howard Correspondence
+- Main idea:
+  + propositions are special case of types
+  + a proof is a program of the required type
+- One language to rule 'em all
+- Proof checking = Type checking!
+- Proving = Programming
+* 
+:PROPERTIES:
+:reveal_background: images/homeo.jpg
+:reveal_background_size: 700px
+:reveal_background_trans: slide
+:END:
+* Proving _is_ programming
+- High confidence in your code
+- It is as strong as strong your specs are (trust!)
+- It can be extremely hard to come up with a spec (think of browsers)
+- IMHO: the best kind of programming
+* Coq as Programming Language
+- Functional
+- Dependently-typed
+- *Total* language
+- Extraction
+* Extraction
+- OCaml
+- Haskell
+- Scheme
+- Scala via https://github.com/JBakouny/Scallina
+- C via https://github.com/akr/codegen
+- C++ via https://github.com/mit-pdos/mcqc
+* 
+:PROPERTIES:
+:reveal_background: images/xmonad.png
+:reveal_background_size: 1000px
+:reveal_background_trans: slide
+:END:
+* Extraction: xmonad
+- [[http://www.staff.science.uu.nl/~swier004/publications/2012-haskell.pdf][xmonad in Coq (Experience Report)]] by Wouter Swierstra (2012)
+- it's possible!
+- the report shows there is lots of room for improvement
+* Extraction: toychain
+[[https://github.com/certichain/toychain][certichain / toychain]] - A Coq implementation of a minimalistic blockchain-based consensus protocol
+* Embedding
+- [[https://github.com/antalsz/hs-to-coq][hs-to-coq]] - Haskell to Coq converter
+- [[https://github.com/clarus/coq-of-ocaml][coq-of-ocaml]] - OCaml to Coq converter
+- [[https://github.com/tchajed/goose][goose]] - Go to Coq conversion
+- clightgen (VST)
+- [[https://github.com/mit-plv/fiat-crypto][fiat-crypto]] - Synthesizing Correct-by-Construction Code for Cryptographic Primitives
+* [[https://github.com/antalsz/hs-to-coq][hs-to-coq]] - Haskell to Coq converter
+- part of the CoreSpec component of the DeepSpec project
+- has been applied to verification Haskell’s =containers= library against specs derived from
+  + type class laws;
+  + library’s test suite;
+  + interfaces from Coq’s stdlib.
+- challenge: partiality
+* Machine Learning
+- The Tactician: https://coq-tactician.github.io
+* Suggested reading (papers)
+- "Formal Proof" - T.C. Hales (2008)
+- "Position paper: the science of deep specification" - A.W. Appel (2017)
+- "QED at Large: A Survey of Engineering of Formally Verified Software" - T. Ringer, K. Palmskog, I. Sergey, M. Gligoric, Z. Tatlock (2019)

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Introduction to program verification</title>
+<meta name="author" content="Anton Trunov (Zilliqa Research)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/beige.css" id="theme"/>
+
+<link rel="stylesheet" href="./modifications.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1 class="title">Introduction to program verification</h1><h2 class="author">Anton Trunov (Zilliqa Research)</h2><h2 class="date">11.03.2021</h2>
+</section>
+
+<section>
+<section id="slide-org742f64a">
+<h2 id="org742f64a">Course administrivia</h2>
+<ul>
+<li>~ 10 lectures</li>
+<li>~ 10 seminars</li>
+<li>There will be homework!</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org62015bf">
+<h2 id="org62015bf">Course administrivia</h2>
+<ul>
+<li>You need to install and use Coq and Mathcomp</li>
+<li>You need to have a laptop to bring to class</li>
+<li>Prerequisites: it'd be nice if you were familiar with
+<ul>
+<li>Basic functional programming</li>
+<li>Basic logic</li>
+
+</ul></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org4141561">
+<h2 id="org4141561">Communication</h2>
+<ul>
+<li>Let's make this interactive</li>
+<li>Ask questions as we go</li>
+<li>Help steering the course</li>
+<li>Course chat</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgc29eff1">
+<h2 id="orgc29eff1">Course reading</h2>
+<ul class="fragment roll-in">
+<li><a href="https://ilyasergey.net/pnp/">Programs and Proofs</a>: Mechanizing Mathematics with Dependent Types - I. Sergey</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li><a href="https://math-comp.github.io/mcb/">Mathematical Components book</a> - A. Mahboubi, E. Tassi</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>More: <a href="https://github.com/coq/coq/wiki#coq-books-and-tutorials">https://github.com/coq/coq/wiki#coq-books-and-tutorials</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgef4b06b">
+<h2 id="orgef4b06b">Course outline</h2>
+<ul>
+<li>Proof engineering with just the right amount of theory</li>
+<li>Focus on verification of functional algorithms</li>
+<li>SSReflect/Mathcomp architecture</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgb80c0bd">
+<h2 id="orgb80c0bd">What is formal program verification?</h2>
+<ul>
+<li>A technique providing means of increasing assurance for the correctness of software
+by proving its correctness with respect to a certain formal specification, using formal methods of mathematics</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Formal ~ have a syntax and may be given semantics</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org2c9dc8d">
+<h2 id="org2c9dc8d">Why is verification important?</h2>
+<ul class="fragment roll-in">
+<li><p>
+Ensure systems are bug-free
+</p>
+<ul class="fragment roll-in">
+<li>Therac-25</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Ariane 5 Disaster, Mars Climate Orbiter, Mariner 1, Patriot missile</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>The Pentium bug</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>The DAO Attack</li>
+<li>&#x2026;</li>
+
+</ul></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org0745e90">
+<h2 id="org0745e90">Why is verification important?</h2>
+<ul>
+<li>Gain an insight about the system at hand</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org3b227f8">
+<h2 id="org3b227f8">Components of formal verification</h2>
+<ul>
+<li>Specification</li>
+<li>Implementation</li>
+<li>Formal proof</li>
+<li>Checker</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org26e0ffc">
+<h2 id="org26e0ffc">Formal specification</h2>
+<ul>
+<li>A means to describe a system</li>
+<li>Specifying systems is hard and is a form of art!</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgc0f7ff7">
+<h2 id="orgc0f7ff7">Formal proof</h2>
+<ul class="fragment roll-in">
+<li>A formal proof is a proof in which every logical inference has been checked all the way back to the fundamental axioms (A definition by T.C. Hales)</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>All the intermediate logical steps are supplied, without exception</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>No appeal is made to intuition, even if the translation from intuition to logic is routine</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>A formal proof is less intuitive, and yet less susceptible to logical errors</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org771ad6b">
+<h2 id="org771ad6b">There is lots of formal systems</h2>
+<ul class="fragment roll-in">
+<li>Not all formalizms are created equal</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>E.g. to expand the definition of the number <code>1</code> fully in terms of Bourbaki primitives requires over 4 trillion symbols</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>With formal proofs one wants as much help as one can get</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org128540a">
+<h2 id="org128540a">Formal methods techniques</h2>
+<p>
+The land of formal methods includes
+</p>
+<ul class="fragment roll-in">
+<li>Interactive theorem provers (e.g. Coq)</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Automated theorem provers (SAT/SMT solvers, &#x2026;)</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Specification languages &amp; Model checking</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Program Logics</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>&#x2026;</li>
+<li>Want to learn more? Join <a href="https://t.me/practical_fm">Formal Verification chat</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org89abee3">
+<h2 id="org89abee3">What is Coq?</h2>
+<p>
+Coq is a formal proof management system.
+It provides
+</p>
+<ul class="fragment roll-in">
+<li>a language to write mathematical definitions,</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>executable algorithms,</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>theorems (specifications),</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>environment for interactive development of machine-checked proofs.</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgf925aec">
+<h2 id="orgf925aec">Related systems</h2>
+<ul>
+<li>Lean prover (similar to Coq)</li>
+<li>F* (used to verify crypto code in Firefox)</li>
+<li>Isabelle/HOL (simple type theory, seL4)</li>
+<li>Idris (honed towards programming)</li>
+<li>Agda</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org7c50097">
+<h2 id="org7c50097">Why Coq?</h2>
+<ul>
+<li>Expressive</li>
+<li>Industrial adoption</li>
+<li>Mature and battle-tested</li>
+<li>Lots of books and tutorials</li>
+<li>Lots of libraries</li>
+<li>Excellent community</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org7920577">
+<h2 id="org7920577">What do people use Coq for?</h2>
+<ul class="fragment roll-in">
+<li>Formalization of mathematics:
+<ul>
+<li>Four color theorem</li>
+<li>Feit-Thompson theorem</li>
+<li>Homotopy type theory</li>
+
+</ul></li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Education: it's a proof <span class="underline">assistant</span>.</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Industry: Compcert (at Airbus)</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgb4c42fd" data-background="images/deepspec.png" data-background-size="1000px" data-background-transition="slide">
+<h2 id="orgb4c42fd"></h2>
+</section>
+</section>
+<section>
+<section id="slide-org1f3d687">
+<h2 id="org1f3d687">More examples</h2>
+<ul class="fragment roll-in">
+<li>Coq-generated crypto code in Chrome</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li><a href="https://github.com/mit-pdos/fscq">FSCQ</a>: a file system written and verified in Coq</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li><a href="https://github.com/mit-pdos/armada">Armada</a>: verifying concurrent storage systems</li>
+
+</ul>
+<ul class="fragment roll-in">
+<li>Cryptocurrencies (e.g. Tezos, Zilliqa)</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org3ba82d6" data-background="images/scilla-coq.jpg" data-background-size="1000px" data-background-transition="slide">
+<h2 id="org3ba82d6"></h2>
+</section>
+</section>
+<section>
+<section id="slide-org4ce13c5">
+<h2 id="org4ce13c5">Coq, its ecosystem and community</h2>
+<ul>
+<li>open source (<a href="https://github.com/coq/coq">https://github.com/coq/coq</a>)</li>
+<li>written in OCaml</li>
+<li>has a standard library (and several overlay stdlibs)</li>
+<li>lots of packages available on opam &amp; Nix</li>
+<li>community-driven projects: <a href="https://github.com/coq-community">https://github.com/coq-community</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-orgd53703d">
+<h2 id="orgd53703d">Coq, its ecosystem and community</h2>
+<ul>
+<li>Official forum: <a href="https://coq.discourse.group">https://coq.discourse.group</a></li>
+<li>Russian subforum <a href="https://coq.discourse.group/c/coq-in-russian">https://coq.discourse.group/c/coq-in-russian</a></li>
+<li>Stackoverflow: <code>[coq]</code> tag</li>
+<li>Coq Club mailing list</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org791c6e9">
+<h2 id="org791c6e9">Coq repo stats (LoC)</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Language</th>
+<th scope="col" class="org-right">files</th>
+<th scope="col" class="org-right">code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">OCaml</td>
+<td class="org-right">949</td>
+<td class="org-right">203230</td>
+</tr>
+
+<tr>
+<td class="org-left">Coq</td>
+<td class="org-right">1970</td>
+<td class="org-right">196057</td>
+</tr>
+
+<tr>
+<td class="org-left">TeX</td>
+<td class="org-right">26</td>
+<td class="org-right">5270</td>
+</tr>
+
+<tr>
+<td class="org-left">Markdown</td>
+<td class="org-right">22</td>
+<td class="org-right">3362</td>
+</tr>
+
+<tr>
+<td class="org-left">Bourne Shell</td>
+<td class="org-right">107</td>
+<td class="org-right">2839</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<section id="slide-org65cd8e9">
+<h2 id="org65cd8e9">Mathcomp stats (LoC)</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Language</th>
+<th scope="col" class="org-right">files</th>
+<th scope="col" class="org-right">code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">HTML        :)</td>
+<td class="org-right">377</td>
+<td class="org-right">299260</td>
+</tr>
+
+<tr>
+<td class="org-left">Coq</td>
+<td class="org-right">92</td>
+<td class="org-right">83726</td>
+</tr>
+
+<tr>
+<td class="org-left">JavaScript</td>
+<td class="org-right">13</td>
+<td class="org-right">34363</td>
+</tr>
+
+<tr>
+<td class="org-left">CSS</td>
+<td class="org-right">6</td>
+<td class="org-right">1199</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<section id="slide-org2f564f4" data-background="images/fscq-bug.png" data-background-size="800px" data-background-transition="slide">
+<h2 id="org2f564f4"></h2>
+</section>
+</section>
+<section>
+<section id="slide-org59ab851">
+<h2 id="org59ab851">Proofs <span class="underline">and</span> Tests</h2>
+<ul>
+<li><code>@vj_chidambaram</code>: Even verified file systems have unverified parts :)</li>
+<li>FSCQ had a buggy optimization in the Haskell-C bindings</li>
+<li>CompCert is known to also have bugs in the non-verified parts, invalid axioms and "out of verification scope" bugs</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org71f2700">
+<h2 id="org71f2700">Proofs <span class="underline">and</span> Tests</h2>
+<ul>
+<li>QuickChick shows an amazing applicability of randomized testing in the context of theorem proving</li>
+<li>Real-world verification projects have assumptions that might not be true</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org06f4534">
+<h2 id="org06f4534">FSCQ stats (LoC)</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Language</th>
+<th scope="col" class="org-right">files</th>
+<th scope="col" class="org-right">code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Coq</td>
+<td class="org-right">98</td>
+<td class="org-right">81049</td>
+</tr>
+
+<tr>
+<td class="org-left">C</td>
+<td class="org-right">36</td>
+<td class="org-right">4132</td>
+</tr>
+
+<tr>
+<td class="org-left">Haskell</td>
+<td class="org-right">8</td>
+<td class="org-right">1091</td>
+</tr>
+
+<tr>
+<td class="org-left">OCaml</td>
+<td class="org-right">10</td>
+<td class="org-right">687</td>
+</tr>
+
+<tr>
+<td class="org-left">Python</td>
+<td class="org-right">9</td>
+<td class="org-right">643</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<section id="slide-org1eb1b52">
+<h2 id="org1eb1b52">CompCert C Compiler stats (LoC)</h2>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Language</th>
+<th scope="col" class="org-right">files</th>
+<th scope="col" class="org-right">code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Coq</td>
+<td class="org-right">223</td>
+<td class="org-right">146226</td>
+</tr>
+
+<tr>
+<td class="org-left">C</td>
+<td class="org-right">223</td>
+<td class="org-right">65053</td>
+</tr>
+
+<tr>
+<td class="org-left">OCaml</td>
+<td class="org-right">147</td>
+<td class="org-right">28381</td>
+</tr>
+
+<tr>
+<td class="org-left">C/C++ Header</td>
+<td class="org-right">86</td>
+<td class="org-right">7834</td>
+</tr>
+
+<tr>
+<td class="org-left">Assembly</td>
+<td class="org-right">59</td>
+<td class="org-right">1542</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section>
+<section id="slide-org4e264ef">
+<h2 id="org4e264ef">What is Coq based on?</h2>
+<p>
+<span class="underline"><b>Calculus of Inductive Constructions</b></span>
+</p>
+
+<p>
+Just some keywords:
+</p>
+<ul>
+<li>Higher-order constructivist logic</li>
+<li>Dependent types (expressivity!)</li>
+<li>Curry-Howard Correspondence</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org9d60635">
+<h2 id="org9d60635">Curry-Howard Correspondence</h2>
+<ul>
+<li>Main idea:
+<ul>
+<li>propositions are special case of types</li>
+<li>a proof is a program of the required type</li>
+
+</ul></li>
+<li>One language to rule 'em all</li>
+<li>Proof checking = Type checking!</li>
+<li>Proving = Programming</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org95525c2" data-background="images/homeo.jpg" data-background-size="700px" data-background-transition="slide">
+<h2 id="org95525c2"></h2>
+</section>
+</section>
+<section>
+<section id="slide-org21c709f">
+<h2 id="org21c709f">Proving <span class="underline">is</span> programming</h2>
+<ul>
+<li>High confidence in your code</li>
+<li>It is as strong as strong your specs are (trust!)</li>
+<li>It can be extremely hard to come up with a spec (think of browsers)</li>
+<li>IMHO: the best kind of programming</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org162711a">
+<h2 id="org162711a">Coq as Programming Language</h2>
+<ul>
+<li>Functional</li>
+<li>Dependently-typed</li>
+<li><b>Total</b> language</li>
+<li>Extraction</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org3221c26">
+<h2 id="org3221c26">Extraction</h2>
+<ul>
+<li>OCaml</li>
+<li>Haskell</li>
+<li>Scheme</li>
+<li>Scala via <a href="https://github.com/JBakouny/Scallina">https://github.com/JBakouny/Scallina</a></li>
+<li>C via <a href="https://github.com/akr/codegen">https://github.com/akr/codegen</a></li>
+<li>C++ via <a href="https://github.com/mit-pdos/mcqc">https://github.com/mit-pdos/mcqc</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org65f7b7d" data-background="images/xmonad.png" data-background-size="1000px" data-background-transition="slide">
+<h2 id="org65f7b7d"></h2>
+</section>
+</section>
+<section>
+<section id="slide-orgd51f2cc">
+<h2 id="orgd51f2cc">Extraction: xmonad</h2>
+<ul>
+<li><a href="http://www.staff.science.uu.nl/~swier004/publications/2012-haskell.pdf">xmonad in Coq (Experience Report)</a> by Wouter Swierstra (2012)</li>
+<li>it's possible!</li>
+<li>the report shows there is lots of room for improvement</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org92e3270">
+<h2 id="org92e3270">Extraction: toychain</h2>
+<p>
+<a href="https://github.com/certichain/toychain">certichain / toychain</a> - A Coq implementation of a minimalistic blockchain-based consensus protocol
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org0c4fd69">
+<h2 id="org0c4fd69">Embedding</h2>
+<ul>
+<li><a href="https://github.com/antalsz/hs-to-coq">hs-to-coq</a> - Haskell to Coq converter</li>
+<li><a href="https://github.com/clarus/coq-of-ocaml">coq-of-ocaml</a> - OCaml to Coq converter</li>
+<li><a href="https://github.com/tchajed/goose">goose</a> - Go to Coq conversion</li>
+<li>clightgen (VST)</li>
+<li><a href="https://github.com/mit-plv/fiat-crypto">fiat-crypto</a> - Synthesizing Correct-by-Construction Code for Cryptographic Primitives</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org16ff2f3">
+<h2 id="org16ff2f3"><a href="https://github.com/antalsz/hs-to-coq">hs-to-coq</a> - Haskell to Coq converter</h2>
+<ul>
+<li>part of the CoreSpec component of the DeepSpec project</li>
+<li>has been applied to verification Haskell’s <code>containers</code> library against specs derived from
+<ul>
+<li>type class laws;</li>
+<li>library’s test suite;</li>
+<li>interfaces from Coq’s stdlib.</li>
+
+</ul></li>
+<li>challenge: partiality</li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org7f9f51f">
+<h2 id="org7f9f51f">Machine Learning</h2>
+<ul>
+<li>The Tactician: <a href="https://coq-tactician.github.io">https://coq-tactician.github.io</a></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org01f849d">
+<h2 id="org01f849d">Suggested reading (papers)</h2>
+<ul>
+<li>"Formal Proof" - T.C. Hales (2008)</li>
+<li>"Position paper: the science of deep specification" - A.W. Appel (2017)</li>
+<li>"QED at Large: A Survey of Engineering of Formally Verified Software" - T. Ringer, K. Palmskog, I. Sergey, M. Gligoric, Z. Tatlock (2019)</li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'none', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>

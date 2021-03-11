@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>The basics of Coq and how to interact with it</title>
+<meta name="author" content="Anton Trunov" />
+<meta name="date" content="Jan 11, 2021" />
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<link rel="stylesheet" href="math.css" type="text/css" />
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.12.0+0.12.0. Coq sources are in this panel; goals and messages will appear in the other. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus.</div><div class="document" id="the-basics-of-coq-and-how-to-interact-with-it">
+<h1 class="title">The basics of Coq and how to interact with it</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Anton Trunov</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>Jan 11, 2021</td></tr>
+</tbody>
+</table>
+<input type="checkbox" class="alectryon-toggle" id="alectryon-toggle-0" /><label for="alectryon-toggle-0" class="alectryon-toggle-label">Display all goals and responses</label><div class="alectryon-container docutils container">
+<hr class="docutils" />
+<div class="section" id="simple-types-and-functions">
+<h1>Simple types and functions</h1>
+<p>Let's start making ourselves a system to work in using the few primitives Coq has built-in.</p>
+<p>Import some very basic facilities of the Mathcomp library:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect.</span></span></span></pre><p>We introduce the following definitions inside a new module
+to avoid name clashes with the standard library later.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Module</span> <span class="nf">My</span>.</span></span></span></pre><div class="section" id="simple-types">
+<h2>Simple types</h2>
+<p>The <code class="highlight coq"><span class="keyword namespace">Inductive</span></code> <em>vernacular</em> is used to introduce a new type into Coq.
+Let's introduce a useful Boolean type with two <em>constructors</em>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">bool</span> : <span class="kt">Type</span> :=
+| true
+| false.</span></span></span></pre><p><code class="highlight coq"><span class="keyword type">Type</span></code> is a primitive and its meaning for now is 'the type of all types',
+or as sometimes they say 'the universe of types'.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk0"><span class="highlight"><span class="kn">Check</span> false : bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">false : bool
+     : bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1"><span class="highlight"><span class="kn">Check</span> false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">false
+     : bool</span></blockquote></div></div></small></span></pre><p>Now that we have a base type to work with, we can form a new type using the
+functional arrow (<code class="highlight coq"><span class="operator">-&gt;</span></code>) type constructor.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2"><span class="highlight"><span class="kn">Check</span> (bool -&gt; bool) : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">bool -&gt; bool : <span class="kt">Type</span>
+     : <span class="kt">Type</span></span></blockquote></div></div></small></span></pre><p>Here is an example of a simply-typed anonymous function:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk3"><span class="highlight"><span class="kn">Check</span> (<span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; b).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; b
+     : bool -&gt; bool</span></blockquote></div></div></small></span></pre><p>It is possible to elide the type annotation for the parameter in the above
+example, however, in this case Coq's output will contain the so-called
+<em>existential variable</em> <code class="highlight coq"><span class="name label">?T</span></code> which is a meta-language feature roughly meaning
+&quot;some type <code class="highlight coq"><span class="name label">?T</span></code> which should be inferrable somehow from the context&quot;:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk4"><span class="highlight"><span class="kn">Check</span> <span class="kr">fun</span> <span class="nv">b</span> =&gt; b.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kr">fun</span> <span class="nv">b</span> : <span class="nl">?T</span> =&gt; b
+     : <span class="nl">?T</span> -&gt; <span class="nl">?T</span>
+<span class="kn">where</span>
+<span class="nl">?T</span> : [ |- <span class="kt">Type</span>]</span></blockquote></div></div></small></span></pre><p>For instance, in the following snipet <code class="highlight coq"><span class="name label">?T</span></code> is determined to be <code class="highlight coq"><span class="name">bool</span></code>
+because we apply the unannotated identity function to a Boolean argument:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk5"><span class="highlight"><span class="kn">Check</span> (<span class="kr">fun</span> <span class="nv">b</span> =&gt; b) true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; b) true
+     : bool</span></blockquote></div></div></small></span></pre><p>Now, let's move on and see an example of a higher-order function and its
+corresponding type:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk6"><span class="highlight"><span class="kn">Check</span> <span class="kr">fun</span> (<span class="nv">f</span> : bool -&gt; bool) =&gt; f true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kr">fun</span> <span class="nv">f</span> : bool -&gt; bool =&gt; f true
+     : (bool -&gt; bool) -&gt; bool</span></blockquote></div></div></small></span></pre><p>We can ask Coq to calculate for us too</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk7"><span class="highlight"><span class="kn">Compute</span> (<span class="kr">fun</span> <span class="nv">b</span> =&gt; b) true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small></span></pre></div>
+<div class="section" id="definitions">
+<h2>Definitions</h2>
+<p>Of course, there are means to introduce new definitions. By the way,
+definitions are not part of Coq's core type theory, it's a meta-linguistic
+feature. However, there is interaction between some language features, like
+<em>universe levels</em>, (which we are going to talk about later in the course) and
+definitions.</p>
+<p>So, here is the definition of the Boolean identity function:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">idb</span> := <span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; b.</span></span></span></pre><p>As with terms we can typecheck definitions, compute with them, etc.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk8"><span class="highlight"><span class="kn">Check</span> idb.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">idb
+     : bool -&gt; bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk9"><span class="highlight"><span class="kn">Check</span> (<span class="kr">fun</span> (<span class="nv">f</span> : bool -&gt; bool) =&gt; f true) idb.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="kr">fun</span> <span class="nv">f</span> : bool -&gt; bool =&gt; f true) idb
+     : bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chka"><span class="highlight"><span class="kn">Compute</span> idb false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small></span></pre><p>The <code class="highlight coq"><span class="keyword namespace">Fail</span></code> vernacular command allows us to assert failure like so:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chkb"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> (<span class="kr">fun</span> (<span class="nv">f</span> : bool -&gt; bool) =&gt; f true) false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;false&quot;</span> has type <span class="s2">&quot;bool&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;bool -&gt; bool&quot;</span>.</span></blockquote></div></div></small></span></pre><p>By the way, <code class="highlight coq"><span class="keyword namespace">Fail</span></code> is compositional: to express that something is failing
+to fail (as expected) one just says: <code class="highlight coq"><span class="keyword namespace">Fail</span> <span class="keyword namespace">Fail</span> <span class="operator">&lt;</span><span class="name">something</span><span class="operator">&gt;.</span></code></p>
+</div>
+<div class="section" id="pattern-matching-elimination">
+<h2>Pattern matching (elimination)</h2>
+<p>This time let's write the Boolean negation function because this time it
+really has to use or, in other words, <em>eliminate</em> its parameter:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">negb</span> :=
+  <span class="kr">fun</span> (<span class="nv">b</span> : bool) =&gt;
+    <span class="kr">match</span> b <span class="kr">with</span>
+    | true =&gt; false
+    | false =&gt; true
+    <span class="kr">end</span>.</span></span></span></pre><p>Let's see <code class="highlight coq"><span class="name">negb</span></code>'s type:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chkc"><span class="highlight"><span class="kn">Check</span> negb.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">negb
+     : bool -&gt; bool</span></blockquote></div></div></small></span></pre><p>And we can make sure <code class="highlight coq"><span class="name">negb</span></code> does that is intended:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chkd"><span class="highlight"><span class="kn">Compute</span> negb false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chke"><span class="highlight"><span class="kn">Compute</span> negb true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small></span></pre><p>Hooray, we just kind of proved <code class="highlight coq"><span class="name">negb</span></code> works as expected by checking
+exhaustively its specification we never wrote down explicitly.</p>
+<p>Here is a sequence of reductions of different kinds that happen to arrive at
+the result of the last of the two computations above:</p>
+<pre class="code Coq literal-block">
+<span class="name">negb</span> <span class="name">true</span>
+
+<span class="operator">~~&gt;</span><span class="name">δ</span>
+
+<span class="operator">(</span><span class="keyword reserved">fun</span> <span class="operator">(</span><span class="name variable">b</span> <span class="operator">:</span> <span class="name">bool</span><span class="operator">)</span> <span class="operator">=&gt;</span> <span class="keyword reserved">match</span> <span class="name">b</span> <span class="keyword reserved">with</span> <span class="operator">|</span> <span class="name">true</span> <span class="operator">=&gt;</span> <span class="name">false</span> <span class="operator">|</span> <span class="name">false</span> <span class="operator">=&gt;</span> <span class="name">true</span> <span class="keyword reserved">end</span><span class="operator">)</span> <span class="name">true</span>
+
+<span class="operator">~~&gt;</span><span class="name">β</span>
+
+<span class="keyword reserved">match</span> <span class="name">true</span> <span class="keyword reserved">with</span> <span class="operator">|</span> <span class="name">true</span> <span class="operator">=&gt;</span> <span class="name">false</span> <span class="operator">|</span> <span class="name">false</span> <span class="operator">=&gt;</span> <span class="name">true</span> <span class="keyword reserved">end</span>
+
+<span class="operator">~~&gt;</span><span class="name">ι</span>
+
+<span class="name">false</span>
+</pre>
+<ul class="simple">
+<li><span class="formula"><i>δ</i></span>-reduction: unfolding of transparent constants;</li>
+<li><span class="formula"><i>β</i></span>-reduction: substitution of the function argument into its body;</li>
+<li><span class="formula"><i>ι</i></span>-reduction: (1) matching a term agains patterns and calculating
+the corresponding branch with the right substitution for the bound variables,
+(2) reduction of the <code class="highlight coq"><span class="keyword reserved">fix</span></code> and <code class="highlight coq"><span class="keyword reserved">cofix</span></code> primitives that allow one to express recursion and co-recursion (we'll cover recursion soon but co-recursion is going to be out of scope of the course).</li>
+</ul>
+<p>It's possible to replicate the above steps using the <code class="highlight coq"><span class="keyword namespace">Eval</span></code> vernacular
+command, of which <code class="highlight coq"><span class="keyword namespace">Compute</span></code> is simply a special case. In what follows, <code class="highlight coq"><span class="name builtin">cbv</span></code>
+stands for 'call-by-value' and is one of the supported reduction strategies.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chkf"><span class="highlight"><span class="kn">Eval</span> <span class="nb">cbv</span> delta <span class="kr">in</span> negb true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= (<span class="kr">fun</span> <span class="nv">b</span> : bool =&gt;
+   <span class="kr">match</span> b <span class="kr">with</span>
+   | true =&gt; false
+   | false =&gt; true
+   <span class="kr">end</span>) true
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk10"><span class="highlight"><span class="kn">Eval</span> <span class="nb">cbv</span> beta delta <span class="kr">in</span> negb true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="kr">match</span> true <span class="kr">with</span>
+  | true =&gt; false
+  | false =&gt; true
+  <span class="kr">end</span>
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk11"><span class="highlight"><span class="kn">Eval</span> <span class="nb">cbv</span> beta delta iota <span class="kr">in</span> negb true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small></span></pre><p>Notice that the order of reduction strategies we allow <code class="highlight coq"><span class="keyword namespace">Eval</span></code> to employ is
+not important.</p>
+</div>
+<div class="section" id="symbolic-computation">
+<h2>Symbolic computation</h2>
+<p>Let's declare a variable <code class="highlight coq"><span class="name">c</span></code> which, in contrast with definitions, does not
+have a body (please ignore the warning for the moment):</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk12"><span class="highlight"><span class="kn">Variable</span> <span class="nv">c</span> : bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
+declaration which shall not be available without
+qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small></span></pre><p>This may come as a surprise but we can compute with variables.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk13"><span class="highlight"><span class="kn">Compute</span> idb c.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= c
+: bool</span></blockquote></div></div></small></span></pre><p>Notice the symbol <code class="highlight coq"><span class="name">c</span></code> blocks reductions at the <span class="formula"><i>ι</i></span>-reduction
+step because it's not a value consisting of constructors -- in other words this
+is not a <em>canonical form</em> -- hence we cannot expect reduction to go through:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk14"><span class="highlight"><span class="kn">Compute</span> negb c.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="kr">match</span> c <span class="kr">with</span>
+  | true =&gt; false
+  | false =&gt; true
+  <span class="kr">end</span>
+: bool</span></blockquote></div></div></small></span></pre><p>We are going to work a lot with mixed concrete/symbolic expressions in our
+proofs and it is important to understand their behavior under reduction. For
+example, consider the following two definitions of the Boolean conjunction
+function. The first function, named <code class="highlight coq"><span class="name">andb</span></code>, does pattern-matching on its first
+parameter and the second one, named <code class="highlight coq"><span class="name">andb'</span></code> does that for its second parameter
+instead:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">andb</span> (<span class="nv">b</span> <span class="nv">c</span> : bool) : bool :=
+  <span class="kr">match</span> b <span class="kr">with</span>
+  | false =&gt; false
+  | true =&gt; c
+  <span class="kr">end</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">andb&#39;</span> (<span class="nv">b</span> <span class="nv">c</span> : bool) : bool :=
+  <span class="kr">match</span> c <span class="kr">with</span>
+  | false =&gt; false
+  | true =&gt; b
+  <span class="kr">end</span>.</span></span></span></pre><p>The <code class="highlight coq"><span class="name">andb</span></code> and <code class="highlight coq"><span class="name">andb'</span></code> functions are <em>extensionally</em> the same, i.e.
+these functions have equal outputs for the corresponding equal inputs (formally:
+<span class="formula">∀<i>b</i> <i>c</i>. <i>andb</i> <i>b</i> <i>c</i> = <i>andb</i>’ <i>b</i> <i>c</i></span>), but that only works for
+concrete inputs. Observe the differences in their behavior on symbolic inputs:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk15"><span class="highlight"><span class="kn">Compute</span> andb  c true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="kr">match</span> c <span class="kr">with</span>
+  | true =&gt; true
+  | false =&gt; false
+  <span class="kr">end</span>
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk16"><span class="highlight"><span class="kn">Compute</span> andb&#39; c true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= c
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk17"><span class="highlight"><span class="kn">Compute</span> andb  c false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="kr">match</span> c <span class="kr">with</span>
+  | true | _ =&gt; false
+  <span class="kr">end</span>
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk18"><span class="highlight"><span class="kn">Compute</span> andb&#39; c false.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk19"><span class="highlight"><span class="kn">Compute</span> andb  false c.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1a"><span class="highlight"><span class="kn">Compute</span> andb&#39; false c.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="kr">match</span> c <span class="kr">with</span>
+  | true | _ =&gt; false
+  <span class="kr">end</span>
+: bool</span></blockquote></div></div></small></span></pre></div>
+<div class="section" id="inductive-types-and-recursive-functions">
+<h2>Inductive types and recursive functions</h2>
+<p>We are going to define the type of unary natural numbers also known as
+'Peano numbers' -- our first truly inductive type. A natural number is either a
+zero (<code class="highlight coq"><span class="name">O</span></code> below resembles zero graphically), or a successor (<code class="highlight coq"><span class="name">S</span></code>) of another
+natural number.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">nat</span> : <span class="kt">Type</span> :=
+| O
+| S of nat.</span></span></span></pre><p>Notice that Coq prints back the <code class="highlight coq"><span class="name">nat</span></code> type using an alternative syntax:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1b"><span class="highlight"><span class="kn">Print</span> nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">nat</span> : <span class="kt">Set</span> :=  O : nat | S : nat -&gt; nat</span></blockquote></div></div></small></span></pre><p>Here are the representations of several first natural numbers: 0, 1, 2, 3
+correspondingly:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1c"><span class="highlight"><span class="kn">Check</span> O.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">O
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1d"><span class="highlight"><span class="kn">Check</span> S O.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">S O
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1e"><span class="highlight"><span class="kn">Check</span> S (S O).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">S (S O)
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk1f"><span class="highlight"><span class="kn">Check</span> S (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">S (S (S O))
+     : nat</span></blockquote></div></div></small></span></pre><p>The unary representation is very inefficient computationally but very
+convenient for proving. This convenience makes the unary numbers ubiquitous in
+proofs and hence there is special notational support which lets us write 0, 1,
+2, 3, etc. instead of the terms above. We can get that support once we close the
+<code class="highlight coq"><span class="name">My</span></code> module and start reusing the standard definition.</p>
+<p>Let's implement some basic arithmetic functions and start with the
+incrementing function that adds one to its argument.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">succn</span> := S.</span></span></span></pre><p>Of course, we can <span class="formula"><i>η</i></span>-expand the function and write it as
+<code class="highlight coq"><span class="keyword namespace">Definition</span> <span class="name function">succn</span> <span class="name variable">n</span> <span class="operator">:=</span> <span class="name">S</span> <span class="name">n</span><span class="operator">.</span></code></p>
+<p>Here is a simple unit-test:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk20"><span class="highlight"><span class="kn">Compute</span> succn (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= S (S (S O))
+: nat</span></blockquote></div></div></small></span></pre><div class="section" id="totality">
+<h3>Totality</h3>
+<p>Now, let's go for the predecessor function:</p>
+<pre class="code Coq literal-block">
+<span class="keyword namespace">Definition</span> <span class="name function">predn</span> <span class="operator">(</span><span class="name variable">n</span> <span class="operator">:</span> <span class="name">nat</span><span class="operator">)</span> <span class="operator">:</span> <span class="name">nat</span> <span class="operator">:=</span>
+  <span class="keyword reserved">match</span> <span class="name">n</span> <span class="keyword reserved">with</span>
+  <span class="operator">|</span> <span class="name">S</span> <span class="name">x</span> <span class="operator">=&gt;</span> <span class="name">x</span>
+  <span class="operator">|</span> <span class="name">O</span> <span class="operator">=&gt;</span> <span class="name">_</span> <span class="comment">(* what do we return here? *)</span>
+  <span class="keyword reserved">end</span><span class="operator">.</span>
+</pre>
+<p>Coq being a total language does not allow us to, for instance,
+throw an exception here -- we <em>have to</em> produce a term of type <code class="highlight coq"><span class="name">nat</span></code> here.</p>
+<p>So, let's take a step back and see what our options for implementing
+the predecessor functions are.</p>
+<ul class="simple">
+<li><code class="highlight coq"><span class="name">pred</span> <span class="operator">:</span> <span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">nat</span></code> -- in this case we need to provide a default value
+(<code class="highlight coq"><span class="literal number integer">0</span></code> is a natural choice);</li>
+<li><code class="highlight coq"><span class="name">pred</span> <span class="operator">:</span> <span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">option</span> <span class="name">nat</span></code> -- use an optional type to signal a missing value;</li>
+<li><code class="highlight coq"><span class="name">pred</span> <span class="operator">:</span> <span class="keyword reserved">forall</span> <span class="name variable">n</span> <span class="operator">:</span> <span class="name">nat</span><span class="operator">,</span> <span class="operator">(</span><span class="name">n</span> <span class="operator">&lt;&gt;</span> <span class="literal number integer">0</span><span class="operator">)</span> <span class="operator">-&gt;</span> <span class="name">nat</span></code> -- pass a precondition <code class="highlight coq"><span class="name">n</span> <span class="operator">&lt;&gt;</span> <span class="literal number integer">0</span></code> to
+have <em>static</em> guarantees the function is never called with the wrong argument.</li>
+</ul>
+<p>The first option usually works best in practice, hence our final definition of
+the predecessor function is as follows.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">predn</span> (<span class="nv">n</span> : nat) : nat :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | S x =&gt; x
+  | O =&gt; O
+  <span class="kr">end</span>.</span></span></span></pre><p>The same reasoning applies to the division function in case of division by
+zero -- we simply return zero in that case. Contrary to what one can read
+sometimes about this solution, it's not going to make our logic inconsistent or
+anything like that. It just means we will have add some preconditions to some of
+our lemmas. We will see it later in the course.</p>
+</div>
+<div class="section" id="recursion">
+<h3>Recursion</h3>
+<p>Here goes our first recursive function: addition on natural numbers.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">addn</span> (<span class="nv">n</span> <span class="nv">m</span> : nat) {<span class="nv">struct</span> <span class="nv">n</span>} : nat :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | O =&gt; m
+  | S n&#39; =&gt; S (addn n&#39; m)
+  <span class="kr">end</span>.</span></span></span></pre><p>First, let's check that <span class="formula">2 + 2 = 4</span>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk21"><span class="highlight"><span class="kn">Compute</span> addn (S (S O)) (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= S (S (S (S O)))
+: nat</span></blockquote></div></div></small></span></pre><p>Here we use the <code class="highlight coq"><span class="keyword namespace">Fixpoint</span></code> vernacular command instead of <code class="highlight coq"><span class="keyword namespace">Definition</span></code> to
+indicate we are going to use recursion here. Also, notice the <code class="highlight coq"><span class="operator">{</span><span class="keyword reserved">struct</span> <span class="name">n</span><span class="operator">}</span></code>
+annotation that tells Coq which parameter we are going to do recursion on.</p>
+<p>An alternative idiomatic way to write the <code class="highlight coq"><span class="name">addn</span></code> function would be</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">addn_idiomatic</span> (<span class="nv">n</span> <span class="nv">m</span> : nat) : nat :=
+  <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> S (addn_idiomatic n&#39; m) <span class="kr">else</span> m.</span></span></span></pre><p>Here we elide the <code class="highlight coq"><span class="keyword reserved">struct</span></code> annotation because Coq infer it in most cases
+(but not always!) and use an alternative syntax for pattern-matching on data
+types with two constructors of only one can carry information. Notice that
+Coq's pretty-printer does not respect this syntactic sugar: try printing
+<code class="highlight coq"><span class="name">addn_idiomatic</span></code>.</p>
+<p>In fact, <code class="highlight coq"><span class="keyword namespace">Fixpoint</span></code> provides some syntactic sugar but it's still a
+<code class="highlight coq"><span class="keyword namespace">Definition</span></code> and a new primitive we haven't seen yet under the hood: <code class="highlight coq"><span class="keyword reserved">fix</span></code>. The
+<code class="highlight coq"><span class="keyword reserved">fix</span></code> primitive is a fixed-point combinator one can use to write recursive
+functions. If you do <code class="highlight coq"><span class="keyword namespace">Print</span> <span class="name">addn</span><span class="operator">.</span></code> you'll see it. So let's define <code class="highlight coq"><span class="name">addn</span></code> in
+terms of those primitive things:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">addn_no_sugar</span> :=
+  <span class="kr">fix</span> addn (n m : nat) {<span class="kr">struct</span> n} : nat :=
+    <span class="kr">match</span> n <span class="kr">with</span>
+    | O =&gt; m
+    | S n&#39; =&gt; S (addn n&#39; m)
+    <span class="kr">end</span>.</span></span></span></pre><p>Observe that the <code class="highlight coq"><span class="name">addn</span></code> identifier after the <code class="highlight coq"><span class="keyword reserved">fix</span></code> keyword is the name we
+are supposed to use for recursive calls and it does not have to have anything
+related to the identifier in the definition.</p>
+<p>Here is yet another alternative implementation but this time we do recursion
+on the second parameter</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">addn&#39;</span> (<span class="nv">n</span> <span class="nv">m</span> : nat) {<span class="nv">struct</span> <span class="nv">m</span>} :=
+  <span class="kr">if</span> m <span class="kr">is</span> S m&#39; <span class="kr">then</span> S (addn&#39; n m&#39;) <span class="kr">else</span> n.</span></span></span></pre><p>As we metioned before, <code class="highlight coq"><span class="name">addn</span></code> and <code class="highlight coq"><span class="name">addn'</span></code> exhibit different behavior
+when calculating with symbolic variables:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk22"><span class="highlight"><span class="kn">Variable</span> <span class="nv">z</span> : nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
+declaration which shall not be available without
+qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk23"><span class="highlight"><span class="kn">Compute</span> addn  O z.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= z
+: nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk24"><span class="highlight"><span class="kn">Compute</span> addn&#39; O z.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= (<span class="kr">fix</span> Ffix (x x0 : nat) {<span class="kr">struct</span> x0} : nat :=
+     <span class="kr">match</span> x0 <span class="kr">with</span>
+     | O =&gt; x
+     | S x1 =&gt; S (Ffix x x1)
+     <span class="kr">end</span>) O z
+: nat</span></blockquote></div></div></small></span></pre><p>Later we can prove these functions are equivalent but not the same and this
+would show in proofs, making interactive proving less intuitive endeavor than
+e.g. regular math. This is in line with the issue of dependent types being not
+exactly modular.</p>
+<p>One more point before we move on: suppose we made a mistake and called
+<code class="highlight coq"><span class="name">addn</span></code> on its input parameter and not on its predecessor. In this case
+we are going to see an error message from the termination checker preventing us
+from using an erroneous definition:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk25"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Fixpoint</span> <span class="nf">addn_loop</span> (<span class="nv">n</span> <span class="nv">m</span> : nat) {<span class="nv">struct</span> <span class="nv">n</span>} : nat :=
+  <span class="kr">if</span> n <span class="kr">is</span> S _ <span class="kr">then</span> S (addn_loop n m) <span class="kr">else</span> m.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+Recursive definition of addn_loop <span class="kr">is</span> ill-formed.
+In environment
+addn_loop : nat -&gt; nat -&gt; nat
+n : nat
+m : nat
+n0 : nat
+Recursive call to addn_loop has principal argument
+equal to <span class="s2">&quot;n&quot;</span> instead of <span class="s2">&quot;n0&quot;</span>.
+Recursive definition <span class="kr">is</span>:
+<span class="s2">&quot;fun n m : nat =&gt;</span>
+<span class="s2"> match n with</span>
+<span class="s2"> | O =&gt; m</span>
+<span class="s2"> | S _ =&gt; S (addn_loop n m)</span>
+<span class="s2"> end&quot;</span>.</span></blockquote></div></div></small></span></pre></div>
+<div class="section" id="mutual-recursion">
+<h3>Mutual Recursion</h3>
+<p>Here is a classical example of mutual recursion. To introduce one more
+mutually recursive function connect use the <code class="highlight coq"><span class="keyword reserved">with</span></code> keyword as follows.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">is_even</span> (<span class="nv">n</span> : nat) : bool :=
+  <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> is_odd n&#39; <span class="kr">else</span> true
+<span class="kr">with</span> is_odd n :=
+  <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> is_even n&#39; <span class="kr">else</span> false.</span></span></span></pre><p>Our namespace is enriched with both <code class="highlight coq"><span class="name">is_even</span></code> and <code class="highlight coq"><span class="name">is_odd</span></code> identifiers:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk26"><span class="highlight"><span class="kn">Compute</span> is_even (S (S (S O))).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk27"><span class="highlight"><span class="kn">Compute</span> is_even (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk28"><span class="highlight"><span class="kn">Compute</span> is_odd (S (S (S O))).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk29" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk29"><span class="highlight"><span class="kn">Compute</span> is_odd (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= false
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">My</span>.</span></span></span></pre><p>After closing a module, the entities defined in it, get prefixed with the
+module's name</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2a" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2a"><span class="highlight"><span class="kn">Check</span> My.nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">My.nat
+     : <span class="kt">Set</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2b" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2b"><span class="highlight"><span class="kn">Check</span> My.addn.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">My.addn
+     : My.nat -&gt; My.nat -&gt; My.nat</span></blockquote></div></div></small></span></pre><p>Now we can abandon our definitions and switch to the ones defined in
+Mathcomp. For that purpose we import the <code class="highlight coq"><span class="name">ssrbool</span></code> and <code class="highlight coq"><span class="name">ssrnat</span></code> libraries which
+contain definitions and proofs (!) about Booleans and natural numbers.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2c" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2c"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssrbool ssrnat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ | _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ : _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ | _ ]&quot;</span> was already used
+<span class="kr">in</span> scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ - _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>This import will generate a ton of warnings telling us that some standard
+notations of Coq are redefined by Mathcomp. Let's ignore this for now. This
+warning can be silenced with <code class="highlight coq"><span class="keyword namespace">Set Warnings</span> <span class="literal string double">&quot;-notation-overridden&quot;</span><span class="operator">.</span></code> command
+placed right before the imports, or this can be done globally at a project
+level. For a &quot;portable&quot; way to do that see
+<a class="reference external" href="https://github.com/coq-community/lemma-overloading/blob/master/_CoqProject#L3">https://github.com/coq-community/lemma-overloading/blob/master/_CoqProject#L3</a>.</p>
+<p>We have now access to standard boolean functions, e.g. here is how exclusive
+disjunction (xor) is implemented in the standard library:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2d" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2d"><span class="highlight"><span class="kn">Print</span> addb.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">addb = 
+<span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; <span class="kr">if</span> b <span class="kr">then</span> negb <span class="kr">else</span> <span class="kr">fun</span> <span class="nv">x</span> : bool =&gt; x
+     : bool -&gt; bool -&gt; bool
+
+<span class="kn">Arguments</span> addb (_ _)%bool_scope</span></blockquote></div></div></small></span></pre><p>It's called <code class="highlight coq"><span class="name">addb</span></code> because it is essentially addition modulo 2.</p>
+<p>Some interactive queries that helps us explore libraries:
+[About] tells you more than [Check] usually:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2e" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2e"><span class="highlight"><span class="kn">About</span> nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">nat : <span class="kt">Set</span>
+
+nat <span class="kr">is</span> not universe polymorphic
+Expands to: <span class="kn">Inductive</span> <span class="nf">Coq</span>.Init.Datatypes.nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk2f" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk2f"><span class="highlight"><span class="kn">About</span> S.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">S : nat -&gt; nat
+
+S <span class="kr">is</span> not universe polymorphic
+<span class="kn">Arguments</span> S _%nat_scope
+Expands to: Constructor Coq.Init.Datatypes.S</span></blockquote></div></div></small></span></pre><p>We have some syntactic sugar like <code class="highlight coq"><span class="literal number integer">42</span></code> but internally this a pile of 42
+<code class="highlight coq"><span class="name">S</span></code>'s ending with <code class="highlight coq"><span class="name">O</span></code></p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk30" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk30"><span class="highlight"><span class="kn">Check</span> <span class="mi">42</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="mi">42</span>
+     : nat</span></blockquote></div></div></small></span></pre><p>Coq displays this back to us as <code class="highlight coq"><span class="literal number integer">3</span></code></p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk31" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk31"><span class="highlight"><span class="kn">Check</span> S (S (S O)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="mi">3</span>
+     : nat</span></blockquote></div></div></small></span></pre><p>This decimal notation does not work for <code class="highlight coq"><span class="name">My</span><span class="operator">.</span><span class="name">nat</span></code> because it is only
+associated with the standard <code class="highlight coq"><span class="name">nat</span></code> type. It's possible to implement decimal
+notations for our own types but we are not going to discuss it.</p>
+<p>Coq lets us control what we see when we do queries.
+E.g. here is how to switch off all the syntactic sugar:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Printing All</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk32" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk32"><span class="highlight"><span class="kn">Check</span> <span class="mi">5</span> + <span class="mi">4</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">addn (S (S (S (S (S O))))) (S (S (S (S O))))
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Unset Printing All</span>.</span></span></span></pre><p>To find out what unfamiliar notations mean you can use the <code class="highlight coq"><span class="keyword namespace">Locate</span></code>
+vernacular command, although sometimes it can be tricky to understand what is part of the notation and what is not.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk33" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk33"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;.+&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Unknown notation</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk34" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk34"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;.+1&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span>
+<span class="s2">&quot;n .+1&quot;</span> := S n : nat_scope (default interpretation)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk35" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk35"><span class="highlight"><span class="kn">Variable</span> <span class="nv">x</span> : nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
+declaration which shall not be available without
+qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture01-v-chk36" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture01-v-chk36"><span class="highlight"><span class="kn">Check</span> x.+<span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">x.+<span class="mi">1</span>
+     : nat</span></blockquote></div></div></small></span></pre><p>One important difference between notations and definitions is that
+definitions represent a semantic barrier and definitions are an essential part
+of theories whereas notations are a convenient (and powerful) shorthand.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></body>
+</html>
