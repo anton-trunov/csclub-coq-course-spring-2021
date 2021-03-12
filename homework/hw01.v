@@ -92,9 +92,9 @@ Compute eqn ...
 Compute eqn ...
 
 (** 2e. Implement less-or-equal comparison function `leq` on natural numbers of
-type `nat -> nat -> bool`. `leq m n` return `true` if and only if `m` is less
-to `n`. Your solution must not use recursion but you may reuse any of the
-functions you defined in this module so far. *)
+type `nat -> nat -> bool`. `leq m n` returns `true` if and only if `m` is less
+than or equal to `n`. Your solution must not use recursion but you may reuse any
+of the functions you defined in this module so far. *)
 
 Definition leq (m n : nat) : bool := ...
 
