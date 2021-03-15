@@ -396,7 +396,7 @@ Print addb.
 (*| It's called `addb` because it is essentially addition modulo 2. |*)
 
 (*| Some interactive queries that helps us explore libraries:
-[About] tells you more than [Check] usually: |*)
+`About` tells you more than `Check` usually: |*)
 About nat.
 About S.
 
