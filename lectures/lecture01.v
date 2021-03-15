@@ -4,7 +4,7 @@ The basics of Coq and how to interact with it
 =============================================
 
 :Author: Anton Trunov
-:Date: Jan 11, 2021
+:Date: March 11, 2021
 
 
 ============================================================
