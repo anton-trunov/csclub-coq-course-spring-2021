@@ -372,7 +372,7 @@ Compute is_odd (S (S O)).
 
 End My.
 
-(*| After closing a module, the entities defined in it, get prefixed with the
+(*| After closing a module, the entities defined in it get prefixed with the
 module's name |*)
 Check My.nat.
 Check My.addn.
