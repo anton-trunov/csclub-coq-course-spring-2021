@@ -1,5 +1,10 @@
 # Introduction to Formal Verification course at [CS Club](https://compsciclub.ru/)
 
+## Building HTML files locally
+
+- Setup Alectryon using its [installation instructions](https://github.com/cpitclaudel/alectryon/#setup) and add it to your `PATH`.
+- Run `make` or `make doc` in the project root directory.
+
 ## Class 1
 
 - [Intro to formal verification](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/intro.html) slides
