@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>Polymorphic functions, parameterized types</title>
+<meta name="author" content="Anton Trunov" />
+<meta name="date" content="March 18, 2021" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-mml-chtml.min.js?config=TeX-AMS_CHTML"></script>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.13.0+0.13.0. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document" id="polymorphic-functions-parameterized-types">
+<h1 class="title">Polymorphic functions, parameterized types</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Anton Trunov</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>March 18, 2021</td></tr>
+</tbody>
+</table>
+<input type="checkbox" class="alectryon-toggle" id="alectryon-toggle-0" /><label for="alectryon-toggle-0" class="alectryon-toggle-label">Display all goals and responses</label><div class="alectryon-container docutils container">
+<hr class="docutils" />
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk0"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect ssrfun ssrbool ssrnat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ | _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ : _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ | _ ]&quot;</span> was already used
+<span class="kr">in</span> scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ - _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><div class="section" id="polymorphic-functions-dependent-functions">
+<h1>Polymorphic functions &amp; Dependent functions</h1>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Module</span> <span class="nf">MyNamespace</span>.</span></span></span></pre><p>Last time we defined an identity function on
+the type <code class="highlight coq"><span class="name">bool</span></code> as follows.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">idb</span> := <span class="kr">fun</span> <span class="nv">b</span> : bool =&gt; b.</span></span></span></pre><p>Clearly, it would be very inconvenient to
+create as many definitions as the number of types
+for which we might need an identity function.
+Morally, we need a function with a type like
+<span class="math">\(\alpha \to \alpha\)</span>, where <span class="math">\(\alpha\)</span>
+means 'arbitrary type'. Functions of the type
+above are called <em>parametrically polymorphic</em>.</p>
+<p>Coq does not support a typing discipline exactly
+like the above. For instance, the following fails:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">id</span> : A -&gt; A := <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; x.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The reference A was not found <span class="kr">in</span> the current
+environment.</span></blockquote></div></div></small></span></pre><p>The issue here is that Coq has no idea what
+<code class="highlight coq"><span class="name">A</span></code> means, as it is neither defined, nor <em>bound</em>
+anywhere.</p>
+<p>But, luckily for us, Coq supports parametric
+polymorphism in an <em>explicit</em> form, meaning that
+we need to tell Coq explicitly <code class="highlight coq"><span class="name">A</span></code> is an arbitrary
+type. And to do that, we need to be able to name
+parameters in <em>type signatures</em> (and not just in
+function definitions).</p>
+<p>Essentially, we want to say something like <code class="highlight coq"><span class="name">id</span> <span class="operator">:</span>
+<span class="operator">(</span><span class="name">A</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">-&gt;</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">A</span></code> and while this might be a
+valid type signature in Coq, it does not mean what
+we intend it to mean here. This is usually called
+<span class="math">\(\Pi\)</span>-types in type theory and the right Coq
+syntax for what we mean is <code class="highlight coq"><span class="keyword reserved">forall</span></code> <em>ident</em> <code class="highlight coq"><span class="operator">:</span></code>
+<em>term</em> <code class="highlight coq"><span class="operator">,</span></code> <em>term</em>. So in this case it is</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">id</span> :
+  <span class="kr">forall</span> <span class="nv">A</span> : <span class="kt">Type</span>, A -&gt; A
+:=
+  <span class="kr">fun</span> <span class="nv">A</span> : <span class="kt">Type</span> =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; x.</span></span></span></pre><p>Here is how one would use <code class="highlight coq"><span class="name">id</span></code>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk2"><span class="highlight"><span class="kn">Compute</span> id bool true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk3"><span class="highlight"><span class="kn">Compute</span> id nat <span class="mi">42</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="mi">42</span>
+: nat</span></blockquote></div></div></small></span></pre><p>Notice that our identity function gets two
+arguments now to apply <code class="highlight coq"><span class="name">id</span></code> to a computationally
+relevant terms (<code class="highlight coq"><span class="name">true</span></code> and <code class="highlight coq"><span class="literal number integer">42</span></code> above) we need to
+explicitly supply their respective types. We are
+going to learn how to deal with this annoyance in
+a moment.</p>
+<p>Now let's take a pause an appreciate that we just
+kind of learned what <em>dependent types</em> are: the
+<em>type</em> of <code class="highlight coq"><span class="name">id</span></code>'s result depends on the <em>value</em> of
+its first parameter and we can check that
+interactively:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk4"><span class="highlight"><span class="kn">Check</span> id bool : bool -&gt; bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">id bool : bool -&gt; bool
+     : bool -&gt; bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk5"><span class="highlight"><span class="kn">Check</span> id nat : nat -&gt; nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">id nat : nat -&gt; nat
+     : nat -&gt; nat</span></blockquote></div></div></small></span></pre><p>Another thing to appreciate is that types in
+Coq are terms and as such are first-class citizens
+and can be stored in data structures, passed to
+functions and returned from functions.</p>
+<p>To recaputilate: a function of type like <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">x</span>
+<span class="operator">:</span> <span class="name">A</span><span class="operator">,</span> <span class="name">B</span></code> is called a dependently typed function
+from <code class="highlight coq"><span class="name">A</span></code> to <code class="highlight coq"><span class="name">B</span><span class="operator">(</span><span class="name">x</span><span class="operator">)</span></code>, where <code class="highlight coq"><span class="name">B</span><span class="operator">(</span><span class="name">x</span><span class="operator">)</span></code> means that <code class="highlight coq"><span class="name">B</span></code>
+may refer to <code class="highlight coq"><span class="name">x</span></code> and <code class="highlight coq"><span class="name">B</span></code> is usually called a
+<em>family of types</em>.</p>
+<p>In fact, let us reveal something I've been
+hiding from you before: Coq does <em>not</em> have an
+arrow type <code class="highlight coq"><span class="operator">-&gt;</span></code>, all its functions are dependently
+typed and <code class="highlight coq"><span class="operator">-&gt;</span></code> is merely a notation that makes
+things more convenient. This can be easily seen if
+we use the <code class="highlight coq"><span class="keyword namespace">Locate</span></code> vernacular.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk6"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;-&gt;&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A -&gt; B&quot;</span> := (<span class="kr">forall</span> <span class="nv">_</span> : A, B) : type_scope
+  (default interpretation)</span></blockquote></div></div></small></span></pre><p>Locate reveals that <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">B</span></code> means <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">_</span> <span class="operator">:</span>
+<span class="name">A</span><span class="operator">,</span> <span class="name">B</span></code> so it's a dependent function which cannot
+refer to the named parameter in <code class="highlight coq"><span class="name">B</span></code> (Coq forbids
+that for underscores, <code class="highlight coq"><span class="name">_</span></code>), making this a usual
+non-dependent function type.</p>
+<p>Also, Coq does not forbid us from unneeded naming in type signature, for example, we can write something like this:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">id&#39;</span> :
+  <span class="kr">forall</span> <span class="nv">A</span> : <span class="kt">Type</span> ,  <span class="kr">forall</span> <span class="nv">x</span> : A ,  A
+:=
+     <span class="kr">fun</span> <span class="nv">A</span> : <span class="kt">Type</span> =&gt;    <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; x.</span></span></span></pre></div>
+<div class="section" id="product-type">
+<h1>Product Type</h1>
+<p>We can use currying to model functions of any
+fixed arity (e.g. addition has arity 2 and we
+assign it the type <code class="highlight coq"><span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">nat</span></code>, which when
+fully parenthesized is <code class="highlight coq"><span class="name">nat</span> <span class="operator">-&gt;</span> <span class="operator">(</span><span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">nat</span><span class="operator">)</span></code>). But
+what about functions returning multiple results,
+e.g. Euclidean division which returns quotient and
+reminder?</p>
+<p>mention why it is called 'product type'</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">prodn</span> : <span class="kt">Type</span> := | pairn of nat &amp; nat.</span></span></span></pre><p><code class="highlight coq"><span class="name">pairn</span> <span class="name">of</span> <span class="name">nat</span> <span class="operator">&amp;</span> <span class="name">nat</span></code> means that the <code class="highlight coq"><span class="name">pairn</span></code>
+constructor holds two natural numbers</p>
+<p>Alternative syntax:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk7"><span class="highlight"><span class="kn">Print</span> prodn.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">prodn</span> : <span class="kt">Set</span> :=  pairn : nat -&gt; nat -&gt; prodn
+
+<span class="kn">Arguments</span> pairn (_ _)%nat_scope</span></blockquote></div></div></small></span></pre><p>Now it's possible to implement a function like
+mentioned above -- it'll have the type <code class="highlight coq"><span class="name">divmod</span> <span class="operator">:</span>
+<span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">nat</span> <span class="operator">-&gt;</span> <span class="name">prodn</span></code>.</p>
+<p>But here is an issue: it'd be hard to create a
+specialized product type for each combination of
+types a function might return, e.g. <code class="highlight coq"><span class="name">nat</span></code> and
+<code class="highlight coq"><span class="name">bool</span></code>, <code class="highlight coq"><span class="name">bool</span></code> and <code class="highlight coq"><span class="name">nat</span></code>, <code class="highlight coq"><span class="name">bool</span></code> and <code class="highlight coq"><span class="name">bool</span></code>, etc.</p>
+</div>
+<div class="section" id="parameterized-inductive-types">
+<h1>Parameterized inductive types</h1>
+<p>Instead we can use <em>parameterized</em> inductive
+types like the following product type:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">prod</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) : <span class="kt">Type</span> :=
+  | pair of A &amp; B.</span></span></span></pre><p>Important: <code class="highlight coq"><span class="name">prod</span></code> is not a type, it's a type
+constructor! You can check it like so:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk8"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> prod : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;prod&quot;</span> has type <span class="s2">&quot;Type -&gt; Type -&gt; Type&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;Type&quot;</span>.</span></blockquote></div></div></small></span></pre><p>But, when speaking informally, people often
+say <code class="highlight coq"><span class="name">prod</span></code> is a type.</p>
+<p>It's only when one applies <code class="highlight coq"><span class="name">prod</span></code> to two type
+arguments one gets a type. For example,</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk9"><span class="highlight"><span class="kn">Check</span> prod nat nat : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">prod nat nat : <span class="kt">Type</span>
+     : <span class="kt">Type</span></span></blockquote></div></div></small></span></pre><p>By the way, the type <code class="highlight coq"><span class="name">prod</span> <span class="name">nat</span> <span class="name">nat</span></code> is
+equivalent to our specialized type <code class="highlight coq"><span class="name">prodn</span></code>.</p>
+<p>Let's discuss <code class="highlight coq"><span class="name">prod</span></code>'s only constructor:
+<code class="highlight coq"><span class="name">pair</span></code>. Informally, the <code class="highlight coq"><span class="name">pair</span></code> constructor carries
+two components of some types <code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code>. What
+type should it have? It could <em>not</em> be <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">B</span> <span class="operator">-&gt;</span>
+<span class="name">prod</span> <span class="name">A</span> <span class="name">B</span></code> because <code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code> would not be bound.
+This is akin to the type of the polymorphic
+identity function we discussed earlier.</p>
+<p>Let's ask Coq about the type of <code class="highlight coq"><span class="name">pair</span></code>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chka"><span class="highlight"><span class="kn">Check</span> pair.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">pair
+     : <span class="kr">forall</span> <span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>, A -&gt; B -&gt; prod A B</span></blockquote></div></div></small></span></pre><p>As we can see, <code class="highlight coq"><span class="name">pair</span></code> has type <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">A</span> <span class="name variable">B</span> <span class="operator">:</span>
+<span class="keyword type">Type</span><span class="operator">,</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">B</span> <span class="operator">-&gt;</span> <span class="name">prod</span> <span class="name">A</span> <span class="name">B</span></code> which means it actually
+carries <em>four</em> components, namely the two types
+<code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code> and two terms of those types
+respectively. In other words, data constructors
+<em>explicitly</em> bind type constructor's parameters.</p>
+<p>To create a pair of two terms like <code class="highlight coq"><span class="literal number integer">42</span></code> and
+<code class="highlight coq"><span class="name">true</span></code> we use the <code class="highlight coq"><span class="name">pair</span></code> constructor like so,
+explicitly providing the types of our terms:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chkb"><span class="highlight"><span class="kn">Check</span> pair nat bool <span class="mi">42</span> true : prod nat bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">pair nat bool <span class="mi">42</span> true : prod nat bool
+     : prod nat bool</span></blockquote></div></div></small></span></pre></div>
+<div class="section" id="implicit-arguments">
+<h1>Implicit Arguments</h1>
+<p>Passing explicitly types can be very annoying,
+especially when the system should be able to
+<em>infer</em> those for us. E.g. Coq knows that <code class="highlight coq"><span class="literal number integer">42</span></code>'s
+type is <code class="highlight coq"><span class="name">nat</span></code> and <code class="highlight coq"><span class="name">true</span></code>'s type is <code class="highlight coq"><span class="name">bool</span></code> so it
+could, in principle, help us with that. And
+indeed, Coq has the incredibly powerful mechanism
+of inferring <em>implicit arguments</em>. Here is how we
+active it for the identity function <code class="highlight coq"><span class="name">id</span></code> and the
+<code class="highlight coq"><span class="name">pair</span></code> data constructor:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> id [A] _.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> pair [A B] _ _.</span></span></span></pre><p><code class="highlight coq"><span class="keyword namespace">Arguments</span> <span class="name">id</span> <span class="operator">[</span><span class="name">A</span><span class="operator">]</span> <span class="name">_</span></code> means that the type <code class="highlight coq"><span class="name">A</span></code>
+is going to be inferred by the elaborator, so the
+user does not have to supply it. The same works
+for <code class="highlight coq"><span class="name">pair</span></code> but in that case Coq is going to infer
+both types <code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code>. So there is no need to do
+it by hand anymore:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chkc"><span class="highlight"><span class="kn">Check</span> id <span class="mi">42</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">id <span class="mi">42</span>
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chkd"><span class="highlight"><span class="kn">Compute</span> id <span class="mi">42</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="mi">42</span>
+: nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chke"><span class="highlight"><span class="kn">Check</span> pair <span class="mi">42</span> true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">pair <span class="mi">42</span> true
+     : prod nat bool</span></blockquote></div></div></small></span></pre><p>Notice that <code class="highlight coq"><span class="name">pair</span> <span class="name">nat</span> <span class="name">bool</span> <span class="literal number integer">42</span> <span class="name">true</span></code> does not
+typecheck anymore:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chkf"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> pair nat bool <span class="mi">42</span> true : prod nat bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+Illegal application (Non-functional construction): 
+The expression <span class="s2">&quot;pair nat bool&quot;</span> of type <span class="s2">&quot;prod Set Set&quot;</span>
+cannot be applied to the term
+ <span class="s2">&quot;42&quot;</span> : <span class="s2">&quot;nat&quot;</span></span></blockquote></div></div></small></span></pre><p>Note that it does not mean we just changed the
+type of <code class="highlight coq"><span class="name">pair</span></code>, no, the underlying formalizm is
+still the same and uses explicit binding. It's
+just we have an extra layer on top of it to help
+us write more concise code in the style of the ML
+family of languages.</p>
+<p>To forbid Coq from implicitly supplying the
+arguments we can use <code class="highlight coq"><span class="operator">&#64;</span></code> syntax, which locally
+switches off inference:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk10"><span class="highlight"><span class="kn">Check</span> @pair nat bool <span class="mi">42</span> true : prod nat bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">pair <span class="mi">42</span> true : prod nat bool
+     : prod nat bool</span></blockquote></div></div></small></span></pre><p>Coq's pretty-printer takes into account the
+implicitness information and does not show us the
+implicit arguments even if we supplied those by
+hand. Sometimes understanding the exact terms
+being inferred by Coq is essential for proofs so
+one needs a way to make the pretty-printer show
+implicit arguments, this can be done like so:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Printing Implicit</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk11"><span class="highlight"><span class="kn">Check</span> pair <span class="mi">42</span> true : prod nat bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">@pair nat bool <span class="mi">42</span> true : prod nat bool
+     : prod nat bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Unset Printing Implicit</span>.</span></span></span></pre><p>The <code class="highlight coq"><span class="keyword type">Set</span> <span class="operator">...</span></code> family of vernacular commands
+changes Coq's behavior globally and in our case
+its effect needs to be reverted the corresponding
+<code class="highlight coq"><span class="keyword namespace">Unset</span></code> command</p>
+<p>It can be a bit tedious to explicitly use the
+<code class="highlight coq"><span class="keyword namespace">Arguments</span></code> vernacular command for each and every
+type or definition we introduce so there is a way
+to ask Coq to decide which parameters it can infer
+for us:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Implicit Arguments</span>.</span></span></span></pre><p>From now on and until either the end of the
+current file or upon encountering the <code class="highlight coq"><span class="keyword namespace">Unset</span>
+<span class="name">Implicit</span> <span class="keyword namespace">Arguments</span></code> vernacular, Coq will try to
+figure out which arguments can be made implicit.</p>
+</div>
+<div class="section" id="notations">
+<h1>Notations</h1>
+<p>Working with pairs using <code class="highlight coq"><span class="name">prod</span></code> and <code class="highlight coq"><span class="name">pair</span></code> is
+not very common, because people usually prefer
+more suggestive notations like <code class="highlight coq"><span class="name">A</span> <span class="operator">*</span> <span class="name">B</span></code> for the
+product type or <code class="highlight coq"><span class="operator">(</span><span class="name">a</span><span class="operator">,</span> <span class="name">b</span><span class="operator">)</span></code> for pairs. Coq lets us
+introduce our own notations which modify its
+parser on-the-fly. Notations in Coq are a complex
+beast, so we will only scratch the surface here.</p>
+<p>Here is a notation for the product type. I'll
+explain some elements of it below. Note that Coq
+will warn us that the new notation is being
+redefined, that's because the standard prelude
+already has it defined for us.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk12"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A * B&quot;</span> :=
+  (prod A B)
+  (<span class="kn">at level</span> <span class="mi">40</span>, <span class="kn">left associativity</span>)
+  : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>So let us break this down:</p>
+<blockquote>
+<ul class="simple">
+<li>the <code class="highlight coq"><span class="keyword namespace">Notation</span></code> vernacular tells Coq
+we are going to extend its parser;</li>
+<li>the notation being defined is usually enclosed
+in double quotes;</li>
+<li><code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code> (and identifiers in general)
+are automatically bound in the body of
+the notation following after <code class="highlight coq"><span class="operator">:=</span></code>;</li>
+<li>the body of the notation which must
+be encloded in parentheses and this is what
+notation means when parsed;</li>
+<li>then some grammatical information follows
+like the precedence level and associativity
+which we supply for infix binary operations
+like the one above; the lower level the tighter
+it binds;</li>
+<li>after that an optional notation scope
+might follow;</li>
+<li>one may provide some formatting info for the
+pretty-printer (not shown here).</li>
+</ul>
+</blockquote>
+<div class="section" id="notation-scopes">
+<h2>Notation scopes</h2>
+<p>The programmer may reuse the same symbol for
+multiple terms. In the notation above we reused
+<code class="highlight coq"><span class="operator">*</span></code> symbol to mean type product. By default <code class="highlight coq"><span class="operator">*</span></code>
+stands for multiplication on natural numbers.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk13"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;*&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (Nat.mul m n) : coq_nat_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln_rec m n) : nat_rec_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln m n) : nat_scope
+  (default interpretation)
+<span class="kn">Notation</span> <span class="s2">&quot;A * B&quot;</span> := (prod A B) : type_scope</span></blockquote></div></div></small></span></pre><p>The term 'default interpretation' in the
+output of <code class="highlight coq"><span class="keyword namespace">Locate</span></code> means that when Coq is not sure
+about the purpose of <code class="highlight coq"><span class="operator">*</span></code>, it will assume it is
+being used as the multiplication symbol, so the
+following fails:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk14"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> nat * bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;nat&quot;</span> has type <span class="s2">&quot;Set&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;nat&quot;</span>.</span></blockquote></div></div></small></span></pre><p>Here we have to give Coq a hint that we mean a
+product type, we do this by specifying the
+notation scope with <code class="highlight coq"><span class="operator">%</span><span class="name">type</span></code>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk15"><span class="highlight"><span class="kn">Check</span> (nat * nat)%type.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(nat * nat)%type
+     : <span class="kt">Set</span></span></blockquote></div></div></small></span></pre><p>Here is another way of doing that:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk16"><span class="highlight"><span class="kn">Check</span> (nat * bool) : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(nat * bool)%type : <span class="kt">Type</span>
+     : <span class="kt">Type</span></span></blockquote></div></div></small></span></pre><p>In this case Coq knows that the term in the
+parentheses is supposed to be a type (remember
+that in Coq there is almost no difference between
+terms/programs and types), so Coq knows how to
+interpret <code class="highlight coq"><span class="operator">*</span></code> as it certainly cannot be
+multiplication.</p>
+<p>Yet another way of changing the default
+meaning of a notation is opening its scope with
+the <code class="highlight coq"><span class="keyword namespace">Open Scope</span></code> vernacular. Notation scopes in
+Coq can be thought of as a stack of opened scopes
+with the scope last opened to become the default
+one and have precedence over the rest of them.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Open Scope</span> type_scope.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk17" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk17"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;*&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (Nat.mul m n) : coq_nat_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln_rec m n) : nat_rec_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln m n) : nat_scope
+<span class="kn">Notation</span> <span class="s2">&quot;A * B&quot;</span> := (prod A B) : type_scope
+  (default interpretation)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk18" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk18"><span class="highlight"><span class="kn">Check</span> (nat * nat).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">nat * nat
+     : <span class="kt">Set</span></span></blockquote></div></div></small></span></pre><p>Since notation scopes are modeled with a
+stack, closing a notation scope pops it off the
+stack and changes the default interpretation to
+the previous one.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Close Scope</span> type_scope.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk19" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk19"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> (nat * nat).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;nat&quot;</span> has type <span class="s2">&quot;Set&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;nat&quot;</span>.</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1a" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1a"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;*&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (Nat.mul m n) : coq_nat_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln_rec m n) : nat_rec_scope
+<span class="kn">Notation</span> <span class="s2">&quot;m * n&quot;</span> := (muln m n) : nat_scope
+  (default interpretation)
+<span class="kn">Notation</span> <span class="s2">&quot;A * B&quot;</span> := (prod A B) : type_scope</span></blockquote></div></div></small></span></pre><p>Let us mention the role of <code class="highlight coq"><span class="name builtin">left</span>
+<span class="name">associativity</span></code> in the above notation definition:
+to model tuples of sizes more than two one may use
+nested pairs. For example, a triple of elements of
+types <code class="highlight coq"><span class="name">nat</span></code>, <code class="highlight coq"><span class="name">bool</span></code>, and <code class="highlight coq"><span class="name">nat</span></code> can be modeled
+like so:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1b" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1b"><span class="highlight"><span class="kn">Check</span> ((nat * bool) * nat)%type.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(nat * bool * nat)%type
+     : <span class="kt">Set</span></span></blockquote></div></div></small></span></pre><p><code class="highlight coq"><span class="keyword namespace">left associativity</span></code> lets us write drop the
+parentheses and write it as</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1c" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1c"><span class="highlight"><span class="kn">Check</span> (nat * bool * nat)%type.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(nat * bool * nat)%type
+     : <span class="kt">Set</span></span></blockquote></div></div></small></span></pre><p>If we associate parentheses to the right, this
+will be a different, although isomorphic, type.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1d" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1d"><span class="highlight"><span class="kn">Check</span> (nat * (bool * nat))%type.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(nat * (bool * nat))%type
+     : <span class="kt">Set</span></span></blockquote></div></div></small></span></pre><p>Having introduced notation for the <code class="highlight coq"><span class="name">prod</span></code> type
+constructor, it would be nice to add notation for
+the <code class="highlight coq"><span class="name">pair</span></code> data contructor to be able to write
+e.g. <code class="highlight coq"><span class="operator">(</span><span class="literal number integer">42</span><span class="operator">,</span> <span class="name">true</span><span class="operator">)</span></code> instead of <code class="highlight coq"><span class="name">pair</span> <span class="literal number integer">42</span> <span class="name">true</span></code>, which
+is, as you already know, a shorthand for <code class="highlight coq"><span class="operator">&#64;</span><span class="name">pair</span>
+<span class="name">nat</span> <span class="name">bool</span> <span class="literal number integer">42</span> <span class="name">true</span></code>.</p>
+<p>Here is a rather unwieldy approach:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;( p ; q )&quot;</span> := (pair p q).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1e"><span class="highlight"><span class="kn">Check</span> (<span class="mi">1</span>; false).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="mi">1</span>; false)
+     : nat * bool</span></blockquote></div></div></small></span></pre><p>It's unwieldy because the following does not
+work: <code class="highlight coq"><span class="keyword namespace">Check</span> <span class="operator">(</span><span class="literal number integer">1</span><span class="operator">;</span> <span class="name">false</span><span class="operator">;</span> <span class="literal number integer">2</span><span class="operator">).</span></code></p>
+<p>But we would want to use triples, quadruples,
+etc. In this case, recursive notations come to the
+rescue.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1f" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1f"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;( p , q , .. , r )&quot;</span> :=
+  (pair .. (pair p q) .. r) : core_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;( _ , _ , .. , _ )&quot;</span> was already used <span class="kr">in</span>
+scope core_scope. [notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk20" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk20"><span class="highlight"><span class="kn">Check</span> (<span class="mi">1</span>, false) : nat * bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="mi">1</span>, false) : nat * bool
+     : nat * bool</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk21" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk21"><span class="highlight"><span class="kn">Check</span> (<span class="mi">1</span>, false, <span class="mi">3</span>) : nat * bool * nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="mi">1</span>, false, <span class="mi">3</span>) : nat * bool * nat
+     : nat * bool * nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk22" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk22"><span class="highlight"><span class="kn">Check</span> (<span class="mi">1</span>, false, <span class="mi">3</span>, true) : nat * bool * nat * bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="mi">1</span>, false, <span class="mi">3</span>, true) : nat * bool * nat * bool
+     : nat * bool * nat * bool</span></blockquote></div></div></small></span></pre><p>Now we are ready to use what we've built so
+far to write some simple programs manipulating
+pairs. Let's define projections on pairs first.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">fst</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} : A * B -&gt; A :=
+  <span class="kr">fun</span> <span class="nv">p</span> =&gt;
+    <span class="kr">match</span> p <span class="kr">with</span>
+    | (a, _) =&gt; a
+    <span class="kr">end</span>.</span></span></span></pre><p>For now, let's think of <code class="highlight coq"><span class="operator">{</span><span class="name">A</span> <span class="name">B</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">}</span></code> as <code class="highlight coq"><span class="operator">[</span><span class="name">A</span>
+<span class="name">B</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">]</span></code>, i.e. <code class="highlight coq"><span class="name">A</span></code> and <code class="highlight coq"><span class="name">B</span></code> are declared as
+implicit parameters.</p>
+<p>If you are not sure what some notations in a
+definition mean, you can ask Coq to print it out
+without using notations like so:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Unset Printing Notations</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk23" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk23"><span class="highlight"><span class="kn">Print</span> fst.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">fst = 
+<span class="kr">fun</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) (<span class="nv">p</span> : prod A B) =&gt;
+<span class="kr">match</span> p <span class="kr">with</span>
+| pair a _ =&gt; a
+<span class="kr">end</span>
+     : <span class="kr">forall</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) (<span class="nv">_</span> : prod A B), A
+
+<span class="kn">Arguments</span> fst {A B}%type_scope _</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Printing Notations</span>.</span></span></span></pre><p>The definition of the second projection is
+analogous to <code class="highlight coq"><span class="name">fst</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">snd</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} : A * B -&gt; B :=
+  <span class="kr">fun</span> <span class="nv">p</span> =&gt;
+    <span class="kr">match</span> p <span class="kr">with</span>
+    | pair _ b =&gt; b
+    <span class="kr">end</span>.</span></span></span></pre><p>Let's introduce the standard in SSReflect
+notation for projections:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;p .1&quot;</span> := (fst p).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;p .2&quot;</span> := (snd p).</span></span></span></pre><p>Here is how we can use it:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk24" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk24"><span class="highlight"><span class="kn">Compute</span> (<span class="mi">42</span>, true).<span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="mi">42</span>
+: nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk25" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk25"><span class="highlight"><span class="kn">Compute</span> (<span class="mi">42</span>, true).<span class="mi">2</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
+: bool</span></blockquote></div></div></small></span></pre><p>Let us define a function which swaps two
+components of the input pair:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">swap</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} : A * B -&gt; B * A :=
+  <span class="kr">fun</span> <span class="nv">p</span> =&gt;
+    <span class="kr">match</span> p <span class="kr">with</span>
+    | (a, b) =&gt; (b, a)
+    <span class="kr">end</span>.</span></span></span></pre></div>
+</div>
+<div class="section" id="sum-type">
+<h1>Sum Type</h1>
+<p>The next important type in functional
+programming is the sum type. This is also know as
+<code class="highlight coq"><span class="name">Result</span></code> type in OCaml or <code class="highlight coq"><span class="name">Maybe</span></code> type in Haskell.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">sum</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) : <span class="kt">Type</span> :=
+  | inl of A
+  | inr of B.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk26" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk26"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A + B&quot;</span> :=
+  (sum A B) (<span class="kn">at level</span> <span class="mi">50</span>, <span class="kn">left associativity</span>)
+  : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>The <code class="highlight coq"><span class="name">sum</span></code> type can be used, for instance, to
+simulate partial functions: if the function
+succeeds and returns a valid result it computes to
+<code class="highlight coq"><span class="name">inl</span> <span class="name">result</span></code> and if it fails then it reports a
+failure explanation <code class="highlight coq"><span class="name">inr</span> <span class="name">explanation</span></code>. For
+example, a parser might have type <code class="highlight coq"><span class="name">String</span> <span class="operator">-&gt;</span> <span class="name">AST</span> <span class="operator">+</span>
+<span class="name">Error</span></code> so it either parses its input successfully
+and returns a value of the <code class="highlight coq"><span class="name">AST</span></code> type wrapped in
+<code class="highlight coq"><span class="name">inl</span><span class="operator">`</span><span class="name">data</span> <span class="name builtin">constructor</span><span class="operator">,</span> <span class="name">or</span> <span class="name">it</span> <span class="name">fails</span> <span class="name">to</span> <span class="name">parse</span> <span class="keyword namespace">and</span>
+<span class="name">reports</span> <span class="name">this</span> <span class="keyword reserved">as</span> <span class="name">a</span> <span class="name builtin">value of</span> <span class="name">a</span> <span class="name">specialized</span> <span class="operator">`</span><span class="name">Error</span></code>
+type wrapped into <code class="highlight coq"><span class="name">inr</span></code> data constructor.</p>
+<p>Here is a simple example of using the <code class="highlight coq"><span class="name">sum</span></code>
+typeaking to the <code class="highlight coq"><span class="name builtin">swap</span></code> function for the product
+type:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">swap_sum</span> {<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>} :
+  A + B -&gt; B + A :=
+  <span class="kr">fun</span> <span class="nv">s</span> =&gt;
+    <span class="kr">match</span> s <span class="kr">with</span>
+    | inl a =&gt; inr B a
+    | inr b =&gt; inl A b
+    <span class="kr">end</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">MyNamespace</span>.</span></span></span></pre></div>
+</div>
+</div>
+</div></body>
+</html>
