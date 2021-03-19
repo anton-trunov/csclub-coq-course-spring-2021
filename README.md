@@ -9,3 +9,7 @@
 
 - [Intro to formal verification](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/intro.html) slides
 - Intro to functional programming in Coq: [source](lectures/lecture01.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture01.html)
+
+## Class 2
+
+- Polymorphic functions & Dependent functions, Implicit Arguments, Notations, Product types and sum types: [source](lectures/lecture02.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture02.html)
