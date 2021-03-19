@@ -125,7 +125,7 @@ datatype.
 You can construct new lists (sequences) like so:
   - [::]           --  notation for the `nil` constructor;
   - x :: xs        --  notation for the `cons` constructor;
-  - [:: 1, 2, 3]   --  notation for a sequence of three elements 1, 2 and 3.
+  - [:: 1; 2; 3]   --  notation for a sequence of three elements 1, 2 and 3.
 
 Using `seq`, we can define the type of programs as follows:
 
