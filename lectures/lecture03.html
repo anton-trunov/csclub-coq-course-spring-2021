@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>Logic, equality, dependent pattern matching</title>
+<meta name="author" content="Anton Trunov" />
+<meta name="date" content="March 25, 2021" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-mml-chtml.min.js?config=TeX-AMS_CHTML"></script>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.13.0+0.13.0. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document" id="logic-equality-dependent-pattern-matching">
+<h1 class="title">Logic, equality, dependent pattern matching</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Anton Trunov</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>March 25, 2021</td></tr>
+</tbody>
+</table>
+<input type="checkbox" class="alectryon-toggle" id="alectryon-toggle-0" /><label for="alectryon-toggle-0" class="alectryon-toggle-label">Display all goals and responses</label><div class="alectryon-container docutils container">
+<hr class="docutils" />
+<div class="section" id="intuitionistic-logic">
+<h1>Intuitionistic logic</h1>
+<p>To be able to write program specifications we
+need to build ourselves a logic in which we are
+going to express the usual connectives like 'and',
+'or', 'not', etc., and also, quantifiers using the
+natural deduction style.</p>
+<p>Logic we are going to emulate in type theory can
+be classified intuitionistic higher-order logic.
+Sometimes peopla also use the terms 'constructive'
+and 'intuitionistic' interchangeably, and, strictly
+speaking, it's not correct but we are not going to
+be too pedantic about it.</p>
+<p>In the constructive setting we demonstrate the
+existence of mathematical objects by providing a
+method (algorithm) for creating the object. In
+type theory the methods are going to be terms.</p>
+<p>There is a correspondence between terms and types
+on one side and proofs and propositions on the
+other. Type theory not only lets us emulate
+higher-order logic but it also lets us manipulate
+proofs as first-class objects, i.e. pass those to
+functions, pack them into data structures, return
+from functions, etc. This creates a powerful
+framework to do mathematical reasoning and program
+verification.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect ssrfun.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Implicit Arguments</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Module</span> <span class="nf">MyNamespace</span>.</span></span></span></pre><div class="section" id="implication">
+<h2>Implication</h2>
+<p>Implication corresponds to the function type.
+Having a proof of '<code class="highlight coq"><span class="name">A</span></code> implies <code class="highlight coq"><span class="name">B</span></code>', amounts to
+having a function of type <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">B</span></code> which
+transforms a proof of proposition <code class="highlight coq"><span class="name">A</span></code> into a proof
+of proposition <code class="highlight coq"><span class="name">B</span></code>.</p>
+<p>Here is a proof that <code class="highlight coq"><span class="name">A</span></code> implies <code class="highlight coq"><span class="name">A</span></code>. This
+corresponds to the identity function, as we have
+already seen.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">A_implies_A</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
+  A -&gt; A
+:= <span class="kr">fun</span> <span class="nv">proof_of_A</span> : A =&gt; proof_of_A.</span></span></span></pre><p>You can read the above definition as a <em>lemma</em>
+named <code class="highlight coq"><span class="name">A_imlpies_A</span></code> stating that for any
+proposition <code class="highlight coq"><span class="name">A</span></code>, <code class="highlight coq"><span class="name">A</span></code> implies <code class="highlight coq"><span class="name">A</span></code> and the proof of
+the lemma is the term <code class="highlight coq"><span class="keyword reserved">fun</span> <span class="name variable">proof_of_A</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">=&gt;</span>
+<span class="name">proof_of_A</span></code>.</p>
+<p>We are using the <code class="highlight coq"><span class="keyword type">Prop</span></code> universe which is yet
+another primitive of Coq which we are going to
+talk in some depth a bit later. For now we just
+need to know that <code class="highlight coq"><span class="name">A</span> <span class="operator">:</span> <span class="keyword type">Prop</span></code> means '<code class="highlight coq"><span class="name">A</span></code> is a
+proposition'.</p>
+<p>Yet another example:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">A_implies_B_implies_A</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) :
+  A -&gt; B -&gt; A
+:= <span class="kr">fun</span> <span class="nv">proof_A</span> =&gt; <span class="kr">fun</span> <span class="nv">proof_B</span> =&gt; proof_A.</span></span></span></pre><p>This corresponds to the well-known <code class="highlight coq"><span class="name">const</span></code> function.</p>
+<p>And here is the internalized 'modus ponens' rule
+in our setting:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">modus_ponens</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) :
+  A -&gt; (A -&gt; B) -&gt; B
+:= <span class="kr">fun</span> <span class="nv">pA</span> <span class="nv">pAimpliesB</span> =&gt; pAimpliesB pA.</span></span></span></pre><p>As you can see, the modus ponens rule is
+nothing more but a simple function application.</p>
+</div>
+<div class="section" id="conjunction">
+<h2>Conjunction</h2>
+<p>A constructive proof of a conjunction <span class="math">\(A
+\cap B\)</span> is a pair of a proof <span class="math">\(A\)</span> and a proof
+of <span class="math">\(B\)</span>. This suggests the following
+definition of conjunction:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">and</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) : <span class="kt">Prop</span> :=
+  | conj of A &amp; B.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk0"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A /\ B&quot;</span> := (<span class="kn">and</span> A B) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ /\ _&quot;</span> was already used <span class="kr">in</span> scope
+type_scope. [notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>Notice the strong resemblance between [and]
+and [prod]:</p>
+<pre class="code Coq literal-block">
+<span class="keyword namespace">Inductive</span> <span class="name function">prod</span> <span class="operator">(</span><span class="name variable">A</span> <span class="name variable">B</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">:</span> <span class="keyword type">Type</span> <span class="operator">:=</span>
+  <span class="operator">|</span> <span class="name">pair</span> <span class="name">of</span> <span class="name">A</span> <span class="operator">&amp;</span> <span class="name">B</span><span class="operator">.</span>
+</pre>
+<p>Let's prove that conjunction is commutative</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">andC</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) :
+  A /\ B -&gt; B /\ A :=
+  <span class="kr">fun</span> <span class="nv">pAandB</span> =&gt;
+    <span class="kr">match</span> pAandB <span class="kr">with</span>
+    | conj pA pB =&gt; conj pB pA
+    <span class="kr">end</span>.</span></span></span></pre><p>Have you noticed that the proof of <code class="highlight coq"><span class="name">A</span> <span class="operator">/\</span> <span class="name">B</span> <span class="operator">-&gt;</span>
+<span class="name">B</span> <span class="operator">/\</span> <span class="name">A</span></code> looks the same (modulo contructor names)
+as the function that swaps the two components of a
+pair?</p>
+</div>
+<div class="section" id="disjunction">
+<h2>Disjunction</h2>
+<p>A constructive proof of a disjunction <span class="math">\(A
+\cup B\)</span> is either a proof of <span class="math">\(A\)</span> or a proof
+of <span class="math">\(B\)</span> and a mark telling us precisely what
+a proof of which proposition we are dealing with.
+This suggests the following definition of
+disjunction:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">or</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) : <span class="kt">Prop</span> :=
+  | or_introl of A
+  | or_intror of B.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk1"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A \/ B&quot;</span> := (or A B) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ \/ _&quot;</span> was already used <span class="kr">in</span> scope
+type_scope. [notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> or_introl [A] B _, [A B] _.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> or_intror [A] B _, [A B] _.</span></span></span></pre><p>Again, notice the strong resemblance between [or]
+and [sum] types:</p>
+<pre class="code Coq literal-block">
+<span class="keyword namespace">Inductive</span> <span class="name function">sum</span> <span class="operator">(</span><span class="name variable">A</span> <span class="name variable">B</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">:</span> <span class="keyword type">Type</span> <span class="operator">:=</span>
+  <span class="operator">|</span> <span class="name">inl</span> <span class="name">of</span> <span class="name">A</span>
+  <span class="operator">|</span> <span class="name">inr</span> <span class="name">of</span> <span class="name">B</span><span class="operator">.</span>
+</pre>
+<p>The only real difference is that <code class="highlight coq"><span class="name">or</span></code> lives in
+the <code class="highlight coq"><span class="keyword type">Prop</span></code> universe and <code class="highlight coq"><span class="name">sum</span></code> inhabits <code class="highlight coq"><span class="keyword type">Type</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">and_or_distr</span> (<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : <span class="kt">Prop</span>) :
+  (A \/ B) /\ C -&gt; (A /\ C) \/ (B /\ C)
+:= <span class="kr">fun</span> &#39;(conj paob pc) =&gt;
+     <span class="kr">match</span> paob <span class="kr">with</span>
+     | or_introl pa =&gt; or_introl (conj pa pc)
+     | or_intror pb =&gt; or_intror (conj pb pc)
+     <span class="kr">end</span>.</span></span></span></pre></div>
+<div class="section" id="the-true-proposition">
+<h2>The true proposition</h2>
+<p>The trivially true proposition does not hold
+any information and its proof should be trivial as
+well. This suggests the true proposition is
+basically a unit type that lives in the <code class="highlight coq"><span class="keyword type">Prop</span></code>
+universe. It has exactly one constructor named <code class="highlight coq"><span class="name">I</span></code>
+for historical reasons.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">True</span> : <span class="kt">Prop</span> :=
+  | I.</span></span></span></pre><p>A couple simple examples</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">anything_implies_True</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
+  A -&gt; <span class="kt">True</span>
+:= <span class="kr">fun</span> <span class="nv">_</span> =&gt; I.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">True_and_True</span> :
+  <span class="kt">True</span> /\ <span class="kt">True</span>
+:= conj I I.</span></span></span></pre></div>
+<div class="section" id="falsehood">
+<h2>Falsehood</h2>
+<p>This is an empty type that lives in
+the <code class="highlight coq"><span class="keyword type">Prop</span></code> universe: it has no constructors.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">False</span> : <span class="kt">Prop</span> := .</span></span></span></pre><p>Because <code class="highlight coq"><span class="keyword type">False</span></code> has no constructors it is not
+possible to prove it without using any
+assumptions, i.e. in the empty context, provided
+the proof assistant's implementation does not have
+critical bugs. Usually, however, proof assistants
+<em>have</em> critical bugs. For instance, Coq's team
+documents those here:
+<a class="reference external" href="https://github.com/coq/coq/blob/master/dev/doc/critical-bugs">https://github.com/coq/coq/blob/master/dev/doc/critical-bugs</a></p>
+<p>Also, because <code class="highlight coq"><span class="keyword type">False</span></code> does not have any
+constructors, a term of type <code class="highlight coq"><span class="keyword type">False</span></code> enjoys
+peculiar pattern matching shape: one has to
+provide a term for each branch of a pattern
+matching expression and since there are no
+branches one can form a term of any type because
+there is no need to provide any terms. This is
+known in logic as the 'principle of explosion' or
+'ex falso quodlibet'. Here is an example showing
+that falsehood implies anything:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">exfalso_quodlibet</span> {<span class="nv">A</span> : <span class="kt">Prop</span>} :
+  <span class="kt">False</span> -&gt; A
+:= <span class="kr">fun</span> <span class="nv">pF</span> : <span class="kt">False</span> =&gt; <span class="kr">match</span> pF <span class="kr">with</span> <span class="kr">end</span>. <span class="c">(* no branches *)</span></span></span></span></pre><p>One more simple example:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">a_or_false_implies_a</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
+  A \/ <span class="kt">False</span> -&gt; A
+:= <span class="kr">fun</span> <span class="nv">paof</span> =&gt;
+     <span class="kr">match</span> paof <span class="kr">with</span>
+     | or_introl pa =&gt; pa
+     | or_intror pf =&gt; exfalso_quodlibet pf
+     <span class="kr">end</span>.</span></span></span></pre></div>
+<div class="section" id="negation">
+<h2>Negation</h2>
+<p>In principle, it is possible to introduce
+logical negation as a first-class connective,
+however, this is rarely done in practice and we
+understand <code class="highlight coq"><span class="name">not</span> <span class="name">A</span></code> (with the corresponding
+notation <code class="highlight coq"><span class="operator">~</span> <span class="name">A</span></code>) as just a shorthand for the
+implication <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">not</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) := A -&gt; <span class="kt">False</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk2"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;~ A&quot;</span> := (not A) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;~ _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>To prove <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="operator">~</span> <span class="operator">~</span> <span class="name">A</span></code> one needs to keep in
+mind the statement means <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="operator">((</span><span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span><span class="operator">)</span> <span class="operator">-&gt;</span>
+<span class="keyword type">False</span></code>):</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">double_negation_introduction</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
+   A -&gt; ~ ~ A
+:= <span class="kr">fun</span> <span class="nv">pa</span> : A =&gt; <span class="kr">fun</span> <span class="nv">pna</span> : ~ A =&gt; pna pa.</span></span></span></pre><p>The logic defined in this style is called
+'intuitionistic' and it is known that, in general,
+it's not possible to prove the classical double
+negation elimination principle in it, i.e. it's
+impossible to provide a proof term for the type <code class="highlight coq"><span class="operator">~</span>
+<span class="operator">~</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">A</span></code>, where <code class="highlight coq"><span class="name">A</span></code> is an arbitrary proposition.</p>
+</div>
+<div class="section" id="equivalence-biimplication">
+<h2>Equivalence (biimplication)</h2>
+<p>Just as negation, logical equivalence is not a
+first-class connective in Coq: there is a
+definition <code class="highlight coq"><span class="name">iff</span></code> which stands for a conjunction of
+two implications and the corresponding <code class="highlight coq"><span class="operator">&lt;-&gt;</span></code>
+notation.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">iff</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) := (A -&gt; B) /\ (B -&gt; A).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk3"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;A &lt;-&gt; B&quot;</span> := (iff A B) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;-&gt; _&quot;</span> was already used <span class="kr">in</span> scope
+type_scope. [notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>We'll see some examples with the logical
+equivalence a bit later.</p>
+</div>
+<div class="section" id="universal-quantifier">
+<h2>Universal quantifier</h2>
+<p>Universal quantifier is just the dependent
+function type. Under the constructivist's
+interpretation, a proof of a univerally quantified
+proposition <span class="math">\(\forall x. P(x)\)</span> transforms an
+individual <span class="math">\(t\)</span> into a proof of <span class="math">\(P(t)\)</span>,
+which is what a dependently typed function does in
+type theory. In this case we cannot build our own
+piece of logic and rely on the Coq's primitive.
+Also, notice that we are working in a typed
+setting, so we would write the above proposition
+as <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">x</span> <span class="operator">:</span> <span class="name">T</span><span class="operator">,</span> <span class="name">P</span> <span class="name">x</span></code>, where <code class="highlight coq"><span class="name">P</span> <span class="operator">:</span> <span class="name">T</span> <span class="operator">-&gt;</span> <span class="keyword type">Prop</span></code> is a
+predicate, i.e. a function from some type into
+<code class="highlight coq"><span class="keyword type">Prop</span></code>.</p>
+<p>Here is a simple example:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">forall_andD</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">P</span> <span class="nv">Q</span> : A -&gt; <span class="kt">Prop</span>) :
+  (<span class="kr">forall</span> <span class="nv">x</span>, P x /\ Q x) -&gt;
+  (<span class="kr">forall</span> <span class="nv">x</span>, P x) /\ (<span class="kr">forall</span> <span class="nv">x</span>, Q x)
+:= <span class="kr">fun</span> <span class="nv">all_pq</span> =&gt;
+     conj
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> all_pq x <span class="kr">with</span> conj px _ =&gt; px <span class="kr">end</span>)
+       (<span class="kr">fun</span> <span class="nv">x</span> =&gt; <span class="kr">match</span> all_pq x <span class="kr">with</span> conj _ qx =&gt; qx <span class="kr">end</span>).</span></span></span></pre></div>
+<div class="section" id="existential-quantifier">
+<h2>Existential quantifier</h2>
+<p>Existential quantifier is the type of
+<em>dependent</em> pairs. Under the constructivist's
+interpretation, a proof of an existentially
+quantified proposition <span class="math">\(\exists x. P(x)\)</span>
+consists of two components: an individual
+<span class="math">\(t\)</span> and a proof that the property <span class="math">\(P\)</span>
+holds for it. In this case we introduce a type
+which generalizes conjunction: now the type of the
+second component may depend on the <em>value</em> of the
+first component.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">ex</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">P</span> : A -&gt; <span class="kt">Prop</span>) : <span class="kt">Prop</span> :=
+  | ex_intro (x : A) (proof : P x).</span></span></span></pre><p>Simplified notation</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;’exists’ x : A , P&quot;</span> :=
+  (ex (<span class="kr">fun</span> <span class="nv">x</span> : A =&gt; P))
+    (<span class="kn">at level</span> <span class="mi">200</span>, <span class="kn">right associativity</span>).</span></span></span></pre><p>Full-blown notation: multiple binders</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk4"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;&#39;exists&#39; x .. y , p&quot;</span> :=
+  (ex (<span class="kr">fun</span> <span class="nv">x</span> =&gt; .. (ex (<span class="kr">fun</span> <span class="nv">y</span> =&gt; p)) ..))
+  (<span class="kn">at level</span> <span class="mi">200</span>, x <span class="kn">binder</span>, <span class="kn">right associativity</span>,
+   <span class="kn">format</span> <span class="s2">&quot;&#39;[&#39; &#39;exists&#39;  &#39;/  &#39; x  ..  y ,  &#39;/  &#39; p &#39;]&#39;&quot;</span>)
+  : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;exists _ .. _ , _&quot;</span> was already used <span class="kr">in</span> scope
+type_scope. [notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>Here is a simple example of reasoning with the
+existential quantifier:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">exists_not_forall</span> <span class="nv">A</span> (<span class="nv">P</span> : A -&gt; <span class="kt">Prop</span>) :
+  (<span class="kr">exists</span> <span class="nv">x</span>, P x) -&gt; ~ (<span class="kr">forall</span> <span class="nv">x</span>, ~ P x)
+:=
+  <span class="kr">fun</span> <span class="nv">x_px</span> : <span class="kr">exists</span> <span class="nv">x</span>, P x =&gt;
+    <span class="kr">fun</span> <span class="nv">all_npx</span> : <span class="kr">forall</span> <span class="nv">x</span>, ~ P x =&gt;
+      <span class="kr">match</span> x_px <span class="kr">with</span>
+      | ex_intro x px =&gt; all_npx x px
+      <span class="kr">end</span>.</span></span></span></pre><p>Currying for dependent pairs:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">curry_dep</span> <span class="nv">A</span> (<span class="nv">P</span> : A -&gt; <span class="kt">Prop</span>) <span class="nv">Q</span> :
+  ((<span class="kr">exists</span> <span class="nv">x</span>, P x) -&gt; Q) -&gt; (<span class="kr">forall</span> <span class="nv">x</span>, P x -&gt; Q)
+:=
+  <span class="kr">fun</span> <span class="nv">f</span> : (<span class="kr">exists</span> <span class="nv">x</span>, P x) -&gt; Q =&gt;
+    <span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
+      <span class="kr">fun</span> <span class="nv">px</span> : P x =&gt;
+        f (ex_intro P x px).</span></span></span></pre></div>
+<div class="section" id="equality">
+<h2>Equality</h2>
+<p>Equality is one of the main topics of type
+theory and it has a hierarchy of notions of
+equality / equivalence there.</p>
+<div class="section" id="definitional-equality">
+<h3>Definitional equality</h3>
+<p>There is a builtin notion of equality between
+terms which lives at the meta-level. It's called
+<em>definitional</em> or judgemental equality and it says
+that any two <em>convertible</em> terms are
+non-distinguishable. Convertible here means you
+can transform the terms into each other by
+computation. It's important that the user cannot
+<em>prove</em> that two terms are definitionally equal
+because there cannot be any evidence of
+definitional equality in the language, i.e. one
+cannot build a proof artefact stating that two
+terms are definitionally equal.</p>
+</div>
+<div class="section" id="propositional-equality">
+<h3>Propositional equality</h3>
+<p>We can internalize definitional equality into
+our language using the notion of propositional
+equality. This is going to be our first encounter
+of <em>indexed</em> types.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">eq</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">x</span> : A) : A -&gt; <span class="kt">Prop</span> :=
+  | eq_refl : eq x x.</span></span></span></pre><p>The only notion of equality we are putting in
+is <em>reflexivity</em>.</p>
+<p>In the definition above the unnamed type parameter
+<code class="highlight coq"><span class="name">A</span></code> after the colon is called an <em>index</em>. The <code class="highlight coq"><span class="name">x</span></code>
+identifier is called a <em>parameter</em>. There is a
+crucial difference between parameters and indices:
+parameters of an inductive type must stay constant
+for all constructors and indices are allowed to
+vary between constructors. In this case there is
+no variation because there is just one constructor
+and there are no other terms of type <code class="highlight coq"><span class="name">A</span></code> except
+<code class="highlight coq"><span class="name">x</span></code>. But the way pattern matching works for such
+<em>type families</em> as <code class="highlight coq"><span class="name">eq</span></code> lets us simulate equality.</p>
+<p>First, let us define a convenient notation for
+the <code class="highlight coq"><span class="name">eq</span></code> type.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk5"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;x = y&quot;</span> := (eq x y) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ = _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> eq_refl {A x}, {A} x.</span></span></span></pre><p>We are going to use <code class="highlight coq"><span class="name">eq_refl</span></code> as the proof
+(witness) of propositions stating that two terms
+are equal. For example, we can check that terms
+that are equal modulo <span class="math">\(\beta\)</span>- and
+<span class="math">\(\iota\)</span>- reduction are propositionally equal
+(because those are equal definitionally too).</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk6"><span class="highlight"><span class="kn">Check</span> eq_refl <span class="mi">0</span> : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
+     : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk7"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
+     : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk8"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : (<span class="kr">fun</span>=&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>
+     : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk9"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>
+     : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span></span></blockquote></div></div></small></span></pre><p>The following does not work because here one
+can either build terms like <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">0</span></code> (or type
+<code class="highlight coq"><span class="literal number integer">0</span> <span class="operator">=</span> <span class="literal number integer">0</span></code>) or <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">1</span></code> (of type <code class="highlight coq"><span class="literal number integer">1</span></code>)</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chka"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;eq_refl&quot;</span> has type <span class="s2">&quot;0 = 0&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;0 = 1&quot;</span>
+(cannot <span class="nb">unify</span> <span class="s2">&quot;0&quot;</span> <span class="kn">and</span> <span class="s2">&quot;1&quot;</span>).</span></blockquote></div></div></small></span></pre><p>So what terms are considered definitionally
+equal? The <code class="highlight coq"><span class="name">eq_refl</span></code> constructor lets us check
+that. Let's see some examples for functions:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkb"><span class="highlight"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
+declaration which shall not be available without
+qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkc"><span class="highlight"><span class="kn">Variable</span> <span class="nv">f</span> : A -&gt; B.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
+declaration which shall not be available without
+qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small></span></pre><p>Syntactically equal functions are
+definitionally equal</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkd"><span class="highlight"><span class="kn">Check</span> eq_refl : f = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : f = f
+     : f = f</span></blockquote></div></div></small></span></pre><p><span class="math">\(\alpha\)</span>-renaming</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chke"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x) = (<span class="kr">fun</span> <span class="nv">y</span> =&gt; y).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : id = id
+     : id = id
+<span class="kn">where</span>
+<span class="nl">?T</span> : [x : <span class="nl">?T</span> |- <span class="kt">Type</span>] (x cannot be used)</span></blockquote></div></div></small></span></pre><p><span class="math">\(\eta\)</span>-expansion: this equality is called the
+uniqueness principle in this case it means 'every
+element of a function type is a function'.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkf"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; f x) = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : [eta f] = f
+     : [eta f] = f</span></blockquote></div></div></small></span></pre><p>Let's prove propositional equality is an
+equivalence relation, i.e. reflexive, symmetric
+and transitive.</p>
+<p>The reflexivity case is trivial because we
+already defined our equality relation to be
+reflexive:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">eq_reflexive</span> <span class="nv">A</span> (<span class="nv">x</span> : A) :
+  x = x
+:=
+  eq_refl x.</span></span></span></pre></div>
+<div class="section" id="dependent-pattern-matching">
+<h3>Dependent pattern matching</h3>
+<p>To prove symmetry, we need to use dependent
+pattern matching which lets us utilize the difference between parameters and indices:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">eq_sym_unannotated</span> <span class="nv">A</span> (<span class="nv">x</span> <span class="nv">y</span> : A) :
+  x = y -&gt; y = x
+:= <span class="kr">fun</span> (<span class="nv">pf</span> : x = y) =&gt;
+   (<span class="kr">match</span> pf <span class="kr">with</span>
+    | eq_refl =&gt; (eq_refl x : x = x)  <span class="c">(* notice the type here *)</span>
+    <span class="kr">end</span>) : y = x.                     <span class="c">(* and here *)</span></span></span></span></pre><p>To understand the magic above one needs to use
+the fully annotated version of the
+<code class="highlight coq"><span class="keyword reserved">match</span></code>-expression. This time we need to add the
+<code class="highlight coq"><span class="keyword reserved">in</span></code> annotation which lets us reinterpret the type
+of the matchee and the <code class="highlight coq"><span class="keyword reserved">return</span></code> annotation which
+lets us specify the return type of the
+<code class="highlight coq"><span class="keyword reserved">match</span></code>-expression. What's important here is that
+the <code class="highlight coq"><span class="keyword reserved">in</span></code> annotation lets one bind <em>indices</em> to
+fresh variables with the intention those bind
+variables are going to be rewritten in the
+branches of <code class="highlight coq"><span class="keyword reserved">match</span></code>-expressions according to the
+definition of the (indexed) inductive type.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">eq_sym</span> <span class="nv">A</span> (<span class="nv">x</span> <span class="nv">y</span> : A) :
+  x = y -&gt; y = x
+:= <span class="kr">fun</span> (<span class="nv">pf</span>  : x = y) =&gt;
+     <span class="kr">match</span>
+       pf <span class="kr">in</span> (_ = b)
+       <span class="kr">return</span> (b = x)
+     <span class="kr">with</span>
+     | eq_refl =&gt; eq_refl x
+     <span class="kr">end</span>.</span></span></span></pre><p>Using the annotated version of the <code class="highlight coq"><span class="keyword reserved">match</span></code>-expression we can prove <code class="highlight coq"><span class="name">eq</span></code> is transitive. Thus, we have established <code class="highlight coq"><span class="name">eq</span></code> is an equivalence relation</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">eq_trans</span> <span class="nv">A</span> (<span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> : A) :
+  x = y -&gt; y = z -&gt; x = z
+:=
+  <span class="kr">fun</span> <span class="nv">pf_xy</span> : x = y =&gt;
+    <span class="kr">match</span>
+      pf_xy <span class="kr">in</span> (_ = b)
+      <span class="kr">return</span> (b = z -&gt; x = z)
+    <span class="kr">with</span>
+    | eq_refl =&gt; <span class="kr">fun</span> (<span class="nv">pf_xz</span> : x = z) =&gt; pf_xz
+    <span class="kr">end</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">MyNamespace</span>.</span></span></span></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div></body>
+</html>
