@@ -1,6 +1,7 @@
 SOURCES := $(shell find lectures -name '*.v')
 HTMLS := $(SOURCES:%.v=%.html)
 
+.PHONY: doc
 doc: $(HTMLS)
 
 lectures/%.html: lectures/%.v
