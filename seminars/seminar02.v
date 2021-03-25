@@ -66,14 +66,6 @@ End Quantifiers.
 
 Section Equality.
 
-Definition iff_is_if_and_only_if :
-  forall a b : bool, (a ==> b) && (b ==> a) = (a == b)
-:=
-
-Definition negbNE :
-  forall b : bool, ~~ ~~ b = true -> b = true
-:=
-
 (** exercise: *)
 Definition f_congr {A B} (f : A -> B) (x y : A) :
   x = y  ->  f x = f y
@@ -144,4 +136,18 @@ Definition eq_compr :
 End ExtensionalEqualityAndComposition.
 
 
+From mathcomp Require Import ssreflect ssrfun ssrbool eqtype.
 
+(* After importing `eqtype` you need to either use a qualified name for
+`eq_refl`: `Logic.eq_refl`, or use the `erefl` notation.
+This is because `eqtype` reuses the `eq_refl` identifier for a
+different lemma.
+ *)
+
+Definition iff_is_if_and_only_if :
+  forall a b : bool, (a ==> b) && (b ==> a) = (a == b)
+:=
+
+Definition negbNE :
+  forall b : bool, ~~ ~~ b = true -> b = true
+:=
