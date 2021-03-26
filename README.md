@@ -13,3 +13,7 @@
 ## Class 2
 
 - Polymorphic functions & Dependent functions, Implicit Arguments, Notations, Product types and sum types: [source](lectures/lecture02.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture02.html)
+
+## Class 3
+
+- Defining logic, equality. Dependent pattern matching: [source](lectures/lecture03.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture03.html)
