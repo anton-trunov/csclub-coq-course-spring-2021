@@ -106,7 +106,7 @@ Conjunction
 |*)
 
 (*| A constructive proof of a conjunction :math:`A
-\cap B` is a pair of a proof :math:`A` and a proof
+\land B` is a pair of a proof :math:`A` and a proof
 of :math:`B`. This suggests the following
 definition of conjunction: |*)
 
@@ -144,7 +144,7 @@ Disjunction
 |*)
 
 (*| A constructive proof of a disjunction :math:`A
-\cup B` is either a proof of :math:`A` or a proof
+\lor B` is either a proof of :math:`A` or a proof
 of :math:`B` and a mark telling us precisely what
 a proof of which proposition we are dealing with.
 This suggests the following definition of
