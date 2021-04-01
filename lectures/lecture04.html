@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>Injectivity and disjointness of constructors, large elimination. Convoy pattern. Proofs by induction. Prop vs Type</title>
+<meta name="author" content="Anton Trunov" />
+<meta name="date" content="April 1, 2021" />
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.13.0+0.13.0. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document" id="injectivity-and-disjointness-of-constructors-large-elimination-convoy-pattern-proofs-by-induction-prop-vs-type">
+<h1 class="title">Injectivity and disjointness of constructors, large elimination. Convoy pattern. Proofs by induction. <code class="highlight coq"><span class="keyword type">Prop</span></code> vs <code class="highlight coq"><span class="keyword type">Type</span></code></h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Anton Trunov</td></tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>April 1, 2021</td></tr>
+</tbody>
+</table>
+<input type="checkbox" class="alectryon-toggle" id="alectryon-toggle-0" /><label for="alectryon-toggle-0" class="alectryon-toggle-label">Display all goals and responses</label><div class="alectryon-container docutils container">
+<hr class="docutils" />
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk0"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect ssrfun ssrbool ssrnat eqtype.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ | _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ : _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ | _ ]&quot;</span> was already used
+<span class="kr">in</span> scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ - _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Implicit Arguments</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Unset Strict Implicit</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Unset Printing Implicit Defensive</span>.</span></span></span></pre><div class="section" id="injectivity-of-constructors">
+<h1>Injectivity of constructors</h1>
+<p>Constructors of inductive types are injective
+functions, i.e. if we have two equal term and
+their head symbols are identical constructors,
+then we can prove the constructor components are
+(propositionally) equal. For example, let us prove
+that if the successors of two natural numbers are
+equal, then the numbers are equal themselves.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">succ_inj</span> (<span class="nv">n</span> <span class="nv">m</span> : nat) :
+  n.+<span class="mi">1</span> = m.+<span class="mi">1</span> -&gt; n = m
+:=
+  <span class="kr">fun</span> <span class="nv">Sn_Sm</span> : n.+<span class="mi">1</span> = m.+<span class="mi">1</span> =&gt;
+    <span class="kr">match</span>
+      Sn_Sm <span class="kr">in</span> (_ = Sm)
+      <span class="kr">return</span> (n = Sm.-<span class="mi">1</span>)
+    <span class="kr">with</span>
+    | erefl =&gt; erefl n
+    <span class="kr">end</span>.</span></span></span></pre><p>Since we can only substitute <code class="highlight coq"><span class="name">n</span><span class="operator">.+</span><span class="literal number integer">1</span></code> with
+<code class="highlight coq"><span class="name">m</span><span class="operator">.+</span><span class="literal number integer">1</span></code>, or, with notations unfolded, <code class="highlight coq"><span class="name">S</span> <span class="name">n</span></code> with <code class="highlight coq"><span class="name">S</span>
+<span class="name">m</span></code>, we need to somehow remove the <code class="highlight coq"><span class="name">S</span></code> constructor
+after substitution, and this is what the
+predecessor function does in the snippet above
+(<code class="highlight coq"><span class="name">Sm</span><span class="operator">.-</span><span class="literal number integer">1</span></code>).</p>
+<p>The same mode of reasoning can be applied to
+prove, for instance, the <code class="highlight coq"><span class="name">or_introl</span></code> constructor
+is injective too.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">or_introl_inj</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) (<span class="nv">p1</span> <span class="nv">p2</span> : A) :
+  or_introl p1 = or_introl p2 :&gt; (A \/ B) -&gt;
+  p1 = p2
+:=
+  <span class="kr">fun</span> <span class="nv">eq</span> =&gt;
+    <span class="kr">match</span>
+      eq <span class="kr">in</span> (_ = oil2)
+      <span class="kr">return</span> (p1 =
+              <span class="kr">if</span> oil2 <span class="kr">is</span> or_introl p2&#39; <span class="kr">then</span> p2&#39; <span class="kr">else</span> p2)
+    <span class="kr">with</span>
+    | erefl =&gt; erefl p1
+    <span class="kr">end</span>.</span></span></span></pre></div>
+<div class="section" id="disjointness-of-constructors">
+<h1>Disjointness of constructors</h1>
+<p>For constructors of inductive types living in
+the <code class="highlight coq"><span class="keyword type">Type</span></code> universe, i.e. the computationally
+relevant terms, we can prove that distinct
+contructors are not propositionally equal.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">false_eq_true_implies_False</span> :
+  false = true -&gt; <span class="kt">False</span>
+:=
+  <span class="kr">fun</span>     <span class="nv">eq</span> :  false = true =&gt;
+    <span class="kr">match</span> eq <span class="kr">in</span> (_    = b)
+             <span class="kr">return</span> (<span class="kr">if</span> b <span class="kr">then</span> <span class="kt">False</span> <span class="kr">else</span> <span class="kt">True</span>)
+    <span class="kr">with</span>
+    | erefl =&gt; I
+    <span class="kr">end</span>.</span></span></span></pre><p>In the snippet above, we formulate the
+<code class="highlight coq"><span class="keyword reserved">return</span></code> annotation in a way that ensures we still
+prove:</p>
+<ul class="simple">
+<li><code class="highlight coq"><span class="keyword type">False</span></code> outside the branch of the
+<code class="highlight coq"><span class="keyword reserved">match</span></code>-expression, because <code class="highlight coq"><span class="name">b</span></code> unifies with
+<code class="highlight coq"><span class="name">true</span></code> at that point;</li>
+<li>and <code class="highlight coq"><span class="keyword type">True</span></code> <em>inside</em> the branch. This time <code class="highlight coq"><span class="name">b</span></code>
+unifies with <code class="highlight coq"><span class="name">false</span></code>. It does not really matter
+if it's <code class="highlight coq"><span class="keyword type">True</span></code>, it can be any inhabited proposition.</li>
+</ul>
+</div>
+<div class="section" id="large-elimination">
+<h1>Large elimination</h1>
+<p>Our prove of disjointness of <code class="highlight coq"><span class="name">true</span></code> and
+<code class="highlight coq"><span class="name">false</span></code> crucially depends on the fact that we can
+eliminate a term (<code class="highlight coq"><span class="name">b</span></code>) and get a type (<code class="highlight coq"><span class="keyword type">False</span></code> or
+<code class="highlight coq"><span class="keyword type">True</span></code> above) and not just a term, i.e. we get
+something of type <code class="highlight coq"><span class="keyword type">Type</span></code>. This is called <em>large
+elimination</em> and if a type theory does not have
+this feature it's not possible to prove that
+different constructors are not equal.</p>
+<p>In Coq, the <code class="highlight coq"><span class="keyword type">Prop</span></code> universe drops this feature to
+support classical reasoning. We are going to talk
+about this a bit more later.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk1"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">or_introl_inj</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) (<span class="nv">p1</span> : A) (<span class="nv">p2</span> : B) :
+  or_introl p1 = or_intror p2 -&gt; <span class="kt">False</span>
+:=
+  <span class="kr">fun</span> <span class="nv">eq</span> =&gt;
+    <span class="kr">match</span>
+      eq <span class="kr">in</span> (_ = oil2)
+      <span class="kr">return</span> (<span class="kr">if</span> oil2 <span class="kr">is</span> or_intror p2&#39; <span class="kr">then</span> <span class="kt">False</span> <span class="kr">else</span> <span class="kt">True</span>)
+    <span class="kr">with</span>
+    | erefl =&gt; I
+    <span class="kr">end</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+Incorrect elimination of <span class="s2">&quot;oil2&quot;</span> <span class="kr">in</span> the inductive type
+<span class="s2">&quot;or&quot;</span>:
+the <span class="kr">return</span> type has sort <span class="s2">&quot;Type&quot;</span> while it
+should be <span class="s2">&quot;SProp&quot;</span> or <span class="s2">&quot;Prop&quot;</span>.
+Elimination of an inductive object of sort <span class="kt">Prop</span>
+<span class="kr">is</span> not allowed on a predicate <span class="kr">in</span> sort <span class="kt">Type</span>
+because proofs can be eliminated <span class="kp">only</span> to build proofs.</span></blockquote></div></div></small></span></pre></div>
+<div class="section" id="convoy-pattern">
+<h1>Convoy pattern</h1>
+<p>As a preliminary definition let's prove
+inequality is irreflexive, i.e. <code class="highlight coq"><span class="name">x</span> <span class="operator">&lt;&gt;</span> <span class="name">x</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span></code>:</p>
+<p>First, we make a query on what <code class="highlight coq"><span class="operator">&lt;&gt;</span></code> means:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk2"><span class="highlight"><span class="kn">Locate</span> <span class="s2">&quot;&lt;&gt;&quot;</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;x &lt;&gt; y  :&gt; T&quot;</span> := (not (eq x y)) : type_scope
+  (default interpretation)
+<span class="kn">Notation</span> <span class="s2">&quot;x &lt;&gt; y&quot;</span> := (not (eq x y)) : type_scope
+  (default interpretation)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">neq_irrefl</span> <span class="nv">A</span> (<span class="nv">x</span> : A) :
+  x &lt;&gt; x -&gt; <span class="kt">False</span>
+:=
+  <span class="kr">fun</span> <span class="nv">neq_xx</span> : x = x -&gt; <span class="kt">False</span> =&gt;
+    neq_xx erefl.</span></span></span></pre><p>Now we can try and prove that inequality is a
+symmetric relation. The type <code class="highlight coq"><span class="name">x</span> <span class="operator">&lt;&gt;</span> <span class="name">y</span> <span class="operator">-&gt;</span> <span class="name">y</span> <span class="operator">&lt;&gt;</span> <span class="name">x</span></code>
+below means <code class="highlight coq"><span class="operator">(</span><span class="name">x</span> <span class="operator">=</span> <span class="name">y</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span><span class="operator">)</span> <span class="operator">-&gt;</span> <span class="name">y</span> <span class="operator">=</span> <span class="name">x</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span></code>,
+so the corresponding term is going to be a
+function with two parameters and we are going to
+start our first failing attempt by introducing two
+parameters:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk3"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">neq_sym</span> <span class="nv">A</span> (<span class="nv">x</span> <span class="nv">y</span> : A) :
+  x &lt;&gt; y -&gt; y &lt;&gt; x
+:=
+  <span class="kr">fun</span> <span class="nv">neq_xy</span> : x &lt;&gt; y =&gt;
+    <span class="kr">fun</span> <span class="nv">eq_yx</span> : y = x =&gt;
+      <span class="kr">match</span>
+        eq_yx <span class="kr">in</span> (_ = a)
+        <span class="kr">return</span> <span class="kt">False</span>
+      <span class="kr">with</span>
+      | erefl =&gt; _
+      <span class="kr">end</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The following term contains unresolved implicit arguments:
+  (<span class="kr">fun</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">x</span> <span class="nv">y</span> : A) (<span class="nv">neq_xy</span> : x &lt;&gt; y)
+     (<span class="nv">eq_yx</span> : y = x) =&gt;
+   <span class="kr">match</span> eq_yx <span class="kr">with</span>
+   | erefl _ _ =&gt; <span class="nl">?f</span>
+   <span class="kr">end</span>)
+More precisely: 
+- <span class="nl">?f</span>: Cannot infer this placeholder of type <span class="s2">&quot;False&quot;</span> <span class="kr">in</span>
+  environment:
+  A : <span class="kt">Type</span>
+  x, y : A
+  neq_xy : x &lt;&gt; y
+  eq_yx : y = x</span></blockquote></div></div></small></span></pre><p>The problem here is that the <code class="highlight coq"><span class="keyword reserved">return</span></code>
+annotation does not contain the index <code class="highlight coq"><span class="name">a</span></code> anywhere
+(it's just constant <code class="highlight coq"><span class="keyword type">False</span></code>), so unification of
+<code class="highlight coq"><span class="name">a</span></code> with <code class="highlight coq"><span class="name">y</span></code> is not going to change anything.</p>
+<p>To fix that, we need to pass <code class="highlight coq"><span class="name">neq_xy</span></code> through the
+<code class="highlight coq"><span class="keyword reserved">match</span></code>-expression, so that we can track the
+relationship between the indices of the types of
+<code class="highlight coq"><span class="name">neq_xy</span></code> and <code class="highlight coq"><span class="name">eq_yx</span></code>.</p>
+<p>To prove our statement we need to somehow make the
+<code class="highlight coq"><span class="keyword reserved">return</span></code> annotation depend on <code class="highlight coq"><span class="name">a</span></code>, moreover we
+need the type of <code class="highlight coq"><span class="name">neq_xy</span></code>, i.e. <code class="highlight coq"><span class="name">x</span> <span class="operator">&lt;&gt;</span> <span class="name">y</span></code> to play a
+role in it, because only then we can get a
+contradiction. To do that we are going to have <code class="highlight coq"><span class="name">x</span>
+<span class="operator">&lt;&gt;</span> <span class="name">y</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span></code> as our <code class="highlight coq"><span class="keyword reserved">return</span></code>-annotation (modulo
+the fact we replace <code class="highlight coq"><span class="name">x</span></code> with the corresponding <code class="highlight coq"><span class="name">a</span></code>
+variable). This means we need to return a function
+inside the <code class="highlight coq"><span class="keyword reserved">match</span></code>-expression and to make the
+whole expression typecheck, we apply the
+<code class="highlight coq"><span class="keyword reserved">match</span></code>-expression to the term of type <code class="highlight coq"><span class="name">x</span> <span class="operator">&lt;&gt;</span> <span class="name">y</span></code>.</p>
+<p>This pattern of re-typechecking a term with
+already &quot;pinned&quot; type is usually called the
+<em>convoy pattern</em>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">neq_sym</span> <span class="nv">A</span> (<span class="nv">x</span> <span class="nv">y</span> : A) :
+  x &lt;&gt; y -&gt; y &lt;&gt; x
+:=
+  <span class="kr">fun</span> <span class="nv">neq_xy</span> : x &lt;&gt; y =&gt;
+    <span class="kr">fun</span> <span class="nv">eq_yx</span> : y = x =&gt;
+      (<span class="kr">match</span>
+         eq_yx <span class="kr">in</span> (_ = a)
+         <span class="kr">return</span> (a &lt;&gt; y -&gt; <span class="kt">False</span>)
+       <span class="kr">with</span>
+       | erefl =&gt; <span class="kr">fun</span> <span class="nv">neq_yy</span> : y &lt;&gt; y =&gt; neq_yy erefl
+       <span class="kr">end</span>) neq_xy.</span></span></span></pre></div>
+<div class="section" id="proofs-by-induction">
+<h1>Proofs by induction</h1>
+<p>Now, let's prove some lemmas about truly
+inductive types like the <code class="highlight coq"><span class="name">nat</span></code> type.</p>
+<p>We are going to need a helper lemma <code class="highlight coq"><span class="name">congr1</span></code>
+expressing that unary functions are compatible
+with the propositional equality, so <code class="highlight coq"><span class="name builtin">congr</span></code> here
+means 'congruence'.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">congr1</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) :
+  <span class="kr">forall</span> (<span class="nv">f</span> : A -&gt; B) (<span class="nv">x</span> <span class="nv">y</span> : A),
+    x = y -&gt; f x = f y
+:=
+  <span class="kr">fun</span> <span class="nv">f</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">xy</span> =&gt;
+    <span class="kr">match</span>
+      xy <span class="kr">in</span> (_ = b)
+         <span class="kr">return</span> (f x = f b)
+    <span class="kr">with</span>
+    | erefl =&gt; erefl (f x)
+    <span class="kr">end</span>.</span></span></span></pre><p>Suppose we'd like to prove that zero is the
+right identity w.r.t addition, i.e. <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">n</span><span class="operator">,</span> <span class="name">n</span> <span class="operator">+</span>
+<span class="literal number integer">0</span> <span class="operator">=</span> <span class="name">n</span></code>. If we start proving this statement as we
+did before by introducing an anonymous function
+which maps an arbitrary <code class="highlight coq"><span class="name">n</span></code> to the proof of <code class="highlight coq"><span class="name">n</span> <span class="operator">+</span>
+<span class="literal number integer">0</span></code> we will soon get stuck:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk4"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">addn0</span> :
+  <span class="kr">forall</span> <span class="nv">n</span> : nat, n + <span class="mi">0</span> = n
+:=
+  <span class="kr">fun</span> (<span class="nv">n</span> : nat) =&gt;
+    <span class="kr">match</span> n <span class="kr">as</span> a <span class="kr">return</span> (a + <span class="mi">0</span> = a) <span class="kr">with</span>
+    | O =&gt; erefl <span class="mi">0</span>
+    | S n&#39; =&gt; congr1 S (_ : n&#39; + <span class="mi">0</span> = n&#39;)
+    <span class="kr">end</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The following term contains unresolved implicit arguments:
+  (<span class="kr">fun</span> <span class="nv">n</span> : nat =&gt;
+   <span class="kr">match</span> n <span class="kr">as</span> a <span class="kr">return</span> (a + <span class="mi">0</span> = a) <span class="kr">with</span>
+   | <span class="mi">0</span> =&gt; erefl <span class="mi">0</span>
+   | n&#39;.+<span class="mi">1</span> =&gt; congr1 succn (<span class="nl">?e</span> : n&#39; + <span class="mi">0</span> = n&#39;)
+   <span class="kr">end</span>)
+More precisely: 
+- <span class="nl">?e</span>: Cannot infer this placeholder of type
+  <span class="s2">&quot;n&#39; + 0 = n&#39;&quot;</span> <span class="kr">in</span> environment:
+  n, n&#39; : nat</span></blockquote></div></div></small></span></pre><p>The reason we got stuck here is that we lack a
+proof the same lemma but for the predecessor of
+<code class="highlight coq"><span class="name">n</span></code>. Well, we can use recursion to get just that.
+Here is a new successful attempt:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">addn0</span> :
+  <span class="kr">forall</span> <span class="nv">n</span> : nat, n + <span class="mi">0</span> = n
+:=
+  <span class="kr">fix</span> rec (n : nat) : n + <span class="mi">0</span> = n :=
+    <span class="kr">match</span> n <span class="kr">return</span> (n + <span class="mi">0</span> = n) <span class="kr">with</span>
+    | O =&gt; erefl <span class="mi">0</span>
+    | S n&#39; =&gt; congr1 S (rec n&#39;)
+    <span class="kr">end</span>.</span></span></span></pre><p>Notice that the symmetric lemma does not
+require recursion:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">add0n</span> :
+  <span class="kr">forall</span> <span class="nv">n</span> : nat, <span class="mi">0</span> + n = n
+:=
+  <span class="kr">fun</span> <span class="nv">n</span> : nat =&gt; erefl n.</span></span></span></pre><p>This is because addition is defined by
+recursion on its first parameter, so <code class="highlight coq"><span class="literal number integer">0</span> <span class="operator">+</span> <span class="name">n</span></code> is
+<em>definitionally</em> equal to <code class="highlight coq"><span class="name">n</span></code>.</p>
+<div class="section" id="principle-of-mathematical-induction">
+<h2>Principle of Mathematical Induction</h2>
+<p>Usually, a lemma like <code class="highlight coq"><span class="name">addn0</span></code> would be proven
+using the principle of mathematical induction,
+which we are going to formulate now.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">nat_ind</span> :
+  <span class="kr">forall</span> (<span class="nv">P</span> : nat -&gt; <span class="kt">Prop</span>),
+    P <span class="mi">0</span> -&gt;
+    (<span class="kr">forall</span> <span class="nv">n</span> : nat, P n -&gt; P n.+<span class="mi">1</span>) -&gt;
+    <span class="kr">forall</span> <span class="nv">n</span> : nat, P n
+:=
+  <span class="kr">fun</span> <span class="nv">P</span> =&gt;
+  <span class="kr">fun</span> (<span class="nv">p0</span> : P <span class="mi">0</span>) =&gt;
+  <span class="kr">fun</span> (<span class="nv">step</span> : (<span class="kr">forall</span> <span class="nv">n</span> : nat, P n -&gt; P n.+<span class="mi">1</span>)) =&gt;
+    <span class="kr">fix</span> rec (n : nat) :=
+      <span class="kr">match</span> n <span class="kr">return</span> (P n) <span class="kr">with</span>
+      | O =&gt; p0
+      | S n&#39; =&gt; step n&#39; (rec n&#39;)
+      <span class="kr">end</span>.</span></span></span></pre><p><code class="highlight coq"><span class="name">nat_ind</span></code> lets us abstract recursion away and
+reduce proofs that require recursion to proving
+two subgoals:</p>
+<ul class="simple">
+<li>we construct a term of type <code class="highlight coq"><span class="name">P</span> <span class="literal number integer">0</span></code>, i.e. we prove
+our property <code class="highlight coq"><span class="name">P</span></code> holds for the base case when
+<code class="highlight coq"><span class="name">n</span></code> is equal to zero;</li>
+<li>we constructr a term of type
+<code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">n</span> <span class="operator">:</span> <span class="name">nat</span><span class="operator">,</span> <span class="name">P</span> <span class="name">n</span> <span class="operator">-&gt;</span> <span class="name">P</span> <span class="name">n</span><span class="operator">.+</span><span class="literal number integer">1</span></code>, i.e. we do
+the inductive step and prove the property <code class="highlight coq"><span class="name">P</span></code> holds
+for any successor <code class="highlight coq"><span class="name">n</span><span class="operator">.+</span><span class="literal number integer">1</span></code> under the assumption it
+holds for the current <code class="highlight coq"><span class="name">n</span></code>.</li>
+</ul>
+<p>In type theory induction is just recursion!</p>
+<p>Here is yet another way of proving <code class="highlight coq"><span class="name">addn0</span></code>
+where we factor out recursion and re-use
+<code class="highlight coq"><span class="name">nat_ind</span></code>:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">addn0&#39;</span> :
+  <span class="kr">forall</span> <span class="nv">n</span> : nat, n + <span class="mi">0</span> = n
+:= @nat_ind
+     (<span class="kr">fun</span> <span class="nv">n</span> =&gt; n + <span class="mi">0</span> = n)
+     (erefl <span class="mi">0</span>)
+     (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">IHn</span> =&gt; congr1 S IHn).</span></span></span></pre><p>In general a principle like <code class="highlight coq"><span class="name">nat_ind</span></code> is
+called a dependent eliminator (or recursor, or
+recursion scheme) and it can have a more general
+type like the following one (it's the same
+definition as <code class="highlight coq"><span class="name">nat_ind</span></code> but <code class="highlight coq"><span class="keyword type">Prop</span></code> is changed to
+<code class="highlight coq"><span class="keyword type">Type</span></code> here, so we are not talking just about
+proofs now):</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">nat_rect</span> :
+  <span class="kr">forall</span> (<span class="nv">P</span> : nat -&gt; <span class="kt">Type</span>),
+    P <span class="mi">0</span> -&gt;
+    (<span class="kr">forall</span> <span class="nv">n</span> : nat, P n -&gt; P n.+<span class="mi">1</span>) -&gt;
+    <span class="kr">forall</span> <span class="nv">n</span> : nat, P n
+  := <span class="kr">fun</span> <span class="nv">P</span>
+         (<span class="nv">p0</span> : P <span class="mi">0</span>)
+         (<span class="nv">step</span> : (<span class="kr">forall</span> <span class="nv">n</span> : nat, P n -&gt; P n.+<span class="mi">1</span>)) =&gt;
+       <span class="kr">fix</span> rec (n : nat) :=
+       <span class="kr">match</span> n <span class="kr">return</span> (P n) <span class="kr">with</span>
+       | O =&gt; p0
+       | S n&#39; =&gt; step n&#39; (rec n&#39;)
+       <span class="kr">end</span>.</span></span></span></pre><p>Recursors factor out recursion and <code class="highlight coq"><span class="name">nat_rect</span></code>
+can be used to implement e.g. the addition
+function without using explicit recursion, i.e.
+<code class="highlight coq"><span class="keyword reserved">fix</span></code>-combinator.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">addn&#39;</span> : nat -&gt; nat -&gt; nat :=
+  @nat_rect
+    (<span class="kr">fun</span> <span class="nv">_</span> =&gt; nat -&gt; nat)
+    id
+    (<span class="kr">fun</span> <span class="nv">_</span> <span class="nv">pn</span> =&gt; succn \o pn).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk5"><span class="highlight"><span class="kn">Check</span> erefl : addn&#39; <span class="mi">21</span> <span class="mi">21</span> = <span class="mi">42</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl (addn&#39; <span class="mi">21</span> <span class="mi">21</span>) : addn&#39; <span class="mi">21</span> <span class="mi">21</span> = <span class="mi">42</span>
+     : addn&#39; <span class="mi">21</span> <span class="mi">21</span> = <span class="mi">42</span></span></blockquote></div></div></small></span></pre><p>It can be proved that <code class="highlight coq"><span class="name">addn</span></code> and <code class="highlight coq"><span class="name">addn'</span></code> are
+equivalent, i.e. <code class="highlight coq"><span class="name">addn</span> <span class="operator">=</span><span class="literal number integer">2</span> <span class="name">addn'</span></code>, which means
+<code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">x</span> <span class="name variable">y</span><span class="operator">,</span> <span class="name">addn</span> <span class="name">x</span> <span class="name">y</span> <span class="operator">=</span> <span class="name">addn'</span> <span class="name">x</span> <span class="name">y</span></code></p>
+<p>These elimination principles for <code class="highlight coq"><span class="keyword type">Set</span></code>, <code class="highlight coq"><span class="keyword type">Prop</span></code>
+and <code class="highlight coq"><span class="keyword type">Type</span></code> Coq generates for you automatically
+when you define a new inductive type. Sometimes
+those principles are not very useful but it's a
+story for a different time.</p>
+<p>To see that <code class="highlight coq"><span class="name">nat_rect</span></code> is a strict generalization
+of <code class="highlight coq"><span class="name">nat_ind</span></code> you can try reimplementing the
+<code class="highlight coq"><span class="name">addn0'</span></code> lemma and the <code class="highlight coq"><span class="name">addn'</span></code> function using
+<code class="highlight coq"><span class="name">nat_rect</span></code> and <code class="highlight coq"><span class="name">nat_ind</span></code> respectively and see that
+it's not possible to implement <code class="highlight coq"><span class="name">addn'</span></code> via the
+<code class="highlight coq"><span class="name">nat_ind</span></code> principle. This is related to the issue
+of large elimination we observed earlier.</p>
+</div>
+<div class="section" id="dependent-pairs-in-prop-and-type">
+<h2>Dependent pairs in <code class="highlight coq"><span class="keyword type">Prop</span></code> and <code class="highlight coq"><span class="keyword type">Type</span></code></h2>
+<p>Because of the issue of large elimination
+mentioned above, Coq has a several dependent pair
+types with components living in <code class="highlight coq"><span class="keyword type">Prop</span></code> or <code class="highlight coq"><span class="keyword type">Type</span></code>.</p>
+<p>We have the <code class="highlight coq"><span class="name">ex</span></code> type we use to emulate the
+existential quantifier. The type <code class="highlight coq"><span class="name">ex</span></code> lives in the
+<code class="highlight coq"><span class="keyword type">Prop</span></code> universe and it is computationally
+irrelevant because of this.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk6"><span class="highlight"><span class="kn">Print</span> ex.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">ex</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">P</span> : A -&gt; <span class="kt">Prop</span>) : <span class="kt">Prop</span> :=
+    ex_intro : <span class="kr">forall</span> <span class="nv">x</span> : A, P x -&gt; <span class="kr">exists</span> <span class="nv">y</span>, P y
+
+<span class="kn">Arguments</span> ex [A]%type_scope _%function_scope
+<span class="kn">Arguments</span> ex_intro [A]%type_scope _%function_scope _ _</span></blockquote></div></div></small></span></pre><p>There is the <code class="highlight coq"><span class="name">sig</span></code> type to emulate elements of
+a certain type for which certain property holds:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk7"><span class="highlight"><span class="kn">Print</span> sig.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">sig</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">P</span> : A -&gt; <span class="kt">Prop</span>) : <span class="kt">Type</span> :=
+    exist : <span class="kr">forall</span> <span class="nv">x</span> : A, P x -&gt; {x : A | P x}
+
+<span class="kn">Arguments</span> sig [A]%type_scope _%type_scope
+<span class="kn">Arguments</span> exist [A]%type_scope _%function_scope _ _</span></blockquote></div></div></small></span></pre><p>Note that <code class="highlight coq"><span class="operator">{</span><span class="name">x</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">|</span> <span class="name">P</span> <span class="name">x</span><span class="operator">}</span></code> is a notation for
+<code class="highlight coq"><span class="name">sig</span> <span class="name">P</span></code>. The type <code class="highlight coq"><span class="name">sig</span></code> lives in <code class="highlight coq"><span class="keyword type">Type</span></code>, i.e.
+terms of this type are computationally relevant
+and are pairs of elements and proofs that a
+certain property holds for these elements. Since
+the <code class="highlight coq"><span class="name">P</span></code> property is of type <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">Prop</span></code>, it means
+the proofs, i.e. the second components of those
+pairs are computationally irrelevant and thus can
+be ignored at run-time.</p>
+<p>There is also the <code class="highlight coq"><span class="name">sigT</span></code> type of dependent
+pairs of which both components are computationally
+relevant.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk8"><span class="highlight"><span class="kn">Print</span> sigT.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">sigT</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">P</span> : A -&gt; <span class="kt">Type</span>) : <span class="kt">Type</span> :=
+    existT : <span class="kr">forall</span> <span class="nv">x</span> : A, P x -&gt; {x : A &amp; P x}
+
+<span class="kn">Arguments</span> sigT [A]%type_scope _%type_scope
+<span class="kn">Arguments</span> existT [A]%type_scope _%function_scope _ _</span></blockquote></div></div></small></span></pre><p>Note that <code class="highlight coq"><span class="operator">{</span><span class="name">x</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">&amp;</span> <span class="name">P</span> <span class="name">x</span><span class="operator">}</span></code> is a notation for
+<code class="highlight coq"><span class="name">sigT</span> <span class="name">P</span></code>.</p>
+<pre class="code Coq literal-block">
+<span class="keyword namespace">Inductive</span> <span class="name function">ex</span> <span class="operator">(</span><span class="name variable">A</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">(</span><span class="name variable">P</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">Prop</span><span class="operator">)</span> <span class="operator">:</span> <span class="keyword type">Prop</span> <span class="operator">:=</span>
+  <span class="name">ex_intro</span> <span class="operator">:</span> <span class="keyword reserved">forall</span> <span class="name variable">x</span> <span class="operator">:</span> <span class="name">A</span><span class="operator">,</span> <span class="name">P</span> <span class="name">x</span> <span class="operator">-&gt;</span> <span class="keyword reserved">exists</span> <span class="name variable">y</span><span class="operator">,</span> <span class="name">P</span> <span class="name">y</span>
+
+<span class="keyword namespace">Inductive</span> <span class="name function">sig</span> <span class="operator">(</span><span class="name variable">A</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">(</span><span class="name variable">P</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">Prop</span><span class="operator">)</span> <span class="operator">:</span> <span class="keyword type">Type</span> <span class="operator">:=</span>
+  <span class="name">exist</span> <span class="operator">:</span> <span class="keyword reserved">forall</span> <span class="name variable">x</span> <span class="operator">:</span> <span class="name">A</span><span class="operator">,</span> <span class="name">P</span> <span class="name">x</span> <span class="operator">-&gt;</span> <span class="operator">{</span><span class="name">x</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">|</span> <span class="name">P</span> <span class="name">x</span><span class="operator">}</span>
+
+<span class="keyword namespace">Inductive</span> <span class="name function">sigT</span> <span class="operator">(</span><span class="name variable">A</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">(</span><span class="name variable">P</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">:</span> <span class="keyword type">Type</span> <span class="operator">:=</span>
+  <span class="name">existT</span> <span class="operator">:</span> <span class="keyword reserved">forall</span> <span class="name variable">x</span> <span class="operator">:</span> <span class="name">A</span><span class="operator">,</span> <span class="name">P</span> <span class="name">x</span> <span class="operator">-&gt;</span> <span class="operator">{</span><span class="name">x</span> <span class="operator">:</span> <span class="name">A</span> <span class="operator">&amp;</span> <span class="name">P</span> <span class="name">x</span><span class="operator">}</span>
+</pre>
+<p>Let us see how we can use the <code class="highlight coq"><span class="name">sig</span></code> type now.</p>
+</div>
+</div>
+<div class="section" id="fun-with-the-predecessor-function">
+<h1>Fun with the predecessor function</h1>
+<p>As we mentioned earlier there is a number of
+ways we can implement the predecessor function on
+the natural numbers. We chose to do it using the
+default element but let's look at some other
+approaches.</p>
+<p>We are going to create a dependently typed version
+and return a natural number if the predessor of a number is
+defined and a term of type <code class="highlight coq"><span class="name">unit</span></code> otherwise.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">Pred</span> <span class="nv">n</span> := <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> nat <span class="kr">else</span> unit.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk9"><span class="highlight"><span class="kn">Check</span> erefl : Pred <span class="mi">0</span> = unit.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl (Pred <span class="mi">0</span>) : Pred <span class="mi">0</span> = unit
+     : Pred <span class="mi">0</span> = unit</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chka"><span class="highlight"><span class="kn">Check</span> erefl : Pred <span class="mi">42</span> = nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl (Pred <span class="mi">42</span>) : Pred <span class="mi">42</span> = nat
+     : Pred <span class="mi">42</span> = nat</span></blockquote></div></div></small></span></pre><p>Here is out definition:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">predn_dep</span> : <span class="kr">forall</span> <span class="nv">n</span>, Pred n :=
+  <span class="kr">fun</span> <span class="nv">n</span> =&gt; <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> n&#39; <span class="kr">else</span> tt.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chkb"><span class="highlight"><span class="kn">Check</span> predn_dep <span class="mi">0</span> : unit.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">predn_dep <span class="mi">0</span> : unit
+     : unit</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chkc"><span class="highlight"><span class="kn">Check</span> predn_dep <span class="mi">7</span> : nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">predn_dep <span class="mi">7</span> : nat
+     : nat</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chkd"><span class="highlight"><span class="kn">Check</span> erefl : predn_dep <span class="mi">0</span> = tt.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl (predn_dep <span class="mi">0</span>) : predn_dep <span class="mi">0</span> = tt
+     : predn_dep <span class="mi">0</span> = tt</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chke"><span class="highlight"><span class="kn">Check</span> erefl : predn_dep <span class="mi">7</span> = <span class="mi">6</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl (predn_dep <span class="mi">7</span>) : predn_dep <span class="mi">7</span> = <span class="mi">6</span>
+     : predn_dep <span class="mi">7</span> = <span class="mi">6</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chkf"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> erefl : predn_dep <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;0&quot;</span> has type <span class="s2">&quot;nat&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;Pred 0&quot;</span>.</span></blockquote></div></div></small></span></pre><p>Reminder: Type inference for dependent types
+is undecidable.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk10"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> (<span class="kr">fun</span> <span class="nv">n</span> =&gt; <span class="kr">if</span> n <span class="kr">is</span> S n&#39; <span class="kr">then</span> n&#39; <span class="kr">else</span> tt).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+In environment
+n : nat
+n&#39; : nat
+The term <span class="s2">&quot;n&#39;&quot;</span> has type <span class="s2">&quot;nat&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;unit&quot;</span>.</span></blockquote></div></div></small></span></pre><p>We will talk about <code class="highlight coq"><span class="name">ex</span></code>, <code class="highlight coq"><span class="name">sig</span></code> and <code class="highlight coq"><span class="name">sigT</span></code> in a
+greater detail later on in this course. For now
+let's just show one simple example for <code class="highlight coq"><span class="name">sig</span></code> type.
+Below, the notation <code class="highlight coq"><span class="operator">{</span><span class="name">x</span> <span class="operator">:</span> <span class="name">T</span> <span class="operator">|</span> <span class="name">P</span> <span class="name">x</span><span class="operator">}</span></code> stands for
+<code class="highlight coq"><span class="name">sig</span> <span class="name">P</span></code>. Let's write yet another implementation of
+our beloved predecessor function.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">pred</span> (<span class="nv">n</span> : {x : nat | x != <span class="mi">0</span>}) : nat :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | exist x proof_x_neq_0 =&gt; predn x
+  <span class="kr">end</span>.</span></span></span></pre><p>To use <code class="highlight coq"><span class="name">pred</span></code> function we must provide a
+number and a proof that it's not a zero.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk11"><span class="highlight"><span class="kn">Compute</span> pred (exist (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x != <span class="mi">0</span>) <span class="mi">42</span> erefl).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= <span class="mi">41</span>
+: nat</span></blockquote></div></div></small></span></pre><p>Notice that we provide the predicate
+expressing that the input number is non-zero
+explicitly. Actually, Coq can infer this predicate
+if we ask to do it for us using an underscore:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk12"><span class="highlight"><span class="kn">Check</span> erefl : pred (exist _ <span class="mi">42</span> erefl) = <span class="mi">41</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl
+  (pred
+     (exist (<span class="kr">fun</span> <span class="nv">x</span> : nat =&gt; x != <span class="mi">0</span>) <span class="mi">42</span>
+        (erefl (<span class="mi">42</span> != <span class="mi">0</span>))))
+  : pred
+      (exist (<span class="kr">fun</span> <span class="nv">x</span> : nat =&gt; x != <span class="mi">0</span>) <span class="mi">42</span>
+         (erefl (<span class="mi">42</span> != <span class="mi">0</span>))) = <span class="mi">41</span>
+     : pred
+         (exist (<span class="kr">fun</span> <span class="nv">x</span> : nat =&gt; x != <span class="mi">0</span>) <span class="mi">42</span>
+            (erefl (<span class="mi">42</span> != <span class="mi">0</span>))) = <span class="mi">41</span></span></blockquote></div></div></small></span></pre><p>Let's try and see what happens if we use [ex]
+instead of [sig] type</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk13"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">pred_fail</span> (<span class="nv">n</span> : <span class="kr">exists</span> <span class="nv">x</span>, x != <span class="mi">0</span>) : nat :=
+  <span class="kr">match</span> n <span class="kr">with</span>
+  | ex_intro x proof_x_neq_0 =&gt; predn x
+  <span class="kr">end</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+Incorrect elimination of <span class="s2">&quot;n&quot;</span> <span class="kr">in</span> the inductive type
+<span class="s2">&quot;ex&quot;</span>:
+the <span class="kr">return</span> type has sort <span class="s2">&quot;Set&quot;</span> while it
+should be <span class="s2">&quot;SProp&quot;</span> or <span class="s2">&quot;Prop&quot;</span>.
+Elimination of an inductive object of sort <span class="kt">Prop</span>
+<span class="kr">is</span> not allowed on a predicate <span class="kr">in</span> sort <span class="kt">Set</span>
+because proofs can be eliminated <span class="kp">only</span> to build proofs.</span></blockquote></div></div></small></span></pre><p>The error message we get means that we cannot
+use proofs to build data. And the reason behind
+this exact restriction we will learn later in the
+course.</p>
+</div>
+</div>
+</div>
+</div></body>
+</html>
