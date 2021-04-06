@@ -491,8 +491,8 @@ explicitly. Actually, Coq can infer this predicate
 if we ask to do it for us using an underscore: |*)
 Check erefl : pred (exist _ 42 erefl) = 41.
 
-(*| Let's try and see what happens if we use [ex]
-instead of [sig] type |*)
+(*| Let's try and see what happens if we use `ex`
+instead of `sig` type |*)
 Fail Definition pred_fail (n : exists x, x != 0) : nat :=
   match n with
   | ex_intro x proof_x_neq_0 => predn x

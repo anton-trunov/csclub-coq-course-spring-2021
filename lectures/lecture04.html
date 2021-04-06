@@ -482,8 +482,8 @@ if we ask to do it for us using an underscore:</p>
          (erefl (<span class="mi">42</span> != <span class="mi">0</span>))) = <span class="mi">41</span>
      : pred
          (exist (<span class="kr">fun</span> <span class="nv">x</span> : nat =&gt; x != <span class="mi">0</span>) <span class="mi">42</span>
-            (erefl (<span class="mi">42</span> != <span class="mi">0</span>))) = <span class="mi">41</span></span></blockquote></div></div></small></span></pre><p>Let's try and see what happens if we use [ex]
-instead of [sig] type</p>
+            (erefl (<span class="mi">42</span> != <span class="mi">0</span>))) = <span class="mi">41</span></span></blockquote></div></div></small></span></pre><p>Let's try and see what happens if we use <code class="highlight coq"><span class="name">ex</span></code>
+instead of <code class="highlight coq"><span class="name">sig</span></code> type</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture04-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture04-v-chk13"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Definition</span> <span class="nf">pred_fail</span> (<span class="nv">n</span> : <span class="kr">exists</span> <span class="nv">x</span>, x != <span class="mi">0</span>) : nat :=
   <span class="kr">match</span> n <span class="kr">with</span>
   | ex_intro x proof_x_neq_0 =&gt; predn x
