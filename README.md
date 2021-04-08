@@ -21,3 +21,7 @@
 ## Class 4
 
 - Injectivity and disjointness of constructors, large elimination. Convoy pattern. Proofs by induction. `Prop` vs `Type`: [source](lectures/lecture04.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture04.html)
+
+## Class 5
+
+- SSReflect tactic language [source](lectures/lecture05.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture05.html)
