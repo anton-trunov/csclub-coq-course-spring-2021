@@ -524,3 +524,17 @@ Definition swap_sum {A B : Type} :
 
 
 End MyNamespace.
+
+(*|
+Summary
+------- |*)
+
+(*|
+Vernacular summary
+================== |*)
+
+(*|
+
+- `Set Printing Notations`: TODO
+
+|*)
