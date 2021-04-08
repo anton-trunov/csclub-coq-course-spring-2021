@@ -327,13 +327,13 @@ and then case analyse on the disjunction using the
 some actions on the top of the goal stack in each
 generated *subgoal*. In our case
 
-.. code-block..
+.. code-block:: Coq
 
    case=> [a|b].
 
 sort of means
 
-.. code-block..
+.. code-block:: Coq
 
    case.
    - move=> a. (* 1st active subgoal *)
