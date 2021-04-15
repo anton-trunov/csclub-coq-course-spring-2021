@@ -321,19 +321,21 @@ go to the current and it work fine for functions
 with a simple recursion pattern, but `fib` uses
 *two* previous values of `n` to compute the next
 Fibonacci number and this calls for a more
-powerful induction pattern. *)
+powerful induction pattern. |*)
+
 Abort.
 
 (*|
 Pair induction
-^^^^^^^^^^^^^^
-|*)
+^^^^^^^^^^^^^^ |*)
 
 (*| To make the proof go through we can design a
 *custom induction principle*. This induction
 principle repeats, in a sense, the structure of
 the (recursive) Fibonacci function. |*)
+
 (*|
+
 .. code-block:: Coq
 
    Lemma nat_ind2 (P : nat -> Prop) :
@@ -341,8 +343,9 @@ the (recursive) Fibonacci function. |*)
      P 1 ->
      (forall n, P n -> P n.+1 -> P n.+2) ->
      forall n, P n.
+|*)
 
-Compare this to the regular induction principle:
+(*| Compare this to the regular induction principle:
 
 .. code-block:: Coq
 
@@ -352,7 +355,7 @@ Compare this to the regular induction principle:
      forall n, P n.
 |*)
 
-
+(*| Now, let us prove `nat_ind2`: |*)
 Lemma nat_ind2 (P : nat -> Prop) :
   P 0 ->
   P 1 ->
@@ -376,9 +379,11 @@ tactic. |*)
 have: P n /\ P n.+1.
 (*| `have` generates two subgoals:
 
-  1. It makes us prove the new statement we specified.
-  2. It makes us prove the new statement implies our
-     old goal. |*)
+ 1. It makes us prove the new statement we specified.
+ 2. It makes us prove the new statement implies our old goal.
+
+
+|*)
 
 - elim: n=> // n [IHn IHSn].
   split=> //.
