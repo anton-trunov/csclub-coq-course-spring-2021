@@ -29,6 +29,11 @@
 - SSReflect tactic language [source](lectures/lecture05.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture05.html)
 
 
+### Class 6
+
+- Proofs by induction: [source](lectures/lecture06.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture06.html)
+- [SSReflect proof methodology](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/ssreflect-intro-slides.html) slides
+
 ## Awesome exercise solutions by class participants
 
 - `unit_neq_bool` [solution and generalization](https://gist.github.com/kana-sama/11acc3e66d72f5203faddf403fbbaa4d) by @kana-sama
