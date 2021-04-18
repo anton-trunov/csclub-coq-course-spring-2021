@@ -21,6 +21,17 @@ Inductive expr : Type :=
 
 Fixpoint eval (e : expr) : nat :=
   replace_with_your_solution_here.
+(* or use the following one
+
+Fixpoint eval (e : expr) : nat :=
+  match e with
+  | Const n => n
+  | Plus e1 e2 => eval_expr e1 + eval_expr e2
+  | Minus e1 e2 => eval_expr e1 - eval_expr e2
+  | Mult e1 e2 => eval_expr e1 * eval_expr e2
+  end.
+
+*)
 
 
 
@@ -32,11 +43,40 @@ Definition stack := seq nat.
 
 Fixpoint run (p : prog) (s : stack) : stack :=
   replace_with_your_solution_here.
+(* or use the following one
+
+Fixpoint run (p : prog) (s : stack) : stack :=
+  if p is (i :: p') then
+    let s' :=
+      match i with
+      | Push n => n :: s
+      | Add => if s is (a1 :: a2 :: s') then a2 + a1 :: s'
+                else s
+      | Sub => if s is (a1 :: a2 :: s') then a2 - a1 :: s'
+                else s
+      | Mul => if s is (a1 :: a2 :: s') then a2 * a1 :: s'
+                else s
+      end
+    in run p' s'
+  else s.
+
+*)
 
 
 (* Compiler from the expression language to the stack language *)
 Fixpoint compile (e : expr) : prog :=
   replace_with_your_solution_here.
+(* or use the following one
+
+Fixpoint compile (e : expr) : prog :=
+  match e with
+  | Const n => [:: Push n]
+  | Plus e1 e2 => compile e1 ++ compile e2 ++ [:: Add]
+  | Minus e1 e2 => compile e1 ++ compile e2 ++ [:: Sub]
+  | Mult e1 e2 => compile e1 ++ compile e2 ++ [:: Mul]
+  end.
+
+*)
 
 
 (** Here is a correctness theorem for the compiler: it preserves the
@@ -68,4 +108,3 @@ Lemma compile_inj :
   injective compile.
 Proof.
 Admitted.
-
