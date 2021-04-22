@@ -9,7 +9,7 @@ Views. `reflect`-predicate. Multi-rewrite rules
 ===============================================
 
 :Author: Anton Trunov
-:Date: April 20, 2021
+:Date: April 22, 2021
 
 
 ====================================================
