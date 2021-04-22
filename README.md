@@ -34,6 +34,10 @@
 - Proofs by induction: [source](lectures/lecture06.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture06.html)
 - [SSReflect proof methodology](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/ssreflect-intro-slides.html) slides
 
+### Class 7
+
+- Views. `reflect`-predicate. Multi-rewrite rules: [source](lectures/lecture07.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture07.html)
+
 ## Awesome exercise solutions by class participants
 
 - `unit_neq_bool` [solution and generalization](https://gist.github.com/kana-sama/11acc3e66d72f5203faddf403fbbaa4d) by @kana-sama
