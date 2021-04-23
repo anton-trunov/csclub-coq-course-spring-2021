@@ -47,7 +47,7 @@ Admitted.
 (** * Exercise: use `eqVneq` to prove this lemma *)
 Lemma eqVneq_example (T : eqType) (w x y z : T) :
   w == x -> z == y ->
-  (x == w) /\ (y == z) /\ (z == y) /\ (x != z).
+  (x == w) /\ (y == z) /\ (z == y).
 Proof.
 Admitted.
 
