@@ -52,6 +52,11 @@
 - Seminar: [seminar06.v](seminars/seminar06.v)
 - Homework: [hw07.v](homework/hw07.v)
 
+### Class 8
+
+- [Canonical Structures & Hierachies](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/slides/lecture08.html) slides
+- Canonical Structures & Hierachies: [demo](lectures/lecture08_demo.v)
+
 ## Awesome exercise solutions by class participants
 
 - `unit_neq_bool` [solution and generalization](https://gist.github.com/kana-sama/11acc3e66d72f5203faddf403fbbaa4d) by @kana-sama
