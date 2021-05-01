@@ -57,6 +57,7 @@
 - [Canonical Structures & Hierachies](https://anton-trunov.github.io/csclub-coq-course-spring-2021/slides/slides/lecture08.html) slides
 - Canonical Structures & Hierachies: [demo](lectures/lecture08_demo.v)
 - Seminar: [seminar07.v](seminars/seminar07.v)
+- Homework: [hw08.v](homework/hw08.v)
 
 ## Awesome exercise solutions by class participants
 
