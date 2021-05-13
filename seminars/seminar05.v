@@ -34,12 +34,15 @@ Proof. by []. Qed.
 Lemma fib_iter_spec n f0 f1 :
   fib_iter n.+1 f0 f1 = f0 * fib n + f1 * fib n.+1.
 Proof.
-Admitted.
+elim: n f0 f1=> [|n IHn] f0 f1; first by rewrite muln0 muln1.
+by rewrite fib_iterS IHn /= mulnDr mulnDl addnCA.
+Qed.
 
 Lemma fib_iter_correct' n :
   fib_iter n 0 1 = fib n.
 Proof.
-Admitted.
+by case: n=> // n; rewrite fib_iter_spec mul1n.
+Qed.
 
 
 
@@ -60,7 +63,11 @@ Lemma nat_ind2' (P : nat -> Prop) :
   (forall n, P n -> P n.+2) ->
   forall n, P n.
 Proof.
-Admitted.
+move=> p0 p1 Istep n.
+suff: P n /\ P n.+1 by case.
+by elim: n=> // n [] /Istep.
+Qed.
+
 
 (** Exercise: use [nat_ind2'] to prove the following *)
 Lemma div2_le n : div2 n <= n.
@@ -69,17 +76,22 @@ Admitted.
 
 (** Hints: you might want to use [leqW] view lemma *)
 
-(* Double induction/recursion. *)
+Lemma catA T :
+  associative (@cat T).
+Proof.
+by move=> s t u; elim: s=> // x s /= ->.
+Qed.
+
+(* Double induction *)
 Lemma seq_ind2 {S T} (P : seq S -> seq T -> Type) :
   P [::] [::] ->
   (forall x y s t, size s = size t ->
                    P s t -> P (x :: s) (y :: t)) ->
   forall s t, size s = size t -> P s t.
 Proof.
-Admitted.
-
-
-
+move=> P00 Pcc; elim; first by move=> t st0; rewrite [t]size0nil.
+by move=> x s IHs [//| y t /= [] sz]; apply: Pcc=> //; apply: IHs.
+Qed.
 
 (* === Optional exercises === *)
 

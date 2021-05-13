@@ -94,6 +94,27 @@ Admitted.
 
 (* ==== OPTIONAL part: decompiler ==== *)
 
+Fixpoint decompile' (p : prog) (acc : seq expr) : seq expr :=
+  if p is (i :: p') then
+    let acc' :=
+        match i with
+        | Push n => Const n :: acc
+        | Add => if acc is (e1 :: e2 :: acc') then Plus e2 e1 :: acc'
+                 else acc
+        | Sub => if acc is (e1 :: e2 :: acc') then Minus e2 e1 :: acc'
+                 else acc
+        end
+    in
+    decompile' p' acc'
+  else acc.
+
+(** return a default value for the empty program *)
+Definition decompile (p : prog) : option expr :=
+  if decompile' p [::] is [:: result] then some result
+  else None.
+Arguments decompile p / : simpl nomatch.
+
+
 Definition decompile (p : prog) : option expr :=
   replace_with_your_solution_here.
 

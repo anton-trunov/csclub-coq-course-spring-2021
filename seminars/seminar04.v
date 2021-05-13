@@ -14,8 +14,34 @@ Variables A B C : Prop.
 Lemma andA :
   (A /\ B) /\ C -> A /\ (B /\ C).
 Proof.
+case.
+case.
+move=> a b c.
+split.
+- exact: a.
+split.
+- exact: b.
+exact: c.
 
-Admitted.
+Restart. Show.
+
+by case=> [[a b] c].
+Show Proof.
+Qed.
+
+Lemma andA' :
+  (A /\ B) /\ C -> A /\ (B /\ C).
+Proof.
+by case=> [[a b] c].
+Defined.
+
+About andA.
+
+Compute andA.
+
+About andA'.
+
+Compute andA'.
 
 
 (** * Exercise *)
@@ -47,11 +73,21 @@ automation. *)
 
 
 (** * Exercise *)
+
 Lemma imp_trans :
   (A -> B) -> (B -> C) -> (A -> C).
 Proof.
+move=> ab bc a.
+move: bc.
+apply.
+move: ab.
+apply.
+exact: a.
 
-Admitted.
+Restart. Show.
+
+by move=> ab bc /ab.
+Qed.
 
 
 (** * Exercise *)

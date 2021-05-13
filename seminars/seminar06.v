@@ -7,12 +7,13 @@ Unset Printing Implicit Defensive.
 (** * Exercise *)
 Lemma elimT_my (P : Prop) (b : bool) :
   reflect P b -> (b -> P).
-Admitted.
+Proof. by case. Qed.
 
 
 (** * Exercise *)
 Lemma reflect_lem P b :
   reflect P b -> P \/ ~ P.
+Proof.
 Admitted.
 
 
@@ -33,14 +34,33 @@ Admitted.
 Lemma leq_max m n1 n2 :
   (m <= maxn n1 n2) = (m <= n1) || (m <= n2).
 Proof.
-Admitted.
+case/orP: (leq_total n2 n1) => [le_n21 | le_n12].
+- Search (maxn ?n1 _ = ?n1).
+  rewrite (maxn_idPl le_n21).
+  admit.
+rewrite (maxn_idPr le_n12).
+
+Restart.
+
+(*| We remove the symmetrical case first: |*)
+wlog le_n21: n1 n2 / n2 <= n1.
+(* - case/orP: (leq_total n2 n1) => le. *)
+(*   - move/(_ n1 n2 le). *)
+(*     exact: id. *)
+(*   move/(_ n2 n1 le). *)
+(*   rewrite orbC. *)
+(*   rewrite maxnC. *)
+(*   exact: id. *)
+- by case/orP: (leq_total n2 n1) => le; last rewrite maxnC orbC; apply.
+rewrite (maxn_idPl le_n21).
+apply/idP/orP.
+
+
 
 
 
 (** * Exercise (use `case: ltngtP` at some point to solve it) *)
-Lemma maxnC : commutative maxn.
-Proof.
-Admitted.
+
 
 
 
@@ -72,9 +92,9 @@ Lemma ltngtP m n :
                   (m <= n) (n < m) (m < n).
 Proof.
 rewrite !ltn_neqAle [_ == n]eq_sym; case: ltnP => [nm|].
-- by rewrite ltnW // gtn_eqF //; constructor.
-rewrite leq_eqVlt; case: ltnP; rewrite ?(orbT, orbF) => //= lt_mn eq_nm.
-- by rewrite ltn_eqF //; constructor.
+- by rewrite ltnW // gtn_eqF //=; constructor.
+rewrite leq_eqVlt; case: ltnP; rewrite ?(orbT, orbF)=> //= lt_mn eq_nm.
+- by rewrite ltn_eqF //=; constructor.
 by rewrite eq_nm; constructor; apply/esym/eqP.
 Qed.
 End Trichotomy.

@@ -12,7 +12,8 @@ Section CaseTacticForTypeFamilies.
 Lemma sym T (x y : T) :
   x = y -> y = x.
 Proof.
-Admitted.
+by case: y/.
+Qed.
 (* Hint: use the `case: ... / ...` variant *)
 
 
@@ -21,7 +22,8 @@ Admitted.
 Lemma altP P b :
   reflect P b -> alt_spec P b b.
 Proof.
-Admitted.
+by case: b/; constructor.
+Qed.
 (* Hint: use the `case: ... / ...` variant *)
 
 End CaseTacticForTypeFamilies.
@@ -59,16 +61,39 @@ Admitted.
 
 Arguments andX {a b}.
 
+
 (** * Exercise: prove the following lemma using `andX` lemma. *)
 (* CONSTRAINTS: you may only use `move` and `rewrite` to solve this;
      no `case` or `[]` or any other form of case-splitting is allowed!
      and no lemmas other than `andX` *)
 Lemma andX_example a b :
   a && b -> b && a && a && b.
-Proof.
-Admitted.
+Proof. by move=> ab; rewrite !(andX ab). Qed.
+
 (** Hint: `reflect`-lemmas may act like functions (implications) *)
 
 End MultiRules.
 
 
+Lemma ltn_ind P :
+  (forall n, (forall m, m < n -> P m) -> P n) ->
+  forall n, P n.
+Proof.
+move=> accP n.
+apply: (accP)=> M leMn.
+(* move: M leMn; elim: n => // n IHn M leMn. *)
+elim: n => // n IHn in M leMn *.
+by apply/accP=> p /leq_trans/(_ leMn)/IHn.
+Qed.
+
+
+
+
+
+
+
+
+
+move=> accP M; have [n leMn] := ubnP M; elim: n => // n IHn in M leMn *.
+by apply/accP=> p /leq_trans/(_ leMn)/IHn.
+Qed.

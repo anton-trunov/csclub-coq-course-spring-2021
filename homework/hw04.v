@@ -77,9 +77,45 @@ Definition yes_no_disj :
 
 
 (** * Exercise *)
-Definition addA : associative addn
-:= replace_with_your_solution_here.
+(*
+0 + (y + z) = 0 + y + z
+y + z = 0 + y + z
+y + z = y + z
 
+
+x'.+1 + (y + z) = x'.+1 + y + z
+(x' + (y + z)).+1 = (x'.+1 + y) + z
+(x' + (y + z)).+1 = (x' + y).+1 + z
+(x' + (y + z)).+1 = ((x' + y) + z).+1
+
+S (x' + (y + z)) = S ((x' + y) + z)
+
+(x' + (y + z))   =   ((x' + y) + z)
+*)
+Check congr1.
+Definition addA : associative addn
+ (* forall x y z : nat, x + (y + z) = x + y + z *)
+:= fix IHx x y z :=
+     match x as x
+       return (x + (y + z) = x + y + z)
+     with
+     | 0 => erefl (y + z)
+     | x'.+1 =>
+       let IHx' : x' + (y + z) = x' + y + z :=
+           IHx x' y z
+       in congr1 S IHx'
+     end.
+Definition addA' : associative addn
+:= fix IHx {x y z} :=
+     if x is x'.+1 then congr1 S IHx else erefl.
+
+Print associative.
+Eval hnf in associative addn.
+Print addn.
+Check tt.
+Print nosimpl.
+Print addn_rec.
+Print Nat.add.
 
 (** * Exercise: *)
 Definition addnCA : left_commutative addn
