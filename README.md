@@ -59,6 +59,12 @@
 - Seminar: [seminar07.v](seminars/seminar07.v)
 - Homework: [hw08.v](homework/hw08.v)
 
+### Class 9
+
+- Verification of insertion sort and merge sort. Non-structurally recursive functions. Nested `fix` pattern. `Program` plugin. `Acc`-predicate. [source](lectures/lecture09.v)
+- Seminar: [seminar08.v](seminars/seminar08.v)
+- Homework: [hw09.v](homework/hw09.v)
+
 ## Awesome exercise solutions by class participants
 
 - `unit_neq_bool` [solution and generalization](https://gist.github.com/kana-sama/11acc3e66d72f5203faddf403fbbaa4d) by @kana-sama
