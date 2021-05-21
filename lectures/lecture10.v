@@ -6,11 +6,11 @@ From mathcomp Require Import zify.
 A potpourri of tools
 -------------------- |*)
 
-Set Equations Transparent.
-
 (*|
 `Equations` plugin
 ================== *)
+
+Set Equations Transparent.
 
 (*| Installation: `opam install coq-equations`. To
 use the plugin, add the following import `From
@@ -51,7 +51,7 @@ Lemma fib_iter_spec n f0 f1 :
   fib_iter n.+1 f0 f1 = f0 * fib n + f1 * fib n.+1.
 Proof.
 elim: n f0 f1=> [/=|n IHn] f0 f1; first by lia.
-by rewrite fib_iter_equation_2 IHn /=; lia.
+rewrite fib_iter_equation_2 IHn /=; lia.
 Qed.
 
 (*| `fib_iter_equation_2` is a one-step reduction
@@ -177,20 +177,6 @@ Import GenLow GenHigh.
 Set Warnings "-extraction-opaque-accessed,-extraction".
 
 
-(* Inductive expr : Type := *)
-(* | Const of nat *)
-(* | Plus of expr & expr *)
-(* | Minus of expr & expr *)
-(* | Mult of expr & expr. *)
-
-(* Fixpoint eval (e : expr) : nat := *)
-(*   match e with *)
-(*   | Const n => n *)
-(*   | Plus e1 e2 => eval e1 + eval e2 *)
-(*   | Minus e1 e2 => eval e1 - eval e2 *)
-(*   | Mult e1 e2 => eval e1 * eval e2 *)
-(*   end. *)
-
 Inductive instr := Push (n : nat) | Add | Sub | Mul.
 
 (*| We are going to the Deriving plugin to
@@ -200,11 +186,15 @@ Installation: `opam install coq-deriving`. Import:
 
 From deriving Require Import deriving.
 
+Fail Check erefl : Add == Add.
 (*| The following boilerplate (four lines) does the job: |*)
 Definition instr_indDef := [indDef for instr_rect].
 Canonical instr_indType := IndType instr instr_indDef.
 Definition instr_eqMixin := [derive eqMixin for instr].
 Canonical instr_eqType := EqType instr instr_eqMixin.
+
+Check erefl : Add == Add.
+
 
 Definition prog := seq instr.
 Definition stack := seq nat.
