@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>A potpourri of tools</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.13.0+0.13.0. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document" id="a-potpourri-of-tools">
+<h1 class="title">A potpourri of tools</h1>
+
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> Equations <span class="kn">Require Import</span> Equations.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk0"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect ssrbool ssrfun eqtype ssrnat seq path.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ | _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ : _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ | _ ]&quot;</span> was already used
+<span class="kr">in</span> scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ - _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> zify.</span></span></span></pre><div class="section" id="equations-plugin">
+<h1><code class="highlight coq"><span class="name">Equations</span></code> plugin</h1>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kt">Set</span> Equations <span class="kn">Transparent</span>.</span></span></span></pre><p>Installation: <code class="highlight coq"><span class="name">opam</span> <span class="name">install</span> <span class="name">coq</span><span class="operator">-</span><span class="name">equations</span></code>. To
+use the plugin, add the following import <code class="highlight coq"><span class="keyword namespace">From</span>
+<span class="name">Equations</span> <span class="keyword namespace">Require Import</span> <span class="name">Equations</span><span class="operator">.</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight">Equations fib (n : nat) : nat :=
+  fib <span class="mi">0</span>             := <span class="mi">0</span>;
+  fib n&#39;.+<span class="mi">1</span> <span class="kr">with</span> n&#39; :=
+    fib n&#39;.+<span class="mi">1</span> n&#39;&#39;.+<span class="mi">1</span> := fib n&#39;&#39; + fib n&#39;;
+    fib n&#39;.+<span class="mi">1</span> <span class="mi">0</span>      := <span class="mi">1</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight">Equations fib_iter (n : nat) (f0 f1 : nat) : nat :=
+  fib_iter n&#39;.+<span class="mi">1</span> f0 f1 := fib_iter n&#39; f1 (f0 + f1);
+  fib_iter <span class="mi">0</span>     f0 f1 := f0.</span></span></span></pre></div>
+<div class="section" id="mczify-package">
+<h1><code class="highlight coq"><span class="name">mczify</span></code> package</h1>
+<p>The <code class="highlight coq"><span class="name">mczify</span></code> package provides access to linear
+and non-linear integral arithmetic solver tactics:
+<code class="highlight coq"><span class="name builtin pseudo">lia</span></code> and <code class="highlight coq"><span class="name builtin pseudo">nia</span></code>, which work with Mathcomp's
+definitions.</p>
+<p>To install execute <code class="highlight coq"><span class="name">opam</span> <span class="name">install</span>
+<span class="name">coq</span><span class="operator">-</span><span class="name">mathcomp</span><span class="operator">-</span><span class="name">zify</span></code>. To use the plugin, import
+<code class="highlight coq"><span class="keyword namespace">From</span> <span class="name">mathcomp</span> <span class="keyword namespace">Require Import</span> <span class="name">zify</span></code>.</p>
+<p>Note that Coq also has its version of the
+<code class="highlight coq"><span class="name builtin pseudo">lia</span></code> tactic, to use it, one has to import the
+<code class="highlight coq"><span class="name">Psatz</span></code> module. But the vanilla <code class="highlight coq"><span class="name builtin pseudo">lia</span></code> tactic
+cannot process Mathcomp's definitions.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk1"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">fib_iter_spec</span> <span class="nv">n</span> <span class="nv">f0</span> <span class="nv">f1</span> :
+  fib_iter n.+<span class="mi">1</span> f0 f1 = f0 * fib n + f1 * fib n.+<span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n, f0, f1</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n.+<span class="mi">1</span> f0 f1 = f0 * fib n + f1 * fib n.+<span class="mi">1</span></span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk2"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n, f0, f1</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n.+<span class="mi">1</span> f0 f1 = f0 * fib n + f1 * fib n.+<span class="mi">1</span></span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk3"><span class="highlight"><span class="nb">elim</span>: n f0 f1=&gt; [/=|n IHn] f0 f1; <span class="kp">first</span> <span class="bp">by</span> <span class="bp">lia</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">IHn</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight"><span class="kr">forall</span> <span class="nv">f0</span> <span class="nv">f1</span> : nat, fib_iter n.+<span class="mi">1</span> f0 f1 = f0 * fib n + f1 * fib n.+<span class="mi">1</span></span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">f0, f1</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n.+<span class="mi">2</span> f0 f1 = f0 * fib n.+<span class="mi">1</span> + f1 * fib n.+<span class="mi">2</span></span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="nb">rewrite</span> fib_iter_equation_2 IHn /=; <span class="bp">lia</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span></span></pre><p><code class="highlight coq"><span class="name">fib_iter_equation_2</span></code> is a one-step reduction
+equation generated by <code class="highlight coq"><span class="name">Equations</span></code></p>
+</div>
+<div class="section" id="functional-induction">
+<h1>Functional induction</h1>
+<p><code class="highlight coq"><span class="name">Equations</span></code> generates induction principles for
+functions which mirror their definitions.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk4"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">fib_iter_correct</span> <span class="nv">n</span> :
+  fib_iter n <span class="mi">0</span> <span class="mi">1</span> = fib n.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n <span class="mi">0</span> <span class="mi">1</span> = fib n</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk5"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n <span class="mi">0</span> <span class="mi">1</span> = fib n</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight"><span class="c">(* We had to use a custom induction principle here:</span>
+<span class="c">   elim/nat_ind2: n =&gt; // n IHn1 IHn2. *)</span>
+
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk6"><span class="highlight"><span class="nb">apply</span>: (fib_elim (<span class="kr">fun</span> <span class="nv">n</span> <span class="nv">f</span> =&gt; fib_iter n <span class="mi">0</span> <span class="mi">1</span> = f))=&gt; //.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight"><span class="kr">forall</span> <span class="nv">n</span> <span class="nv">n0</span> : nat,
+fib_iter n0 <span class="mi">0</span> <span class="mi">1</span> = fib n0 -&gt;
+fib_iter n <span class="mi">0</span> <span class="mi">1</span> = fib n -&gt;
+n = n0.+<span class="mi">1</span> -&gt; fib_iter n0.+<span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> = fib n0 + fib n</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk7"><span class="highlight"><span class="nb">move</span>=&gt; {}n n&#39; IH1 IH2 n_eq_Sn&#39;.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n, n'</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">IH1</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">fib_iter n&#39; <span class="mi">0</span> <span class="mi">1</span> = fib n&#39;</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">IH2</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">fib_iter n <span class="mi">0</span> <span class="mi">1</span> = fib n</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">n_eq_Sn'</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">n = n&#39;.+<span class="mi">1</span></span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n&#39;.+<span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> = fib n&#39; + fib n</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk8"><span class="highlight"><span class="nb">rewrite</span> n_eq_Sn&#39; <span class="kr">in</span> IH2 *.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">n, n'</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">IH1</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">fib_iter n&#39; <span class="mi">0</span> <span class="mi">1</span> = fib n&#39;</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">n_eq_Sn'</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">n = n&#39;.+<span class="mi">1</span></span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">IH2</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">fib_iter n&#39;.+<span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> = fib n&#39;.+<span class="mi">1</span></span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">fib_iter n&#39;.+<span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> = fib n&#39; + fib n&#39;.+<span class="mi">1</span></span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="nb">rewrite</span> fib_iter_spec /=; <span class="bp">lia</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span></span></pre></div>
+<div class="section" id="coqhammer-package">
+<h1><code class="highlight coq"><span class="name">CoqHammer</span></code> package</h1>
+<p>The <code class="highlight coq"><span class="name">CoqHammer</span></code> package provides a number of
+tactics like <code class="highlight coq"><span class="name">sauto</span></code>, <code class="highlight coq"><span class="name">sfirstorder</span></code>, <code class="highlight coq"><span class="name">hammer</span></code> to
+automate proofs.</p>
+<p>Note: these tactics never use induction, so you
+might need to start your proofs by induction first
+and then call the solvers.</p>
+<p>The <code class="highlight coq"><span class="name">sauto</span></code> tactic does general proof search for
+the goal expressed in Calculus of Inductive
+Construction and does not rely on external tools.</p>
+<p>On the other hand, <code class="highlight coq"><span class="name">hammer</span></code> relies on external
+automated theorem provers (ATP) and SMT-solvers
+like: Eprover, Vampire, CVC4, Z3.</p>
+<p><code class="highlight coq"><span class="name">CoqHammer</span></code> only uses SMT solvers as ATPs, meaning
+that the natural numbers, lists and other
+datastructures are treated as uninterpreted by the
+supported SMT solvers.</p>
+<p>The <code class="highlight coq"><span class="name">hammer</span></code> tactic works in three phases:</p>
+<blockquote>
+<ol class="arabic simple">
+<li>Use simple and fast machine-learning for premise selection;</li>
+<li>Translate the goal into the format ATPs understand
+and call the available ATPs;</li>
+<li>Post-process the ATPs' output: reinterpret artefacts returned
+by the ATPs into Coq's logic (most ATPs use classical logic).</li>
+</ol>
+</blockquote>
+<p>Installation: <code class="highlight coq"><span class="name">opam</span> <span class="name">install</span> <span class="name">coq</span><span class="operator">-</span><span class="name">hammer</span></code> (will be
+available soon for Coq 8.13 too). Import: <code class="highlight coq"><span class="keyword namespace">From</span>
+<span class="name">Hammer</span> <span class="keyword namespace">Require Import</span> <span class="name">Hammer</span><span class="operator">.</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> Hammer <span class="kn">Require Import</span> Hammer.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk9"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">foo</span> <span class="nv">m</span> <span class="nv">n</span> <span class="nv">p</span> <span class="nv">q</span> <span class="nv">r</span> :
+  m + (n + p * (q * r)) = m + n + p * q * r.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">m, n, p, q, r</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">m + (n + p * (q * r)) = m + n + p * q * r</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chka"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">m, n, p, q, r</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">m + (n + p * (q * r)) = m + n + p * q * r</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chkb"><span class="highlight">hammer.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Replace the hammer tactic <span class="kr">with</span>: sauto </span></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chkc"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">lt_zero_lt_one</span> <span class="nv">x</span> : x &lt; <span class="mi">0</span> -&gt; x &lt; <span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">x</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">x &lt; <span class="mi">0</span> -&gt; x &lt; <span class="mi">1</span></span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chkd"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">x</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">x &lt; <span class="mi">0</span> -&gt; x &lt; <span class="mi">1</span></span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chke"><span class="highlight">hammer.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Replace the hammer tactic <span class="kr">with</span>: sauto lq: on drew: off </span></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span></span></pre><p>Note: <code class="highlight coq"><span class="name builtin pseudo">lia</span></code> or <code class="highlight coq"><span class="name">sauto</span></code> can also handle the two above goals.</p>
+</div>
+<div class="section" id="quickchick-plugin">
+<h1>QuickChick plugin</h1>
+<p>If we try proving a lemma for a long time without
+actually succeeding we might start asking
+ourselves if it's not provable at all because we
+made a mistake somewhere.</p>
+<p>If only we had a quicker way of checking if it
+makes sense to prove a property of an algorithm.</p>
+<p>Property-based randomized testing to the rescue!</p>
+<p>Key ideas:
+- Write specifications as <em>computable</em> predicates;
+- Generate lots of random inputes to test your functions;
+- Shrink counterexamples;</p>
+<p>One could say that property-based randomized
+testing sits in the sweet spot between
+hand-written unit tests and fully formal proofs.</p>
+<p>Installation: <code class="highlight coq"><span class="name">opam</span> <span class="name">install</span> <span class="name">coq</span><span class="operator">-</span><span class="name">quickchick</span></code>.
+Import: <code class="highlight coq"><span class="keyword namespace">From</span> <span class="name">QuickChick</span> <span class="keyword namespace">Require Import</span>
+<span class="name">QuickChick</span><span class="operator">.</span></code>.</p>
+<p>QuickChick is a port of QuickCheck written around
+the year 2000 by John Hughes for Haskell.</p>
+<p>For more detail about QuickChick see &quot;Foundational
+Property-Based Testing&quot; by Paraskevopoulou,
+Hritcu, Denes, Lampropoulos, Pierce.</p>
+<p>Also, &quot;QuickChick: Property-Based Testing in Coq&quot;
+by Lampropoulos and Pierce provides a gentle
+introduction into the topic:
+<a class="reference external" href="https://softwarefoundations.cis.upenn.edu/qc-current/index.html">https://softwarefoundations.cis.upenn.edu/qc-current/index.html</a></p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> QuickChick <span class="kn">Require Import</span> QuickChick.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Import</span> QcDefaultNotation.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Open Scope</span> qc_scope.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Import</span> GenLow GenHigh.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Set Warnings</span> <span class="s2">&quot;-extraction-opaque-accessed,-extraction&quot;</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">instr</span> := Push (n : nat) | <span class="kn">Add</span> | Sub | Mul.</span></span></span></pre><p>We are going to the Deriving plugin to
+deriving an instance of <code class="highlight coq"><span class="name">eqType</span></code> for <code class="highlight coq"><span class="name">instr</span></code>.
+Installation: <code class="highlight coq"><span class="name">opam</span> <span class="name">install</span> <span class="name">coq</span><span class="operator">-</span><span class="name">deriving</span></code>. Import:
+<code class="highlight coq"><span class="keyword namespace">From</span> <span class="name">deriving</span> <span class="keyword namespace">Require Import</span> <span class="name">deriving</span><span class="operator">.</span></code>.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> deriving <span class="kn">Require Import</span> deriving.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chkf"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> erefl : <span class="kn">Add</span> == <span class="kn">Add</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+The term <span class="s2">&quot;Add&quot;</span> has type <span class="s2">&quot;instr&quot;</span>
+while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;Equality.sort ?T&quot;</span>.</span></blockquote></div></div></small></span></pre><p>The following boilerplate (four lines) does the job:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">instr_indDef</span> := [indDef <span class="kr">for</span> instr_rect].</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Canonical</span> <span class="nf">instr_indType</span> := IndType instr instr_indDef.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">instr_eqMixin</span> := [derive eqMixin <span class="kr">for</span> instr].</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Canonical</span> <span class="nf">instr_eqType</span> := EqType instr instr_eqMixin.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk10"><span class="highlight"><span class="kn">Check</span> erefl : <span class="kn">Add</span> == <span class="kn">Add</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">erefl : <span class="kn">Add</span> == <span class="kn">Add</span>
+     : <span class="kn">Add</span> == <span class="kn">Add</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">prog</span> := seq instr.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">stack</span> := seq nat.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">run</span> (<span class="nv">p</span> : prog) (<span class="nv">s</span> : stack) : stack :=
+  <span class="kr">if</span> p <span class="kr">is</span> (i :: p&#39;) <span class="kr">then</span>
+    <span class="kr">let</span> <span class="nv">s&#39;</span> :=
+      <span class="kr">match</span> i <span class="kr">with</span>
+      | Push n =&gt; n :: s
+      | <span class="kn">Add</span> =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> a2 + a1 :: s&#39;
+                <span class="kr">else</span> s
+      | Sub =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> a2 - a1 :: s&#39;
+                <span class="kr">else</span> s
+      | Mul =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> a2 * a1 :: s&#39;
+                <span class="kr">else</span> s
+      <span class="kr">end</span>
+    <span class="kr">in</span> run p&#39; s&#39;
+  <span class="kr">else</span> s.</span></span></span></pre><p>Now, to prove properties about <code class="highlight coq"><span class="name">run</span></code>, one would find useful
+the following lemma.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk11"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">run_append</span> <span class="nv">p1</span> <span class="nv">p2</span> <span class="nv">s</span> :
+  run (p1 ++ p2) s = run p2 (run p1 s).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">p1, p2</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">seq instr</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">s</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">stack</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">run (p1 ++ p2) s = run p2 (run p1 s)</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk12" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk12"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">p1, p2</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">seq instr</span></span></span></span></div><div class="goal-hyp"><span class="hyp-names">s</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">stack</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">run (p1 ++ p2) s = run p2 (run p1 s)</span></div></blockquote></div></div></small><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="bp">by</span> <span class="nb">elim</span>: p1 s=&gt; /=.</span></span><span class="alectryon-wsp"> </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span></span></pre><p>Unfortunately, if we change the semantics of
+<code class="highlight coq"><span class="name">run</span></code> to the one that stops processing its input
+immediately once there is an error condition, this
+property would not hold.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">run&#39;</span> (<span class="nv">p</span> : prog) (<span class="nv">s</span> : stack) : stack :=
+  <span class="kr">if</span> p <span class="kr">is</span> (i :: p&#39;) <span class="kr">then</span>
+    <span class="kr">match</span> i <span class="kr">with</span>
+    | Push n =&gt; run&#39; p&#39; (n :: s)
+    | <span class="kn">Add</span> =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> run&#39; p&#39; (a2 + a1 :: s&#39;)
+              <span class="kr">else</span> s
+    | Sub =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> run&#39; p&#39; (a2 - a1 :: s&#39;)
+              <span class="kr">else</span> s
+    | Mul =&gt; <span class="kr">if</span> s <span class="kr">is</span> (a1 :: a2 :: s&#39;) <span class="kr">then</span> run&#39; p&#39; (a2 * a1 :: s&#39;)
+              <span class="kr">else</span> s
+    <span class="kr">end</span>
+  <span class="kr">else</span> s.</span></span></span></pre><p>The user writes their generators and
+shrinkers, but luckily for us for sufficiently
+simple datatypes QuickChick can do it
+automatically.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Derive</span> <span class="nf">Arbitrary</span> <span class="kr">for</span> instr.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Derive</span> <span class="nf">Show</span> <span class="kr">for</span> instr.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">cat_run&#39;_prop</span> (<span class="nv">p1</span> <span class="nv">p2</span> : prog) (<span class="nv">s</span> : stack) :=
+  run&#39; (p1 ++ p2) s == run&#39; p2 (run&#39; p1 s).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-wsp"><span class="highlight"><span class="c">(*</span>
+<span class="c">[Mul; Sub; Sub; Sub; Mul]</span>
+<span class="c">[Push 0]</span>
+<span class="c">[]</span>
+<span class="c">*** Failed after 6 tests and 11 shrinks. (0 discards)</span>
+<span class="c">*)</span></span></span></pre><p>For the original <code class="highlight coq"><span class="name">run</span></code>, QuickChick cannot find
+counter-examples:</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">cat_run_prop</span> (<span class="nv">p1</span> <span class="nv">p2</span> : prog) (<span class="nv">s</span> : stack) :=
+  run (p1 ++ p2) s == run p2 (run p1 s).</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk13" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk13"><span class="highlight">QuickChick cat_run_prop.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">+++ Passed <span class="mi">10000</span> tests (<span class="mi">0</span> discards)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight"><span class="c">(* +++ Passed 10000 tests (0 discards) *)</span></span></span></pre><p>Practical observation: Using QuickChick can be
+a nice way of figuring out the precodintions to
+the lemmas of interest, i.e. testing helps
+proving!</p>
+<p>Moreover, since our testing code (and most of
+QuickChick itself) is written in Coq, we can also
+formally verify this code using Coq. That is,
+proving helps testing!</p>
+<p>Property-based randomized testing is a
+powerful yet complex beast and we barely scratched
+the surface here.</p>
+<p>It's easy to end up generating lots of dead inputs
+-- in many cases the precodintions discard <em>a lot</em>
+of random inputs.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">insert</span> <span class="nv">e</span> <span class="nv">s</span> : seq nat :=
+  <span class="kr">if</span> s <span class="kr">is</span> x :: s&#39; <span class="kr">then</span>
+    <span class="kr">if</span> e &lt;= x <span class="kr">then</span>
+      e :: s
+    <span class="kr">else</span>
+      x :: (insert e s&#39;)
+  <span class="kr">else</span> [:: e].</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">insert_sorted_prop</span> (<span class="nv">e</span> : nat) (<span class="nv">s</span> : seq nat) :=
+  sorted leq s ==&gt; sorted leq (insert e s).</span></span></span></pre><p>Let us check how many inputs we generate for
+nothing: one can use QuickChick's <code class="highlight coq"><span class="name">collect</span></code>
+facility to do that.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk14" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk14"><span class="highlight"><span class="kn">Time</span> QuickChick (<span class="kr">fun</span> <span class="nv">e</span> <span class="nv">s</span> =&gt;
+  collect (sorted leq s) (insert_sorted_prop e s)).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="mi">5502</span> : false</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="mi">4498</span> : true</span></blockquote><blockquote class="alectryon-message"><span class="highlight">+++ Passed <span class="mi">10000</span> tests (<span class="mi">0</span> discards)</span></blockquote><blockquote class="alectryon-message"><span class="highlight">Finished transaction <span class="kr">in</span> <span class="mi">1</span>.<span class="mi">72</span> secs (<span class="mi">0</span>.<span class="mi">286</span>u,<span class="mi">0</span>.<span class="mi">075</span>s) (successful)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight"><span class="c">(*</span>
+<span class="c">5526 : false</span>
+<span class="c">4474 : true</span>
+<span class="c">+++ Passed 10000 tests (0 discards)</span>
+<span class="c">*)</span></span></span></pre><p>QuickChick supports user-defined random
+generators that can produce inputs with the
+required properties. Even more, the user can
+formally verify that the supplied random generator
+is sound and complete.</p>
+<p>Moreover, there is an improvement over QuickChick
+called FuzzChick which combines methods developed
+in the fuzzing communitywith the methods developed
+in PBRT community to alleviate the pain of
+implementing custom generators which can be quite
+complex.</p>
+</div>
+<div class="section" id="mutation-proving">
+<h1>Mutation Proving</h1>
+<p>mCoq: Mutation Proving for Analysis of Verification Projects
+by K. Palmskog et al.(2019).</p>
+<p>This is related to Mutation Testing:</p>
+<ul class="simple">
+<li>make small changes resembling faults to software system;</li>
+<li>execute accompanying test suite on changed system;</li>
+<li>measure how well the test suite catches introduced faults;</li>
+<li>improve test suite and repeat;</li>
+</ul>
+<p>Mutation Proving:</p>
+<ul class="simple">
+<li>a mutation operator <code class="highlight coq"><span class="name">op</span></code> is applied to a Coq project;</li>
+<li><code class="highlight coq"><span class="name">op</span></code> may generate a mutant
+where specifications are different;</li>
+<li>an <code class="highlight coq"><span class="name">op</span></code> mutant where a proof fails during
+checking is killed;</li>
+<li>a <code class="highlight coq"><span class="name">op</span></code> mutant where all proofs are successfully
+checked is live.</li>
+</ul>
+<p>Examples of operations:</p>
+<ul class="simple">
+<li>Reorder branches of if-expressions;</li>
+<li>Replace plus with minus;</li>
+<li>Replace a list with its tail;</li>
+<li>...</li>
+</ul>
+<p>A practical observation:
+a high amount of live mutants might indicate weak specs.</p>
+<p>But sometimes it's just hard to come up
+with a precise spec, e.g. this is often the case
+when talking about time/space complexity:</p>
+<p>The key but unstated invariant of <code class="highlight coq"><span class="name">ss</span></code> is that
+its <code class="highlight coq"><span class="name">i</span><span class="operator">`</span><span class="name">th</span> <span class="name">item</span> <span class="name">has</span> <span class="name">size</span> <span class="operator">`</span><span class="literal number integer">2</span><span class="name">i</span></code> if it is not empty,
+so that merge sort push only performs perfectly
+balanced merges... without the <code class="highlight coq"><span class="operator">[::]</span></code> placeholder
+the MathComp sort becomes two element-wise insertion sort.
+—Georges Gonthier</p>
+<p>A bit of context:</p>
+<pre class="code Coq literal-block">
+<span class="keyword namespace">Section</span> <span class="name function">SortSeq</span><span class="operator">.</span>
+
+<span class="keyword namespace">Variables</span> <span class="operator">(</span><span class="name variable">T</span> <span class="operator">:</span> <span class="keyword type">Type</span><span class="operator">)</span> <span class="operator">(</span><span class="name variable">leT</span> <span class="operator">:</span> <span class="name">rel</span> <span class="name">T</span><span class="operator">).</span>
+
+<span class="keyword namespace">Fixpoint</span> <span class="name function">merge_sort_push</span> <span class="name variable">s1</span> <span class="name variable">ss</span> <span class="operator">:=</span>
+  <span class="keyword reserved">match</span> <span class="name">ss</span> <span class="keyword reserved">with</span>
+  <span class="operator">|</span> <span class="operator">[::]</span> <span class="operator">::</span> <span class="name">ss'</span>
+  <span class="operator">|</span> <span class="operator">[::]</span> <span class="keyword reserved">as</span> <span class="name">ss'</span> <span class="operator">=&gt;</span> <span class="name">s1</span> <span class="operator">::</span> <span class="name">ss'</span>
+  <span class="operator">|</span> <span class="name">s2</span> <span class="operator">::</span> <span class="name">ss'</span> <span class="operator">=&gt;</span> <span class="operator">[::]</span> <span class="operator">::</span> <span class="name">merge_sort_push</span> <span class="operator">(</span><span class="name">merge</span> <span class="name">s2</span> <span class="name">s1</span><span class="operator">)</span> <span class="name">ss'</span>
+                <span class="operator">^^^^</span>
+  <span class="name">this</span> <span class="name">can</span> <span class="name">be</span> <span class="name">deleted</span><span class="operator">,</span> <span class="name">but</span> <span class="name">proofs</span> <span class="name">will</span> <span class="name">still</span> <span class="name">go</span> <span class="name">through</span>
+  <span class="keyword reserved">end</span><span class="operator">.</span>
+
+<span class="keyword namespace">Fixpoint</span> <span class="name function">merge_sort_pop</span> <span class="name variable">s1</span> <span class="name variable">ss</span> <span class="operator">:=</span>
+  <span class="keyword reserved">if</span> <span class="name">ss</span> <span class="keyword reserved">is</span> <span class="name">s2</span> <span class="operator">::</span> <span class="name">ss'</span> <span class="keyword reserved">then</span> <span class="name">merge_sort_pop</span> <span class="operator">(</span><span class="name">merge</span> <span class="name">s2</span> <span class="name">s1</span><span class="operator">)</span> <span class="name">ss'</span>
+  <span class="keyword reserved">else</span> <span class="name">s1</span><span class="operator">.</span>
+
+<span class="keyword namespace">Fixpoint</span> <span class="name function">merge_sort_rec</span> <span class="name variable">ss</span> <span class="name variable">s</span> <span class="operator">:=</span>
+  <span class="keyword reserved">if</span> <span class="name">s</span> <span class="keyword reserved">is</span> <span class="operator">[::</span> <span class="name">x1</span><span class="operator">,</span> <span class="name">x2</span> <span class="operator">&amp;</span> <span class="name">s'</span><span class="operator">]</span> <span class="keyword reserved">then</span>
+    <span class="keyword reserved">let</span> <span class="name variable">s1</span> <span class="operator">:=</span> <span class="keyword reserved">if</span> <span class="name">leT</span> <span class="name">x1</span> <span class="name">x2</span> <span class="keyword reserved">then</span> <span class="operator">[::</span> <span class="name">x1</span><span class="operator">;</span> <span class="name">x2</span><span class="operator">]</span>
+              <span class="keyword reserved">else</span> <span class="operator">[::</span> <span class="name">x2</span><span class="operator">;</span> <span class="name">x1</span><span class="operator">]</span> <span class="keyword reserved">in</span>
+    <span class="name">merge_sort_rec</span> <span class="operator">(</span><span class="name">merge_sort_push</span> <span class="name">s1</span> <span class="name">ss</span><span class="operator">)</span> <span class="name">s'</span>
+  <span class="keyword reserved">else</span> <span class="name">merge_sort_pop</span> <span class="name">s</span> <span class="name">ss</span><span class="operator">.</span>
+
+<span class="keyword namespace">Definition</span> <span class="name function">sort</span> <span class="operator">:=</span> <span class="name">merge_sort_rec</span> <span class="operator">[::].</span>
+
+<span class="comment">(* ... *)</span>
+
+<span class="keyword namespace">End</span> <span class="name function">SortSeq</span><span class="operator">.</span>
+</pre>
+</div>
+<div class="section" id="extraction">
+<h1>Extraction</h1>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">From</span> Coq <span class="kn">Require Import</span> <span class="kn">Extraction</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Module</span> <span class="nf">Insertion</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Section</span> <span class="nf">InsertionSort</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Variable</span> <span class="nv">T</span> : eqType.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Variable</span> <span class="nv">leT</span> : rel T.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Implicit Types</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span> : T.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Implicit Types</span> <span class="nv">s</span> <span class="nv">t</span> <span class="nv">u</span> : seq T.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">insert</span> <span class="nv">e</span> <span class="nv">s</span> : seq T :=
+  <span class="kr">if</span> s <span class="kr">is</span> x :: s&#39; <span class="kr">then</span>
+    <span class="kr">if</span> leT e x <span class="kr">then</span>
+      e :: s
+    <span class="kr">else</span>
+      x :: (insert e s&#39;)
+  <span class="kr">else</span> [:: e].</span></span></span></pre><p>Sort input list <code class="highlight coq"><span class="name">s</span></code></p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Fixpoint</span> <span class="nf">sort</span> <span class="nv">s</span> : seq T :=
+  <span class="kr">if</span> s <span class="kr">is</span> x :: s&#39; <span class="kr">then</span>
+    insert x (sort s&#39;)
+  <span class="kr">else</span>
+    [::].</span></span></span></pre><p>Proofs of correctness skipped</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">InsertionSort</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Extraction Language OCaml</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk15" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk15"><span class="highlight"><span class="kn">Extraction</span> sort.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="sd">(** val sort0 :</span>
+<span class="sd">    Equality.coq_type -&gt; Equality.sort rel -&gt;</span>
+<span class="sd">    Equality.sort list -&gt; Equality.sort list **)</span>
+
+<span class="kr">let rec</span> <span class="nv">sort0</span> <span class="nv">t</span> <span class="nv">leT</span> = function
+| [] -&gt; []
+| x :: s&#39; -&gt; insert t leT x (sort0 t leT s&#39;)</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Extraction Language Haskell</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture10-v-chk16" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture10-v-chk16"><span class="highlight"><span class="kn">Extraction</span> sort.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">sort :: <span class="kt">Type</span> -&gt; (Rel <span class="kn">Sort</span>) -&gt; (list <span class="kn">Sort</span>) -&gt; list <span class="kn">Sort</span>
+sort t leT s =
+  <span class="nb">case</span> s of {
+   [] -&gt; [];
+   ( :: ) x s&#39; -&gt; insert t leT x (sort t leT s&#39;)}
+
+</span></blockquote></div></div></small></span></pre><p>Caveat: extracting SSReflect-based projects is
+usually not straightforward. It can be done, see
+e.g. <a class="reference external" href="https://github.com/certichain/toychain">https://github.com/certichain/toychain</a>. But
+one has to overcome some issues.</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">Insertion</span>.</span></span></span></pre></div>
+</div>
+</div></body>
+</html>

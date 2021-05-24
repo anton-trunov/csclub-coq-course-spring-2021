@@ -2,7 +2,7 @@
 
 ## Building HTML files locally
 
-- Setup Alectryon using its [installation instructions](https://github.com/cpitclaudel/alectryon/#setup) and add it to your `PATH`.
+- Setup Alectryon using its [installation instructions](https://github.com/cpitclaudel/alectryon/#setup) and add it to your `PATH`. (You need Alectryon at commit df5664e71c1026af4aaf69e6b227d427a728e7c6 or newer).
 - Run `make` or `make doc` in the project root directory.
 
 ## Classes
@@ -61,9 +61,15 @@
 
 ### Class 9
 
-- Verification of insertion sort and merge sort. Non-structurally recursive functions. Nested `fix` pattern. `Program` plugin. `Acc`-predicate. [source](lectures/lecture09.v)
+- Verification of insertion sort and merge sort. Non-structurally recursive functions. Nested `fix` pattern. `Program` plugin. `Acc`-predicate. [source](lectures/lecture09.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture09.html)
 - Seminar: [seminar08.v](seminars/seminar08.v)
 - Homework: [hw09.v](homework/hw09.v)
+
+### Class 10
+
+- A potpourri of tools: automation (linear integer arithmetic, hammers), Equations plugin, property based randomized testing, mutation proving, extraction [source](lectures/lecture10.v), [rendered](https://anton-trunov.github.io/csclub-coq-course-spring-2021/lectures/lecture10.html)
+- Seminar: [seminar09.v](seminars/seminar09.v)
+- Homework: no homework
 
 ## Awesome exercise solutions by class participants
 
