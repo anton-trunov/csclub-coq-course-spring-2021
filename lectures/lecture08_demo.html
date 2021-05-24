@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<title>lecture08_demo.v</title>
+<link rel="stylesheet" href="alectryon.css" type="text/css" />
+<link rel="stylesheet" href="docutils_basic.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.css" type="text/css" />
+<link rel="stylesheet" href="tango_subtle.min.css" type="text/css" />
+<script type="text/javascript" src="alectryon.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/IBM-type/0.5.4/css/ibm-type.min.css" integrity="sha512-sky5cf9Ts6FY1kstGOBHSybfKqdHR41M0Ldb0BjNiv3ifltoQIsg0zIaQ+wwdwgQ0w9vKFW7Js50lxH9vqNSSw==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/firacode/5.2.0/fira_code.min.css" integrity="sha512-MbysAYimH1hH2xYzkkMHB6MqxBqfP0megxsCLknbYqHVwXTCg9IqHbk+ZP/vnhO8UEW6PaXAkKe2vQ+SWACxxA==" crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/cpitclaudel/alectryon/">Alectryon</a>, running Coq+SerAPI v8.13.0+0.13.0. Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents. Use <kbd>Ctrl+↑</kbd> <kbd>Ctrl+↓</kbd> to navigate, <kbd>Ctrl+🖱️</kbd> to focus. On Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>.</div><div class="document">
+
+
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="highlight"><span class="c">(* Demo accompanying slides *)</span>
+
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk0" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk0"><span class="highlight"><span class="kn">From</span> mathcomp <span class="kn">Require Import</span> ssreflect ssrbool ssrfun ssrnat seq bigop.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ | _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ : _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ | _ ]&quot;</span> was already used
+<span class="kr">in</span> scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ &amp; _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ | _ ]&quot;</span> was already used <span class="kr">in</span>
+scope fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;[ rel _ _ in _ ]&quot;</span> was already used <span class="kr">in</span> scope
+fun_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ + _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ - _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt;= _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &gt; _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt;= _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt;= _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ &lt; _ &lt; _&quot;</span> was already used <span class="kr">in</span> scope
+nat_scope. [notation-overridden,parsing]</span></blockquote><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ * _&quot;</span> was already used <span class="kr">in</span> scope nat_scope.
+[notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Import</span> Monoid.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk1" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk1"><span class="highlight"><span class="kn">Print</span> Monoid.Law.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Record</span> <span class="nf">law</span> (<span class="nv">T</span> : <span class="kt">Type</span>) (<span class="nv">idm</span> : T) : <span class="kt">Type</span> := Law
+  { operator : T -&gt; T -&gt; T;
+    _ : associative operator;
+    _ : left_id idm operator;
+    _ : right_id idm operator }
+
+<span class="kn">Arguments</span> law [T]%type_scope _
+<span class="kn">Arguments</span> Law [T]%type_scope [idm]
+  [operator]%function_scope _ _ _</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk2"><span class="highlight"><span class="kn">Print Canonical Projections</span> operator.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">cat &lt;- operator ( cat_monoid )
+div.lcmn &lt;- operator ( lcmn_monoid )
+div.gcdn &lt;- operator ( gcdn_monoid )
+maxn &lt;- operator ( maxn_monoid )
+muln &lt;- operator ( muln_monoid )
+addn &lt;- operator ( addn_monoid )
+addb &lt;- operator ( addb_monoid )
+orb &lt;- operator ( orb_monoid )
+andb &lt;- operator ( andb_monoid )</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk3" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk3"><span class="highlight"><span class="kn">About</span> mulmA.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">mulmA :
+<span class="kr">forall</span> [T : <span class="kt">Type</span>] [idm : T] (mul : law idm),
+associative mul
+
+mulmA <span class="kr">is</span> not universe polymorphic
+<span class="kn">Arguments</span> mulmA [T]%type_scope [idm] _ _ _ _
+mulmA <span class="kr">is</span> transparent
+Expands to: Constant
+mathcomp.ssreflect.bigop.Monoid.mulmA</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk4"><span class="highlight"><span class="kn">Lemma</span> <span class="nf">foo</span> <span class="nv">m</span> <span class="nv">n</span> <span class="nv">p</span> <span class="nv">q</span> <span class="nv">r</span> :
+  m + (n + p * (q * r)) = m + n + p * q * r.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">m, n, p, q, r</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">m + (n + p * (q * r)) = m + n + p * q * r</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture08-demo-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture08-demo-v-chk5"><span class="highlight"><span class="kn">Proof</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><div class="goal-hyp"><span class="hyp-names">m, n, p, q, r</span><span><span class="hyp-type-block"><span class="hyp-punct">:</span><span class="hyp-type"><span class="highlight">nat</span></span></span></span></div></div><span class="goal-separator"><hr></span><div class="goal-conclusion"><span class="highlight">m + (n + p * (q * r)) = m + n + p * q * r</span></div></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="bp">by</span> <span class="nb">rewrite</span> !mulmA /=.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Qed</span>.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+<span class="c">(*</span>
+
+<span class="c">Here is some information which should</span>
+<span class="c">help you understand how exactly `rewrite mulmA` works</span>
+<span class="c">when it rewrites in the goal for the first time.</span>
+
+<span class="c">mulmA : forall [T : Type] [idm : T] (mul : law idm), associative mul</span>
+
+<span class="c">Or, unfolding `associative`:</span>
+<span class="c">mulmA : forall [T : Type] [idm : T] (mul : law idm) (x y z : T),</span>
+<span class="c">          mul x (mul y z) = mul (mul x y) z</span>
+
+<span class="c">Let&#39;s define a short-hand:</span>
+<span class="c">O := @operator</span>
+
+<span class="c">The goal (we focus on its left-hand side, LHS):</span>
+<span class="c">m + (n + p * (q * r)) = ...</span>
+
+<span class="c">Unfold notations in the goal:</span>
+<span class="c">addn             m  (addn              n (muln p (muln q r))) = ...</span>
+
+<span class="c">LHS of `mulmA` lemma:</span>
+<span class="c">mul              ?x (mul               ?y ?z                 )</span>
+
+<span class="c">LHS of `mulmA` lemma with inserted coercions:</span>
+<span class="c">(O ?T ?idm ?mul) ?x ((O ?T ?idm ?mul)  ?y ?z                 )</span>
+
+<span class="c">Let&#39;s unify the goal with the LHS of `mulmA` equation:</span>
+<span class="c">addn             m  (addn              n (muln p (muln q r))) = ...</span>
+<span class="c">(O ?T ?idm ?mul) ?x ((O ?T ?idm ?mul)  ?y ?z                 )</span>
+
+<span class="c">The head symbol get us</span>
+<span class="c">addn ≡ @operator ?T ?idm ?mul</span>
+
+<span class="c">We have the canonical instance!</span>
+<span class="c">addn &lt;- operator ( addn_monoid )</span>
+
+<span class="c">Hence,</span>
+<span class="c">addn ≡ @operator ?T ?idm addn_monoid</span>
+
+<span class="c">And `?T` and `?idm` can be deduced from the type of `addn_monoid`:</span>
+<span class="c">addn ≡ @operator ?T ?idm addn_monoid</span>
+<span class="c">                           ..</span>
+<span class="c">                        @law ?T ?idm ≡ @law nat 0</span>
+
+<span class="c">So, these unify:</span>
+<span class="c">addn ≡ operator nat 0 addn_monoid</span>
+
+<span class="c">End of inference.</span>
+
+<span class="c">This is why after the first rewrite we get the following goal:</span>
+<span class="c">Lemma foo m n p q r :</span>
+<span class="c">  m + (n + p * (q * r)) = m + n + p * q * r.</span>
+<span class="c">Proof.</span>
+<span class="c">rewrite mulmA.</span>
+<span class="c">Set Printing Coercions.</span>
+<span class="c">Set Printing Implicit.</span>
+
+<span class="c">@operator nat 0 addn_monoid (@operator nat 0 addn_monoid m n) (p * (q * r)) =</span>
+<span class="c">  m + n + p * q * r</span>
+<span class="c">*)</span></span></span></pre>
+</div>
+</div></body>
+</html>
