@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" class="alectryon-standalone" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.16: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <title>Polymorphic functions, parameterized types</title>
 <meta name="author" content="Anton Trunov" />
 <meta name="date" content="March 18, 2021" />
@@ -430,7 +430,7 @@ components of the input pair:</p>
 <h1>Sum Type</h1>
 <p>The next important type in functional
 programming is the sum type. This is also know as
-<code class="highlight coq"><span class="name">Result</span></code> type in OCaml or <code class="highlight coq"><span class="name">Maybe</span></code> type in Haskell.</p>
+<code class="highlight coq"><span class="name">Result</span></code> type in OCaml or <code class="highlight coq"><span class="name">Either</span></code> type in Haskell.</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">sum</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>) : <span class="kt">Type</span> :=
   | inl of A
   | inr of B.</span></span><span class="alectryon-wsp">
