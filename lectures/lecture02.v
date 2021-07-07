@@ -488,7 +488,7 @@ Sum Type
 
 (*| The next important type in functional
 programming is the sum type. This is also know as
-`Result` type in OCaml or `Maybe` type in Haskell.
+`Result` type in OCaml or `Either` type in Haskell.
 |*)
 
 Inductive sum (A B : Type) : Type :=
