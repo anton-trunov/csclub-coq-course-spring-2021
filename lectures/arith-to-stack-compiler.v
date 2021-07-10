@@ -32,6 +32,14 @@ functionality. |*)
      - `\rrbracket`
    * - `⋅`
      - `\cdot`
+   * - `⧐`
+     - `\RightTriangleBar`
+   * - `⊕`
+     - `\oplus`
+   * - `⊖`
+     - `\ominus`
+   * - `⊗`
+     - `\otimes`
 
 |*)
 
@@ -115,6 +123,7 @@ End Evaluator.
 Notation "⟦ e ⟧" := (aeval e) (at level 30, no associativity).
 
 (*| Unit and notation tests: |*)
+Check erefl : ⟦ ‴0 - 4‴ ⟧ = 0.
 Check erefl : ⟦ ‴40 - 3 - 1‴ ⟧ = 36.
 Check erefl : ⟦ ‴40 - (3 - 1)‴ ⟧ = 38.
 Check erefl : ⟦ ‴2 + 2 * 2‴ ⟧ = 6.
@@ -125,3 +134,69 @@ End Expr.
 (*| A test |*)
 Import Expr.
 Check erefl : ⟦ ‴40 + 3 - 1‴ ⟧ = 42.
+
+
+(*|
+Stack machine
+------------- |*)
+Module StackMachine.
+
+(*|
+Stack machine program
+===================== |*)
+
+(*| The stack machine instructions: |*)
+Inductive instr := Push (n : nat) | Add | Sub | Mul.
+
+(*| A program for our stack machine is simply a sequence of instructions: |*)
+Definition prog := seq instr.
+
+(*| The stack of our stack machine is represented as a list of natural numbers |*)
+Definition stack := seq nat.
+
+Declare Scope stack_scope.
+Delimit Scope stack_scope with S.
+
+Notation "⧐ n" := (Push n)
+  (at level 0, no associativity) : stack_scope.
+Notation "⊕" := Add
+  (at level 0, no associativity) : stack_scope.
+Notation "⊖" := Sub
+  (at level 0, no associativity) : stack_scope.
+Notation "⊗" := Mul
+  (at level 0, no associativity) : stack_scope.
+
+Implicit Types (p : prog) (s : stack).
+
+Open Scope S.
+
+Equations run p s : stack :=
+  run (⧐ n :: p) s := run p (n :: s);
+  run (⊕ :: p) (a1 :: a2 :: s) := run p ((a2 + a1) :: s);
+  run (⊖ :: p) (a1 :: a2 :: s) := run p ((a2 - a1) :: s);
+  run (⊗ :: p) (a1 :: a2 :: s) := run p ((a2 * a1) :: s);
+  run _ s := s.
+
+
+
+(*| Unit and notation tests: |*)
+Check erefl : run [:: ⧐ 21; ⧐ 21; ⊕] [::] = [:: 42].
+End StackMachine.
+
+
+(*|
+Compiler from arithmetic expressions to stack machine language
+-------------------------------------------------------------- |*)
+Module Compiler.
+
+Import StackMachine.
+Implicit Types (e : aexp) (p : prog).
+
+Equations compile e : prog :=
+  compile ‴#n‴ := [:: ⧐ n];
+  compile ‴e1 + e2‴ := compile e1 ++ compile e2 ++ [:: ⊕];
+  compile ‴e1 - e2‴ := compile e1 ++ compile e2 ++ [:: ⊖];
+  compile ‴e1 ⋅ e2‴ := compile e1 ++ compile e2 ++ [:: ⊗].
+
+Check erefl: run (compile ‴40 + 3 - 1‴) [::] = [:: 42].
+End Compiler.
