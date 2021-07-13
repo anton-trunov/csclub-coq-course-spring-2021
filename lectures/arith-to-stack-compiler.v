@@ -326,9 +326,10 @@ Qed.
 Back to property based testing
 ============================== |*)
 
-(* Using boolean implication, we can filter out incorrect stack programs when
+(*| Using boolean implication, we can filter out incorrect stack programs when
 doing property based testing, let's also see some statistics showing how
-(in)efficient this is. *)
+(in)efficient this is. |*)
+
 Definition cat_run''_prop (p1 p2 : prog) (s : stack) :=
   (inp (infer p1) <= size s) ==>
   (run (p1 ++ p2) s == run p2 (run p1 s)).
@@ -341,6 +342,7 @@ QuickChick (fun p1 p2 s =>
 (* +++ Passed 10000 tests (1583 discards) *)
 
 (*| This is how one changes the number of QuickChick tests. |*)
+
 Extract Constant defNumTests => "11600".
 QuickChick (fun p1 p2 s =>
   collect
@@ -363,6 +365,7 @@ https://github.com/QuickChick/QuickChick/issues/228. *)
 (*|
 Back to proving
 =============== |*)
+
 Lemma run_cat p1 p2 s :
   inp (infer p1) <= size s ->
   run (p1 ++ p2) s = run p2 (run p1 s).
