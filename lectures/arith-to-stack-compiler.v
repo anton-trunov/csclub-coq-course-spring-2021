@@ -75,11 +75,11 @@ functionality. |*)
  Simple Arithmetic Expressions
 ******************************* |*)
 
+Module ArithExpr.
+
 (*|
 Expressions
 =========== |*)
-
-Module Expr.
 
 (*|
 Abstract Syntax Tree
@@ -94,6 +94,13 @@ Inductive aexp : Type :=
 | Plus of aexp & aexp
 | Minus of aexp & aexp
 | Mult of aexp & aexp.
+
+(*| QuickChick (see below) comes with a derivation mechanism for random
+generators and conversion to strings for a wide class of inductive types. |*)
+Derive (Arbitrary, Show) for aexp.
+
+Implicit Types (e : aexp).
+
 
 (*|
 Notations
@@ -140,6 +147,7 @@ Notation "x ⋅ y" := (Mult x y)
 (*|
 Evaluator
 ========= |*)
+
 Section Evaluator.
 
 (*| Computable big-step semantics for arithmetic expressions: |*)
@@ -160,18 +168,12 @@ Check erefl : ⟦ ‴40 - 3 - 1‴ ⟧ = 36.
 Check erefl : ⟦ ‴40 - (3 - 1)‴ ⟧ = 38.
 Check erefl : ⟦ ‴2 + 2 * 2‴ ⟧ = 6.
 Check erefl : ⟦ ‴(2 + 2) * 2‴ ⟧ = 8.
-End Expr.
-
-
-(*| A test |*)
-Import Expr.
 Check erefl : ⟦ ‴40 + 3 - 1‴ ⟧ = 42.
 
 
 (*|
 Simple Stack Machine
 ==================== |*)
-Module StackMachine.
 
 (*|
 Abstract Syntax for Simple Stack Machine
@@ -180,11 +182,18 @@ Abstract Syntax for Simple Stack Machine
 (*| The stack machine instructions: |*)
 Inductive instr := Push (n : nat) | Add | Sub | Mul.
 
+
+(*| QuickChick (see below) comes with a derivation mechanism for random
+generators and conversion to strings for a wide class of inductive types. |*)
+Derive (Arbitrary, Show) for instr.
+
 (*| A program for our stack machine is simply a sequence of instructions: |*)
 Definition prog := seq instr.
 
 (*| The stack of our stack machine is represented as a list of natural numbers |*)
 Definition stack := seq nat.
+
+Implicit Types (p : prog) (s : stack).
 
 Declare Scope stack_scope.
 Delimit Scope stack_scope with S.
@@ -198,9 +207,8 @@ Notation "⊖" := Sub
 Notation "⊗" := Mul
   (at level 0, no associativity) : stack_scope.
 
-Implicit Types (p : prog) (s : stack).
-
 Open Scope S.
+
 
 (*|
 Stack Programs Semantics
@@ -217,16 +225,11 @@ Arguments run : simpl nomatch.
 
 (*| Unit and notation tests: |*)
 Check erefl : run [:: ⧐ 21; ⧐ 21; ⊕] [::] = [:: 42].
-End StackMachine.
 
 
 (*|
 Compiler from Simple Arithmetic Expressions to Stack Machine Language
 ===================================================================== |*)
-Module Compiler.
-
-Import StackMachine.
-Implicit Types (e : aexp) (p : prog).
 
 Equations compile e : prog :=
   compile ‴#n‴ := [:: ⧐ n];
@@ -235,15 +238,11 @@ Equations compile e : prog :=
   compile ‴e1 ⋅ e2‴ := compile e1 ++ compile e2 ++ [:: ⊗].
 
 Check erefl: run (compile ‴40 + 3 - 1‴) [::] = [:: 42].
-End Compiler.
 
 
 (*|
 Compiler correctness: specification and first steps to prove it
 --------------------------------------------------------------- |*)
-
-Import StackMachine.
-Import Compiler.
 
 (* TODO: maybe show the non-generalized version first *)
 
@@ -261,9 +260,8 @@ Abort.
 (*|
 Property-based randomized testing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |*)
-Derive (Arbitrary, Show) for instr.
 
-Definition cat_run'_prop (p1 p2 : prog) (s : stack) :=
+Definition cat_run'_prop p1 p2 s :=
   run (p1 ++ p2) s == run p2 (run p1 s).
 
 QuickChick cat_run'_prop.
@@ -440,10 +438,11 @@ Equations nsymb (e : aexp) : nat :=
 
 (*| First, let's check the property holds using QuickChick: |*)
 
-Derive (Arbitrary, Show) for aexp.
-QuickChick (fun e : aexp =>
+QuickChick (fun e =>
   size (compile e) <= nsymb e).
 
 Lemma compile_is_not_very_inefficient e :
   size (compile e) <= nsymb e.
 Proof. elim: e=> //= e1 IH1 e2 IH2; rewrite !size_cat /=; lia. Qed.
+
+End ArithExpr.
