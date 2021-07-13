@@ -1,7 +1,13 @@
 (*|
-==============================================
+##############################################
  A compiler from expressions to stack machine
-==============================================
+##############################################
+|*)
+
+(*|
+
+.. contents:: Table of Contents
+
 |*)
 
 From Equations Require Import Equations.
@@ -23,7 +29,7 @@ Set Equations Transparent.
 
 (*|
 How to type Unicode notations in this file
------------------------------------------- |*)
+|*)
 
 (*| To type Unicode notation you might want to use an editor with a LaTeX-like
 input mode for Unicode. Emacs supports this out-of-the-box: `M-x
@@ -65,13 +71,19 @@ functionality. |*)
 
 
 (*|
+*******************************
+ Simple Arithmetic Expressions
+******************************* |*)
+
+(*|
 Expressions
------------ |*)
+=========== |*)
+
 Module Expr.
 
 (*|
 Abstract Syntax Tree
-==================== |*)
+-------------------- |*)
 
 (*| Abstract Syntax Tree (AST) for arithmetic expressions: we support numerals
 (`Const`) and three arithmetic operations: addition (represented with the `Plus`
@@ -85,7 +97,7 @@ Inductive aexp : Type :=
 
 (*|
 Notations
-========= |*)
+^^^^^^^^^ |*)
 
 (*| This means we declare `expr` as an identifier referring to a 'notation
 entry'. |*)
@@ -157,13 +169,13 @@ Check erefl : ⟦ ‴40 + 3 - 1‴ ⟧ = 42.
 
 
 (*|
-Stack machine
-------------- |*)
+Simple Stack Machine
+==================== |*)
 Module StackMachine.
 
 (*|
-Stack machine program
-===================== |*)
+Abstract Syntax for Simple Stack Machine
+---------------------------------------- |*)
 
 (*| The stack machine instructions: |*)
 Inductive instr := Push (n : nat) | Add | Sub | Mul.
@@ -190,6 +202,10 @@ Implicit Types (p : prog) (s : stack).
 
 Open Scope S.
 
+(*|
+Stack Programs Semantics
+------------------------ |*)
+
 Equations run p s : stack :=
   run (⧐ n :: p) s := run p (n :: s);
   run (⊕ :: p) (a1 :: a2 :: s) := run p ((a2 + a1) :: s);
@@ -205,8 +221,8 @@ End StackMachine.
 
 
 (*|
-Compiler from arithmetic expressions to stack machine language
--------------------------------------------------------------- |*)
+Compiler from Simple Arithmetic Expressions to Stack Machine Language
+===================================================================== |*)
 Module Compiler.
 
 Import StackMachine.
@@ -223,11 +239,13 @@ End Compiler.
 
 
 (*|
-Compiler correctness
--------------------- |*)
+Compiler correctness: specification and first steps to prove it
+--------------------------------------------------------------- |*)
 
 Import StackMachine.
 Import Compiler.
+
+(* TODO: maybe show the non-generalized version first *)
 
 Lemma compile_correct_generalized e s :
   run (compile e) s = ⟦e⟧ :: s.
@@ -240,6 +258,9 @@ counter-example using property-based randomized testing. *)
 Abort.
 
 
+(*|
+Property-based randomized testing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |*)
 Derive (Arbitrary, Show) for instr.
 
 Definition cat_run'_prop (p1 p2 : prog) (s : stack) :=
@@ -259,6 +280,10 @@ QuickChick cat_run'_prop.
 should signal a failure or we could add a typechecker for our stack language.
 Let's go with the latter approach. *)
 
+
+(*|
+Typed stack programs
+-------------------- |*)
 
 (* The type of a stack instruction / program *)
 Record stype : Type :=
@@ -330,7 +355,7 @@ Qed.
 
 (*|
 Back to property based testing
-============================== |*)
+------------------------------ |*)
 
 (*| Using boolean implication, we can filter out incorrect stack programs when
 doing property based testing, let's also see some statistics showing how
@@ -369,8 +394,8 @@ https://github.com/QuickChick/QuickChick/issues/228. *)
 
 
 (*|
-Back to proving compiler correctness
-==================================== |*)
+Finishing proofs of compiler correctness
+---------------------------------------- |*)
 
 Lemma run_cat p1 p2 s :
   inp (infer p1) <= size s ->
@@ -397,7 +422,7 @@ Proof. exact: compile_correct_generalized. Qed.
 
 (*|
 Compiler is not very inefficient
-================================ |*)
+-------------------------------- |*)
 
 (*| Let us show the compiler does not produce very inefficient code: we are
 going to assume that the measure of inefficiency in our case is the length of
