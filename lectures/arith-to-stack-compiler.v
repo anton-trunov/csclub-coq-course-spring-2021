@@ -363,8 +363,8 @@ https://github.com/QuickChick/QuickChick/issues/228. *)
 
 
 (*|
-Back to proving
-=============== |*)
+Back to proving compiler correctness
+==================================== |*)
 
 Lemma run_cat p1 p2 s :
   inp (infer p1) <= size s ->
@@ -387,3 +387,32 @@ Qed.
 Lemma compile_correct e :
   run (compile e) [::] = [:: ⟦e⟧].
 Proof. exact: compile_correct_generalized. Qed.
+
+
+(*|
+Compiler is not very inefficient
+================================ |*)
+
+(*| Let us show the compiler does not produce very inefficient code: we are
+going to assume that the measure of inefficiency in our case is the length of
+the code the compiler produces. In our case the length of produced code should
+not exceed the number of symbols (operations and constants) in the source
+arithmetic expression. In fact, our compiler is efficient in a sense, for
+instance, it does not add spurious instructions like `<some-code>; ⧐ 0; ⊕; ...`
+but our specification so far does not ensure that. |*)
+
+Equations nsymb (e : aexp) : nat :=
+  nsymb ‴#n‴ := 1;
+  nsymb ‴e1 + e2‴ := (nsymb e1 + nsymb e2).+1;
+  nsymb ‴e1 - e2‴ := (nsymb e1 + nsymb e2).+1;
+  nsymb ‴e1 ⋅ e2‴ := (nsymb e1 + nsymb e2).+1.
+
+(*| First, let's check the property holds using QuickChick: |*)
+
+Derive (Arbitrary, Show) for aexp.
+QuickChick (fun e : aexp =>
+  size (compile e) <= nsymb e).
+
+Lemma compile_is_not_very_inefficient e :
+  size (compile e) <= nsymb e.
+Proof. elim: e=> //= e1 IH1 e2 IH2; rewrite !size_cat /=; lia. Qed.
