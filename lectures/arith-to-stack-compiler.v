@@ -1,3 +1,9 @@
+(*|
+==============================================
+ A compiler from expressions to stack machine
+==============================================
+|*)
+
 From Equations Require Import Equations.
 From QuickChick Require Import QuickChick.
 From mathcomp Require Import ssreflect ssrfun ssrbool eqtype ssrnat seq.
