@@ -2,7 +2,7 @@
 
 ## Building HTML files locally
 
-- Setup Alectryon using its [installation instructions](https://github.com/cpitclaudel/alectryon/#setup) and add it to your `PATH`. (You need Alectryon v1.1 or newer).
+- Setup Alectryon using its [installation instructions](https://github.com/cpitclaudel/alectryon/#setup) and add it to your `PATH`. (You need Alectryon v1.2 or newer).
 - Run `make` or `make doc` in the project root directory.
 
 ## Classes
