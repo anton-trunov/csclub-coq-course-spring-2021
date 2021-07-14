@@ -60,7 +60,7 @@ syntax for what we mean is `forall` *ident* `:`
 *term* `,` *term*. So in this case it is |*)
 
 Definition id :
-  forall A : Type, A -> A
+  forall (A : Type), A -> A
 :=
   fun A : Type => fun x : A => x.
 
@@ -83,6 +83,8 @@ interactively: |*)
 
 Check id bool : bool -> bool.
 Check id nat : nat -> nat.
+
+(*| ------------------------------ exercises ------------------------------ |*)
 
 (*| Another thing to appreciate is that types in
 Coq are terms and as such are first-class citizens
@@ -201,6 +203,8 @@ respectively. In other words, data constructors
 explicitly providing the types of our terms: |*)
 Check pair nat bool 42 true : prod nat bool.
 
+(*| ------------------------------ exercises ------------------------------ |*)
+
 (*|
 Implicit Arguments
 ------------------
@@ -280,6 +284,8 @@ Implicit Arguments` vernacular, Coq will try to
 figure out which arguments can be made implicit.
 |*)
 
+(*| ------------------------------ exercises ------------------------------ |*)
+
 (*|
 Notations
 ---------
@@ -328,7 +334,6 @@ Notation "A * B" :=
  - one may provide some formatting info for the
    pretty-printer (not shown here).
 |*)
-
 
 (*|
 Notation scopes
@@ -419,6 +424,8 @@ Notation "( p ; q )" := (pair p q).
 
 Check (1; false).
 
+(*| ------------------------------ exercises ------------------------------ |*)
+
 (*| It's unwieldy because the following does not
 work: `Check (1; false; 2).` |*)
 
@@ -481,6 +488,8 @@ Definition swap {A B : Type} : A * B -> B * A :=
     | (a, b) => (b, a)
     end.
 
+(*| ------------------------------ exercises ------------------------------ |*)
+
 (*|
 Sum Type
 --------
@@ -522,8 +531,12 @@ Definition swap_sum {A B : Type} :
     | inr b => inl A b
     end.
 
+About inl.
+About inr.
 
 End MyNamespace.
+
+(*| ------------------------------ exercises ------------------------------ |*)
 
 (*|
 Summary

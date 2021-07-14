@@ -81,7 +81,7 @@ we intend it to mean here. This is usually called
 syntax for what we mean is <code class="highlight coq"><span class="keyword reserved">forall</span></code> <em>ident</em> <code class="highlight coq"><span class="operator">:</span></code>
 <em>term</em> <code class="highlight coq"><span class="operator">,</span></code> <em>term</em>. So in this case it is</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">id</span> :
-  <span class="kr">forall</span> <span class="nv">A</span> : <span class="kt">Type</span>, A -&gt; A
+  <span class="kr">forall</span> (<span class="nv">A</span> : <span class="kt">Type</span>), A -&gt; A
 :=
   <span class="kr">fun</span> <span class="nv">A</span> : <span class="kt">Type</span> =&gt; <span class="kr">fun</span> <span class="nv">x</span> : A =&gt; x.</span></span></span></pre><p>Here is how one would use <code class="highlight coq"><span class="name">id</span></code>:</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk2"><span class="highlight"><span class="kn">Compute</span> id bool true.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">= true
@@ -101,7 +101,8 @@ interactively:</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk4" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk4"><span class="highlight"><span class="kn">Check</span> id bool : bool -&gt; bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">id bool : bool -&gt; bool
      : bool -&gt; bool</span></blockquote></div></div></small><span class="alectryon-wsp">
 </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk5"><span class="highlight"><span class="kn">Check</span> id nat : nat -&gt; nat.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">id nat : nat -&gt; nat
-     : nat -&gt; nat</span></blockquote></div></div></small></span></pre><p>Another thing to appreciate is that types in
+     : nat -&gt; nat</span></blockquote></div></div></small></span></pre><p>------------------------------ exercises ------------------------------</p>
+<p>Another thing to appreciate is that types in
 Coq are terms and as such are first-class citizens
 and can be stored in data structures, passed to
 functions and returned from functions.</p>
@@ -185,7 +186,8 @@ respectively. In other words, data constructors
 <code class="highlight coq"><span class="name">true</span></code> we use the <code class="highlight coq"><span class="name">pair</span></code> constructor like so,
 explicitly providing the types of our terms:</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chkb"><span class="highlight"><span class="kn">Check</span> pair nat bool <span class="mi">42</span> true : prod nat bool.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">pair nat bool <span class="mi">42</span> true : prod nat bool
-     : prod nat bool</span></blockquote></div></div></small></span></pre></div>
+     : prod nat bool</span></blockquote></div></div></small></span></pre><p>------------------------------ exercises ------------------------------</p>
+</div>
 <div class="section" id="implicit-arguments">
 <h1>Implicit Arguments</h1>
 <p>Passing explicitly types can be very annoying,
@@ -249,6 +251,7 @@ for us:</p>
 current file or upon encountering the <code class="highlight coq"><span class="keyword namespace">Unset</span>
 <span class="name">Implicit</span> <span class="keyword namespace">Arguments</span></code> vernacular, Coq will try to
 figure out which arguments can be made implicit.</p>
+<p>------------------------------ exercises ------------------------------</p>
 </div>
 <div class="section" id="notations">
 <h1>Notations</h1>
@@ -369,7 +372,8 @@ is, as you already know, a shorthand for <code class="highlight coq"><span class
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;( p ; q )&quot;</span> := (pair p q).</span></span><span class="alectryon-wsp">
 </span></span><span class="alectryon-wsp"><span class="highlight">
 </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk1e" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk1e"><span class="highlight"><span class="kn">Check</span> (<span class="mi">1</span>; false).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">(<span class="mi">1</span>; false)
-     : nat * bool</span></blockquote></div></div></small></span></pre><p>It's unwieldy because the following does not
+     : nat * bool</span></blockquote></div></div></small></span></pre><p>------------------------------ exercises ------------------------------</p>
+<p>It's unwieldy because the following does not
 work: <code class="highlight coq"><span class="keyword namespace">Check</span> <span class="operator">(</span><span class="literal number integer">1</span><span class="operator">;</span> <span class="name">false</span><span class="operator">;</span> <span class="literal number integer">2</span><span class="operator">).</span></code></p>
 <p>But we would want to use triples, quadruples,
 etc. In this case, recursive notations come to the
@@ -424,7 +428,8 @@ components of the input pair:</p>
   <span class="kr">fun</span> <span class="nv">p</span> =&gt;
     <span class="kr">match</span> p <span class="kr">with</span>
     | (a, b) =&gt; (b, a)
-    <span class="kr">end</span>.</span></span></span></pre></div>
+    <span class="kr">end</span>.</span></span></span></pre><p>------------------------------ exercises ------------------------------</p>
+</div>
 </div>
 <div class="section" id="sum-type">
 <h1>Sum Type</h1>
@@ -460,8 +465,19 @@ type:</p>
     | inr b =&gt; inl A b
     <span class="kr">end</span>.</span></span><span class="alectryon-wsp">
 </span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk27" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk27"><span class="highlight"><span class="kn">About</span> inl.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">inl : <span class="kr">forall</span> [A : <span class="kt">Type</span>] (B : <span class="kt">Type</span>), A -&gt; A + B
 
-</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">MyNamespace</span>.</span></span></span></pre></div>
+inl <span class="kr">is</span> template universe polymorphic on sum.u0 sum.u1
+<span class="kn">Arguments</span> inl [A]%type_scope _%type_scope _
+Expands to: Constructor SerTop.MyNamespace.inl</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture02-v-chk28" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture02-v-chk28"><span class="highlight"><span class="kn">About</span> inr.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">inr : <span class="kr">forall</span> (<span class="nv">A</span> : <span class="kt">Type</span>) [B : <span class="kt">Type</span>], B -&gt; A + B
+
+inr <span class="kr">is</span> template universe polymorphic on sum.u0 sum.u1
+<span class="kn">Arguments</span> inr _%type_scope [B]%type_scope _
+Expands to: Constructor SerTop.MyNamespace.inr</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">End</span> <span class="nf">MyNamespace</span>.</span></span></span></pre><p>------------------------------ exercises ------------------------------</p>
+</div>
 <div class="section" id="summary">
 <h1>Summary</h1>
 <div class="section" id="vernacular-summary">

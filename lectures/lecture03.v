@@ -128,10 +128,12 @@ and [prod]:
 
 Definition andC (A B : Prop) :
   A /\ B -> B /\ A :=
-  fun pAandB =>
-    match pAandB with
-    | conj pA pB => conj pB pA
+  fun paVb =>
+    match paVb with
+    | conj pa pb => conj pb pa
     end.
+
+(*| ------------------------------ exercises ------------------------------ |*)
 
 (*| Have you noticed that the proof of `A /\ B ->
 B /\ A` looks the same (modulo contructor names)
@@ -171,8 +173,8 @@ the `Prop` universe and `sum` inhabits `Type`. |*)
 
 Definition and_or_distr (A B C : Prop) :
   (A \/ B) /\ C -> (A /\ C) \/ (B /\ C)
-:= fun '(conj paob pc) =>
-     match paob with
+:= fun '(conj paVb pc) =>
+     match paVb with
      | or_introl pa => or_introl (conj pa pc)
      | or_intror pb => or_intror (conj pb pc)
      end.
@@ -237,8 +239,8 @@ Definition exfalso_quodlibet {A : Prop} :
 (*| One more simple example: |*)
 Definition a_or_false_implies_a (A : Prop) :
   A \/ False -> A
-:= fun paof =>
-     match paof with
+:= fun paVb =>
+     match paVb with
      | or_introl pa => pa
      | or_intror pf => exfalso_quodlibet pf
      end.
@@ -259,8 +261,7 @@ Definition not (A : Prop) := A -> False.
 Notation "~ A" := (not A) : type_scope.
 
 (*| To prove `A -> ~ ~ A` one needs to keep in
-mind the statement means `A -> ((A -> False) ->
-False`): |*)
+mind the statement means `A -> ((A -> False) -> False`): |*)
 Definition double_negation_introduction (A : Prop) :
    A -> ~ ~ A
 := fun pa : A => fun pna : ~ A => pna pa.
@@ -272,6 +273,8 @@ negation elimination principle in it, i.e. it's
 impossible to provide a proof term for the type `~
 ~ A -> A`, where `A` is an arbitrary proposition.
 |*)
+
+(*| ------------------------------ exercises ------------------------------ |*)
 
 
 (*|
@@ -372,6 +375,7 @@ Definition curry_dep A (P : A -> Prop) Q :
       fun px : P x =>
         f (ex_intro P x px).
 
+(*| ------------------------------ exercises ------------------------------ |*)
 
 (*|
 Equality
@@ -410,8 +414,14 @@ our language using the notion of propositional
 equality. This is going to be our first encounter
 of *indexed* types. |*)
 
+(* Unset Implicit Arguments. *)
+
 Inductive eq (A : Type) (x : A) : A -> Prop :=
   | eq_refl : eq x x.
+
+Check eq_refl.
+
+(* Set Implicit Arguments. *)
 
 (*| The only notion of equality we are putting in
 is *reflexivity*.
@@ -446,10 +456,11 @@ Check eq_refl 0 : 0 = 0.
 Check eq_refl : 0 = 0.
 Check eq_refl : (fun _ => 0) 42 = 0.
 Check eq_refl : 2 + 2 = 4.
+Check eq_refl 4 : 2 + 2 = 4.
 
 (*| The following does not work because here one
-can either build terms like `eq_refl 0` (or type
-`0 = 0`) or `eq_refl 1` (of type `1`) |*)
+can either build terms like `eq_refl 0` (of type
+`0 = 0`) or `eq_refl 1` (of type `1 = 1`) |*)
 Fail Check eq_refl : 0 = 1.
 
 (*| So what terms are considered definitionally

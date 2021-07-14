@@ -1,153 +1,96 @@
-Section PropositionalLogic.
+From mathcomp Require Import ssreflect.
 
-Variables A B C : Prop.
+Axiom replace_with_your_solution_here : forall {A : Type}, A.
 
-Definition anb1 :
-  A /\ B -> A
-:=
+(* Remember function from the first lecture *)
 
-Definition impl_trans :
-  (A -> B) -> (B -> C) -> A -> C
-:=
+Definition foo := fun (f : bool -> bool) => f true.
 
-Definition HilbertS :
-  (A -> B -> C) -> (A -> B) -> A -> C
-:=
+(* We can generalize it a bit *)
 
-Definition DNE_triple_neg :
-  ~ ~ ~ A -> ~ A
-:=
-
-Definition or_comm :
-  A \/ B -> B \/ A
-:=
-
-End PropositionalLogic.
+Definition applyb : bool -> (bool -> bool) -> bool 
+  := fun (b : bool) (f : bool -> bool) => f b.
 
 
+(* implement polymorphic version of the apply funtion *)
+(* Say about `forall` erasing *)
 
-Section Quantifiers.
+(* implement parameterized inductive of prod3 *)
 
-Variable T : Type.
-Variable A : Prop.
-Variable P Q : T -> Prop.
-Definition forall_conj_comm :
-  (forall x, P x /\ Q x) <-> (forall x, Q x /\ P x)
-:=
-
-Definition forall_disj_comm :
-  (forall x, P x \/ Q x) <-> (forall x, Q x \/ P x)
-:=
-
-Definition not_exists_forall_not :
-  ~(exists x, P x) -> forall x, ~P x
-:=
-
-Definition exists_forall_not_ :
-(exists x, A -> P x) -> (forall x, ~P x) -> ~A.
-
-(** Extra exercise (feel free to skip): the dual Frobenius rule *)
-Definition LEM :=
-  forall P : Prop, P \/ ~ P.
-
-Definition Frobenius2 :=
-  forall (A : Type) (P : A -> Prop) (Q : Prop),
-    (forall x, Q \/ P x) <-> (Q \/ forall x, P x).
-
-Definition lem_iff_Frobenius2 :
-  LEM <-> Frobenius2
-:=
-
-End Quantifiers.
+(* Inductive prod3 ... : ... :=
+  | triple ... *)
 
 
+(* Without Coq try to infer `prod3`'s and `triple`'s type *)
+
+(*
+
+Check prod3.
+Check triple.
+
+*)
+
+(* Make implicit some `apply`'s and `triple`'s arguments *)
+(* Say about alternative way of Implicit's  *)
+
+(* Introduce a haskell like `$` notation *)
+
+Section Haskell.
+
+(* Local Notation .. := .. . *)
+
+End Haskell.
+
+(* Introduce a (a; b; c) notation for triple *)
+
+(* Notation .. := .. *)
 
 
+(* function composition *)
 
-Section Equality.
-
-(** exercise: *)
-Definition f_congr {A B} (f : A -> B) (x y : A) :
-  x = y  ->  f x = f y
-:=
-
-Definition f_congr' A B (f g : A -> B) (x y : A) :
-  f = g  ->  x = y  ->  f x = g y
-:=
-
-(** extra exercise *)
-Definition congId A {x y : A} (p : x = y) :
-  f_congr (fun x => x) p = p :=
-
-(* exercise *)
-Definition pair_inj A B (a1 a2 : A) (b1 b2 : B) :
-  (a1, b1) = (a2, b2) -> (a1 = a2) /\ (b1 = b2)
-:=
-
-End Equality.
+Definition comp A B C (f : B -> A) (g : C -> B)  : C -> A
+:= replace_with_your_solution_here.
 
 
-
-Section ExtensionalEqualityAndComposition.
-
-Variables A B C D : Type.
-
-(** Exercise 2a *)
-(** [\o] is a notation for function composition in MathComp, prove that it's associative *)
-
-Definition compA (f : A -> B) (g : B -> C) (h : C -> D) :
-  (h \o g) \o f = h \o (g \o f)
-:=
+(* Introduce a notation that lets us use composition like so: f \o g.
+   You might need to tweak the implicit status of some comp's arguments *)
 
 
-(** [=1] stands for extensional equality on unary functions,
-    i.e. [f =1 g] means [forall x, f x = g x].
-    This means it's an equivalence relation, i.e. it's reflexive, symmetric and transitive.
-    Let us prove a number of facts about [=1]. *)
+(* implement functions with the given signatures *)
+
+Definition prodA (A B C : Type) :
+  (A * B) * C -> A * (B * C)
+:= replace_with_your_solution_here.
+
+Definition sumA (A B C : Type) :
+  (A + B) + C -> A + (B + C)
+:= replace_with_your_solution_here.
+
+Definition prod_sumD (A B C : Type) :
+  A * (B + C) -> (A * B) + (A * C)
+:= replace_with_your_solution_here.
+
+Definition sum_prodD (A B C : Type) :
+  A + (B * C) -> (A + B) * (A + C)
+:= replace_with_your_solution_here.
+
+(* Introduce `unit` type (a type with exactly one canonical form) *)
+
+(* () : () *)
+Inductive unit : Type :=
+  | tt.
+
+Definition unit_initial (A : Type) :
+  A -> unit
+:= replace_with_your_solution_here.
+
+(* Introduce empty type, call `void` *)
+
+Inductive void : Type := .
+
+Definition void_terminal (A : Type) :
+  void -> A
+:= replace_with_your_solution_here.
 
 
-(** Exercise: Reflexivity *)
-Definition eqext_refl :
-  forall (f : A -> B), f =1 f
-:=
-
-(** Exercise: Symmetry *)
-Definition eqext_sym :
-  forall (f g : A -> B), f =1 g -> g =1 f
-:=
-
-(** Exercise: Transitivity *)
-Definition eqext_trans :
-  forall (f g h : A -> B), f =1 g -> g =1 h -> f =1 h
-:=
-
-(** Exercise: left congruence *)
-Definition eq_compl :
-  forall (f g : A -> B) (h : B -> C),
-    f =1 g -> h \o f =1 h \o g
-:=
-
-(** Exercise: right congruence *)
-Definition eq_compr :
-  forall (f g : B -> C) (h : A -> B),
-    f =1 g -> f \o h =1 g \o h
-:=
-
-End ExtensionalEqualityAndComposition.
-
-
-From mathcomp Require Import ssreflect ssrfun ssrbool eqtype.
-
-(* After importing `eqtype` you need to either use a qualified name for
-`eq_refl`: `Logic.eq_refl`, or use the `erefl` notation.
-This is because `eqtype` reuses the `eq_refl` identifier for a
-different lemma.
- *)
-
-Definition iff_is_if_and_only_if :
-  forall a b : bool, (a ==> b) && (b ==> a) = (a == b)
-:=
-
-Definition negbNE :
-  forall b : bool, ~~ ~~ b = true -> b = true
-:=
+(* Think of some more type signatures involving void, unit, sum, prod *)

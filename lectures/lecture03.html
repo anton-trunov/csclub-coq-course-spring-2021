@@ -113,10 +113,11 @@ and [prod]:</p>
 <p>Let's prove that conjunction is commutative</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">andC</span> (<span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Prop</span>) :
   A /\ B -&gt; B /\ A :=
-  <span class="kr">fun</span> <span class="nv">pAandB</span> =&gt;
-    <span class="kr">match</span> pAandB <span class="kr">with</span>
-    | conj pA pB =&gt; conj pB pA
-    <span class="kr">end</span>.</span></span></span></pre><p>Have you noticed that the proof of <code class="highlight coq"><span class="name">A</span> <span class="operator">/\</span> <span class="name">B</span> <span class="operator">-&gt;</span>
+  <span class="kr">fun</span> <span class="nv">paVb</span> =&gt;
+    <span class="kr">match</span> paVb <span class="kr">with</span>
+    | conj pa pb =&gt; conj pb pa
+    <span class="kr">end</span>.</span></span></span></pre><p>------------------------------ exercises ------------------------------</p>
+<p>Have you noticed that the proof of <code class="highlight coq"><span class="name">A</span> <span class="operator">/\</span> <span class="name">B</span> <span class="operator">-&gt;</span>
 <span class="name">B</span> <span class="operator">/\</span> <span class="name">A</span></code> looks the same (modulo contructor names)
 as the function that swaps the two components of a
 pair?</p>
@@ -147,8 +148,8 @@ and [sum] types:</p>
 the <code class="highlight coq"><span class="keyword type">Prop</span></code> universe and <code class="highlight coq"><span class="name">sum</span></code> inhabits <code class="highlight coq"><span class="keyword type">Type</span></code>.</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">and_or_distr</span> (<span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> : <span class="kt">Prop</span>) :
   (A \/ B) /\ C -&gt; (A /\ C) \/ (B /\ C)
-:= <span class="kr">fun</span> &#39;(conj paob pc) =&gt;
-     <span class="kr">match</span> paob <span class="kr">with</span>
+:= <span class="kr">fun</span> &#39;(conj paVb pc) =&gt;
+     <span class="kr">match</span> paVb <span class="kr">with</span>
      | or_introl pa =&gt; or_introl (conj pa pc)
      | or_intror pb =&gt; or_intror (conj pb pc)
      <span class="kr">end</span>.</span></span></span></pre></div>
@@ -196,8 +197,8 @@ that falsehood implies anything:</p>
 := <span class="kr">fun</span> <span class="nv">pF</span> : <span class="kt">False</span> =&gt; <span class="kr">match</span> pF <span class="kr">with</span> <span class="kr">end</span>. <span class="c">(* no branches *)</span></span></span></span></pre><p>One more simple example:</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">a_or_false_implies_a</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
   A \/ <span class="kt">False</span> -&gt; A
-:= <span class="kr">fun</span> <span class="nv">paof</span> =&gt;
-     <span class="kr">match</span> paof <span class="kr">with</span>
+:= <span class="kr">fun</span> <span class="nv">paVb</span> =&gt;
+     <span class="kr">match</span> paVb <span class="kr">with</span>
      | or_introl pa =&gt; pa
      | or_intror pf =&gt; exfalso_quodlibet pf
      <span class="kr">end</span>.</span></span></span></pre></div>
@@ -212,8 +213,7 @@ implication <code class="highlight coq"><span class="name">A</span> <span class=
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">not</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) := A -&gt; <span class="kt">False</span>.</span></span><span class="alectryon-wsp">
 </span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk2" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk2"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;~ A&quot;</span> := (not A) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;~ _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
 [notation-overridden,parsing]</span></blockquote></div></div></small></span></pre><p>To prove <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="operator">~</span> <span class="operator">~</span> <span class="name">A</span></code> one needs to keep in
-mind the statement means <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="operator">((</span><span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span><span class="operator">)</span> <span class="operator">-&gt;</span>
-<span class="keyword type">False</span></code>):</p>
+mind the statement means <code class="highlight coq"><span class="name">A</span> <span class="operator">-&gt;</span> <span class="operator">((</span><span class="name">A</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span><span class="operator">)</span> <span class="operator">-&gt;</span> <span class="keyword type">False</span></code>):</p>
 <pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Definition</span> <span class="nf">double_negation_introduction</span> (<span class="nv">A</span> : <span class="kt">Prop</span>) :
    A -&gt; ~ ~ A
 := <span class="kr">fun</span> <span class="nv">pa</span> : A =&gt; <span class="kr">fun</span> <span class="nv">pna</span> : ~ A =&gt; pna pa.</span></span></span></pre><p>The logic defined in this style is called
@@ -222,6 +222,7 @@ it's not possible to prove the classical double
 negation elimination principle in it, i.e. it's
 impossible to provide a proof term for the type <code class="highlight coq"><span class="operator">~</span>
 <span class="operator">~</span> <span class="name">A</span> <span class="operator">-&gt;</span> <span class="name">A</span></code>, where <code class="highlight coq"><span class="name">A</span></code> is an arbitrary proposition.</p>
+<p>------------------------------ exercises ------------------------------</p>
 </div>
 <div class="section" id="equivalence-biimplication">
 <h2>Equivalence (biimplication)</h2>
@@ -296,7 +297,8 @@ existential quantifier:</p>
   <span class="kr">fun</span> <span class="nv">f</span> : (<span class="kr">exists</span> <span class="nv">x</span>, P x) -&gt; Q =&gt;
     <span class="kr">fun</span> <span class="nv">x</span> : A =&gt;
       <span class="kr">fun</span> <span class="nv">px</span> : P x =&gt;
-        f (ex_intro P x px).</span></span></span></pre></div>
+        f (ex_intro P x px).</span></span></span></pre><p>------------------------------ exercises ------------------------------</p>
+</div>
 <div class="section" id="equality">
 <h2>Equality</h2>
 <p>Equality is one of the main topics of type
@@ -323,8 +325,15 @@ terms are definitionally equal.</p>
 our language using the notion of propositional
 equality. This is going to be our first encounter
 of <em>indexed</em> types.</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">eq</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">x</span> : A) : A -&gt; <span class="kt">Prop</span> :=
-  | eq_refl : eq x x.</span></span></span></pre><p>The only notion of equality we are putting in
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-wsp"><span class="highlight"><span class="c">(* Unset Implicit Arguments. *)</span>
+
+</span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Inductive</span> <span class="nf">eq</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">x</span> : A) : A -&gt; <span class="kt">Prop</span> :=
+  | eq_refl : eq x x.</span></span><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk5"><span class="highlight"><span class="kn">Check</span> eq_refl.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl
+     : <span class="kr">forall</span> (<span class="nv">A</span> : <span class="kt">Type</span>) (<span class="nv">x</span> : A), eq x x</span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-wsp"><span class="highlight">
+<span class="c">(* Set Implicit Arguments. *)</span></span></span></pre><p>The only notion of equality we are putting in
 is <em>reflexivity</em>.</p>
 <p>In the definition above the unnamed type parameter
 <code class="highlight coq"><span class="name">A</span></code> after the colon is called an <em>index</em>. The <code class="highlight coq"><span class="name">x</span></code>
@@ -339,7 +348,7 @@ and there are no other terms of type <code class="highlight coq"><span class="na
 <em>type families</em> as <code class="highlight coq"><span class="name">eq</span></code> lets us simulate equality.</p>
 <p>First, let us define a convenient notation for
 the <code class="highlight coq"><span class="name">eq</span></code> type.</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk5" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk5"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;x = y&quot;</span> := (eq x y) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ = _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk6"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;x = y&quot;</span> := (eq x y) : type_scope.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight"><span class="kn">Notation</span> <span class="s2">&quot;_ = _&quot;</span> was already used <span class="kr">in</span> scope type_scope.
 [notation-overridden,parsing]</span></blockquote></div></div></small><span class="alectryon-wsp">
 </span></span><span class="alectryon-wsp"><span class="highlight">
 </span></span><span class="alectryon-sentence"><span class="alectryon-input"><span class="highlight"><span class="kn">Arguments</span> eq_refl {A x}, {A} x.</span></span></span></pre><p>We are going to use <code class="highlight coq"><span class="name">eq_refl</span></code> as the proof
@@ -348,40 +357,42 @@ are equal. For example, we can check that terms
 that are equal modulo <span class="math">\(\beta\)</span>- and
 <span class="math">\(\iota\)</span>- reduction are propositionally equal
 (because those are equal definitionally too).</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk6" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk6"><span class="highlight"><span class="kn">Check</span> eq_refl <span class="mi">0</span> : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk7"><span class="highlight"><span class="kn">Check</span> eq_refl <span class="mi">0</span> : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
      : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
-</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk7" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk7"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk8"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">0</span> = <span class="mi">0</span>
      : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
-</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk8" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk8"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : (<span class="kr">fun</span>=&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk9"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">_</span> =&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : (<span class="kr">fun</span>=&gt; <span class="mi">0</span>) <span class="mi">42</span> = <span class="mi">0</span>
      : <span class="mi">0</span> = <span class="mi">0</span></span></blockquote></div></div></small><span class="alectryon-wsp">
-</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk9" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk9"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chka"><span class="highlight"><span class="kn">Check</span> eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>
+     : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span></span></blockquote></div></div></small><span class="alectryon-wsp">
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkb"><span class="highlight"><span class="kn">Check</span> eq_refl <span class="mi">4</span> : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span>
      : <span class="mi">2</span> + <span class="mi">2</span> = <span class="mi">4</span></span></blockquote></div></div></small></span></pre><p>The following does not work because here one
-can either build terms like <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">0</span></code> (or type
-<code class="highlight coq"><span class="literal number integer">0</span> <span class="operator">=</span> <span class="literal number integer">0</span></code>) or <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">1</span></code> (of type <code class="highlight coq"><span class="literal number integer">1</span></code>)</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chka" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chka"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
+can either build terms like <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">0</span></code> (of type
+<code class="highlight coq"><span class="literal number integer">0</span> <span class="operator">=</span> <span class="literal number integer">0</span></code>) or <code class="highlight coq"><span class="name">eq_refl</span> <span class="literal number integer">1</span></code> (of type <code class="highlight coq"><span class="literal number integer">1</span> <span class="operator">=</span> <span class="literal number integer">1</span></code>)</p>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkc"><span class="highlight"><span class="kn">Fail</span> <span class="kn">Check</span> eq_refl : <span class="mi">0</span> = <span class="mi">1</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">The command has indeed failed <span class="kr">with</span> message:
 The term <span class="s2">&quot;eq_refl&quot;</span> has type <span class="s2">&quot;0 = 0&quot;</span>
 while it <span class="kr">is</span> expected to <span class="nb">have</span> type <span class="s2">&quot;0 = 1&quot;</span>
 (cannot <span class="nb">unify</span> <span class="s2">&quot;0&quot;</span> <span class="kn">and</span> <span class="s2">&quot;1&quot;</span>).</span></blockquote></div></div></small></span></pre><p>So what terms are considered definitionally
 equal? The <code class="highlight coq"><span class="name">eq_refl</span></code> constructor lets us check
 that. Let's see some examples for functions:</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkb" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkb"><span class="highlight"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkd"><span class="highlight"><span class="kn">Variables</span> <span class="nv">A</span> <span class="nv">B</span> : <span class="kt">Type</span>.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
 declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
 declaration which shall not be available without
 qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small><span class="alectryon-wsp">
-</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkc" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkc"><span class="highlight"><span class="kn">Variable</span> <span class="nv">f</span> : A -&gt; B.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
+</span></span><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chke"><span class="highlight"><span class="kn">Variable</span> <span class="nv">f</span> : A -&gt; B.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">Interpreting this declaration <span class="kr">as</span> <span class="kr">if</span> a <span class="kn">global</span>
 declaration prefixed <span class="bp">by</span> <span class="s2">&quot;Local&quot;</span>, i.e. <span class="kr">as</span> a <span class="kn">global</span>
 declaration which shall not be available without
 qualification when imported. [local-declaration,scope]</span></blockquote></div></div></small></span></pre><p>Syntactically equal functions are
 definitionally equal</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkd" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkd"><span class="highlight"><span class="kn">Check</span> eq_refl : f = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : f = f
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkf"><span class="highlight"><span class="kn">Check</span> eq_refl : f = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : f = f
      : f = f</span></blockquote></div></div></small></span></pre><p><span class="math">\(\alpha\)</span>-renaming</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chke" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chke"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x) = (<span class="kr">fun</span> <span class="nv">y</span> =&gt; y).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : id = id
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk10" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk10"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; x) = (<span class="kr">fun</span> <span class="nv">y</span> =&gt; y).</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : id = id
      : id = id
 <span class="kn">where</span>
 <span class="nl">?T</span> : [x : <span class="nl">?T</span> |- <span class="kt">Type</span>] (x cannot be used)</span></blockquote></div></div></small></span></pre><p><span class="math">\(\eta\)</span>-expansion: this equality is called the
 uniqueness principle in this case it means 'every
 element of a function type is a function'.</p>
-<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chkf" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chkf"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; f x) = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : [eta f] = f
+<pre class="alectryon-io"><!-- Generator: Alectryon --><span class="alectryon-sentence"><input class="alectryon-toggle" id="lecture03-v-chk11" style="display: none" type="checkbox"><label class="alectryon-input" for="lecture03-v-chk11"><span class="highlight"><span class="kn">Check</span> eq_refl : (<span class="kr">fun</span> <span class="nv">x</span> =&gt; f x) = f.</span></label><small class="alectryon-output"><div class="alectryon-output-sticky-wrapper"><div class="alectryon-messages"><blockquote class="alectryon-message"><span class="highlight">eq_refl : [eta f] = f
      : [eta f] = f</span></blockquote></div></div></small></span></pre><p>Let's prove propositional equality is an
 equivalence relation, i.e. reflexive, symmetric
 and transitive.</p>
