@@ -51,8 +51,8 @@ type. And to do that, we need to be able to name
 parameters in *type signatures* (and not just in
 function definitions).
 
-Essentially, we want to say something like `id :
-(A : Type) -> A -> A` and while this might be a
+Essentially, we want to say something like 
+`id : (A : Type) -> A -> A` and while this might be a
 valid type signature in Coq, it does not mean what
 we intend it to mean here. This is usually called
 :math:`\Pi`-types in type theory and the right Coq
@@ -60,9 +60,9 @@ syntax for what we mean is `forall` *ident* `:`
 *term* `,` *term*. So in this case it is |*)
 
 Definition id :
-  forall (A : Type), A -> A
+  forall (A : Type), A    -> A
 :=
-  fun A : Type => fun x : A => x.
+  fun (A : Type) (x : A) => x.
 
 (*| Here is how one would use `id`: |*)
 Compute id bool true.
@@ -160,8 +160,20 @@ Parameterized inductive types
 (*| Instead we can use *parameterized* inductive
 types like the following product type: |*)
 
+(* prodn ~~ prod nat nat *)
+(* prod A B  *)
+(* pair A B a b  *)
+(* prod : Type -> Type -> Type *)
+(*  *)
+(* prod3 *)
+
 Inductive prod (A B : Type) : Type :=
   | pair of A & B.
+
+Check pair.
+(* pair :  *)
+
+Print prod.
 
 (*| Important: `prod` is not a type, it's a type
 constructor! You can check it like so: |*)
@@ -201,7 +213,7 @@ respectively. In other words, data constructors
 (*| To create a pair of two terms like `42` and
 `true` we use the `pair` constructor like so,
 explicitly providing the types of our terms: |*)
-Check pair nat bool 42 true : prod nat bool.
+Check pair _ _ 42 true : prod nat bool.
 
 (*| ------------------------------ exercises ------------------------------ |*)
 
@@ -435,6 +447,7 @@ rescue. |*)
 Notation "( p , q , .. , r )" :=
   (pair .. (pair p q) .. r) : core_scope.
 
+(* pair 1 false *)
 Check (1, false) : nat * bool.
 Check (1, false, 3) : nat * bool * nat.
 Check (1, false, 3, true) : nat * bool * nat * bool.
@@ -520,9 +533,12 @@ and returns a value of the `AST` type wrapped in
 reports this as a value of a specialized `Error`
 type wrapped into `inr` data constructor. |*)
 
+Check inr.
+
 (*| Here is a simple example of using the `sum`
 typeaking to the `swap` function for the product
 type: |*)
+
 Definition swap_sum {A B : Type} :
   A + B -> B + A :=
   fun s =>

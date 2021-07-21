@@ -352,6 +352,9 @@ from using an erroneous definition: |*)
 Fail Fixpoint addn_loop (n m : nat) {struct n} : nat :=
   if n is S _ then S (addn_loop n m) else m.
 
+
+(******************************** Ex *******************************)
+
 (*|
 Mutual Recursion
 ^^^^^^^^^^^^^^^^
@@ -412,7 +415,7 @@ notations for our own types but we are not going to discuss it. |*)
 
 (*| Coq lets us control what we see when we do queries.
 E.g. here is how to switch off all the syntactic sugar: |*)
-Set Printing All.
+Unset Printing Notations.
 Check 5 + 4.
 Unset Printing All.
 
@@ -423,6 +426,13 @@ Locate ".+1".
 
 Variable x : nat.
 Check x.+1.
+
+From mathcomp Require Import ssrnat.
+
+Fixpoint divn (n m : nat) {struct n} : nat := 
+  if n is S n' then 
+    divn (n - m) m 
+  else O.
 
 (*| One important difference between notations and definitions is that
 definitions represent a semantic barrier and definitions are an essential part

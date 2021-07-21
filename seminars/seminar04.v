@@ -14,21 +14,12 @@ Variables A B C : Prop.
 Lemma andA :
   (A /\ B) /\ C -> A /\ (B /\ C).
 Proof.
-case.
-case.
-move=> a b c.
-split.
-- exact: a.
-split.
-- exact: b.
-exact: c.
-Qed.
+Admitted.
 
 Lemma andA' :
   (A /\ B) /\ C -> A /\ (B /\ C).
 Proof.
-by case=> [[a b] c].
-Defined.
+Admitted.
 
 About andA.
 
@@ -43,20 +34,18 @@ Compute andA'.
 Lemma conj_disjD :
   A /\ (B \/ C) -> (A /\ B) \/ (A /\ C).
 Proof.
-by case=> [a [b|c]]; [left|right].
-Qed.
+Admitted.
 
 (** * Exercise *)
 Lemma disj_conjD :
   A \/ (B /\ C) -> (A \/ B) /\ (A \/ C).
 Proof.
-by case=> [a|[b c]]; split; left + right.
-Qed.
-
+Admitted.
 (** * Exercise *)
 Lemma notTrue_iff_False :
   (~ True) <-> False.
-Proof. by []. Qed.
+Proof. 
+Admitted.
 (** Hint 1: use [case] tactic on a proof of [False] to apply the explosion
 principle. *)
 (** Hint 2: to solve the goal of the form [True], use [exact: I], or simple
@@ -68,40 +57,26 @@ automation. *)
 Lemma imp_trans :
   (A -> B) -> (B -> C) -> (A -> C).
 Proof.
-move=> ab bc a.
-move: bc.
-apply.
-move: ab.
-apply.
-exact: a.
-
-Restart. Show.
-
-by move=> ab bc /ab.
-Qed.
+Admitted.
 
 
 (** * Exercise *)
 Lemma dne_False :
   ~ ~ False -> False.
 Proof.
-apply; exact.
-Qed.
+Admitted.
 
 (** * Exercise *)
 Lemma dne_True :
   ~ ~ True -> True.
 Proof.
-(* move=> ?; exact: I. *)
-by [].
-Qed.
+Admitted.
 
 (** * Exercise *)
 Lemma DNE_triple_neg :
   ~ ~ ~ A -> ~ A.
 Proof.
-by move=> /[swap] a; do ? apply.
-Qed.
+Admitted.
 (** Hint : use `apply: (identifier)`
 to apply a hypothesis from the context to
 the goal and keep the hypothesis in the context *)

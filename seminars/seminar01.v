@@ -20,27 +20,38 @@ Definition negb :=
 (*| 1a. Define `orb` function implementing boolean disjunction and test it
 _thoroughly_ using the command `Compute`. |*)
 
-Definition orb (b c : bool) : bool := ...
+Definition orb (b c : bool) : bool := 
+  match b with
+  | true => true
+  | false => 
+    match c with
+    | true => true
+    | false => false
+    end
+  end.
 
-Compute orb ...
-...
-Compute orb ...
+Compute orb true true.
 
 (*| 1b. Define `addb` function implementing _exclusive_ boolean disjunction.
 Try to come up with more than one definition (try to make it interesting
 and don't just swap the variables) and explore its reduction behavior
 in the presence of symbolic variables. |*)
 
-Definition addb (b c : bool) : bool := ...
+Definition addb (b c : bool) : bool := 
+  match b with
+  | true => negb c
+  | false => c
+  end.
 
 (*| 1c. Define `eqb` function implementing equality on booleans, i.e. `eqb b c`
 must return `true` if and only iff `b` is equal to `c`. Add unit tests. |*)
 
-Definition eqb (b c : bool) : bool := ...
-
-Compute eqb ...
-...
-Compute eqb ...
+Definition eqb (b c : bool) : bool := 
+  match b, c with 
+  | true , true  => true
+  | false, false => true
+  | _    , _     => false
+  end.
 
 
 (** * Exercise 2 : arithmetic *)
@@ -54,22 +65,33 @@ Inductive nat : Type :=
 number and decrements it by 2, e.g. for the number `5` it must return `3`. Write
 some unit tests for `dec2`. What should it return for `1` and `0`? |*)
 
-Definition dec2 (n : nat) : nat := ...
+Definition dec2 (n : nat) : nat := 
+  match n with
+  | S (S n') => n'
+  | _        => O
+  end.
 
-Compute dec2 ...
-...
-Compute dec2 ...
+Print dec2.
 
 
 (*| 2b. Define `subn` function of type `nat -> nat -> nat` which takes two
 natural numbers `m` and `n` and returns the result of subtracting `n` from `m`.
 E.g. `subn 5 3` returns `2`. Write some unit tests. |*)
 
-Fixpoint subn (m n : nat) : nat := ...
+Fixpoint subn (n m : nat) : nat := 
+  match n, m with
+  | S n', S m' => subn n' m'
+  | O   , _    => O
+  | _   , O    => n
+  end.
 
-Compute subn ...
-...
-Compute subn ...
+Fixpoint div2 n : nat :=
+  match n with
+  | S (S n) => S (div2 n)
+  | _       => O
+  end.
+
+Compute (div2 (S (S (S (S (S O)))))).
 
 (*| 2c. Define an `muln` function of type `nat -> nat -> nat` which takes two
 natural numbers `m` and `n` and returns the result of their multiplication.

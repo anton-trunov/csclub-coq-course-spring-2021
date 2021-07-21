@@ -239,9 +239,15 @@ Lemma unit_neq_bool:
   unit <> bool.
 Proof.
 move=> ub.
-suff/(_ true false): forall a b : bool, a = b by [].
-by rewrite -ub=> [[[]]].
+have: forall a b : bool, a = b.
+- by rewrite -ub=> [[[]]].
+move=> F. move: (F true false). by [].
 Qed.
+
+Inductive bool' : Type :=
+  | true'
+  | false'.
+
 
 (** [==] is the decidable equality operation for types with decidable equality.
     In case of booleans it means [if and only if]. *)
@@ -259,6 +265,7 @@ Qed.
      *)
     Print odd.
     (** Try to come up with a one-line proof *)
+
 Lemma mostowski_equiv_even_odd a n :
   mostowski_equiv a n = a || odd n.
 Proof.
@@ -286,12 +293,8 @@ Qed.
 Lemma nat_3k5m n : exists k m, n + 8 = 3 * k + 5 * m.
 Proof.
 elim: n=> [|n [k1 [m1]]]; first by exists 1, 1.
-rewrite addSn=> /[dup] {2}->.
-case: m1=> [|n1 _]; last exists k1.+2, n1.
-- case: k1; first by case: n.
-  (do ? (case; first by rewrite addnC))=> k _.
-  by exists k, 2; rewrite !mulnS muln0 ?addn0 [3 * k + _]addnC.
-by rewrite !mulnS !addSn -!addnS.
+case: m1=> [|n1]; last (exists k1.+2, n1; lia).
+move: k1; (do ? (case; first by lia))=> k; exists k, 2; lia.
 Qed.
 
 

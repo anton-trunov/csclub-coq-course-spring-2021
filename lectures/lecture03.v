@@ -83,7 +83,7 @@ proposition'. |*)
 
 (*| Yet another example: |*)
 Definition A_implies_B_implies_A (A B : Prop) :
-  A -> B -> A
+  A -> (B -> A)
 := fun proof_A => fun proof_B => proof_A.
 
 (*| This corresponds to the well-known `const` function. |*)
@@ -128,8 +128,8 @@ and [prod]:
 
 Definition andC (A B : Prop) :
   A /\ B -> B /\ A :=
-  fun paVb =>
-    match paVb with
+  fun paAb =>
+    match paAb with
     | conj pa pb => conj pb pa
     end.
 
@@ -239,8 +239,8 @@ Definition exfalso_quodlibet {A : Prop} :
 (*| One more simple example: |*)
 Definition a_or_false_implies_a (A : Prop) :
   A \/ False -> A
-:= fun paVb =>
-     match paVb with
+:= fun paVf =>
+     match paVf with
      | or_introl pa => pa
      | or_intror pf => exfalso_quodlibet pf
      end.
@@ -260,11 +260,14 @@ implication `A -> False`. |*)
 Definition not (A : Prop) := A -> False.
 Notation "~ A" := (not A) : type_scope.
 
+(* ~ A === A -> False *)
+(* ~ ~ A = (~A) -> False === (A -> False) -> Flase *)
+
 (*| To prove `A -> ~ ~ A` one needs to keep in
-mind the statement means `A -> ((A -> False) -> False`): |*)
+mind the statement means `A -> (A -> False) -> False: |*)
 Definition double_negation_introduction (A : Prop) :
    A -> ~ ~ A
-:= fun pa : A => fun pna : ~ A => pna pa.
+:= fun pa : A => fun pna : (A -> False) => pna pa.
 
 (*| The logic defined in this style is called
 'intuitionistic' and it is known that, in general,
@@ -300,6 +303,8 @@ Universal quantifier
 ====================
 |*)
 
+(* forall x : T, P x *)
+
 (*| Universal quantifier is just the dependent
 function type. Under the constructivist's
 interpretation, a proof of a univerally quantified
@@ -316,13 +321,14 @@ predicate, i.e. a function from some type into
 
 Here is a simple example: |*)
 
-Definition forall_andD (A : Type) (P Q : A -> Prop) :
-  (forall x, P x /\ Q x) ->
-  (forall x, P x) /\ (forall x, Q x)
-:= fun all_pq =>
-     conj
-       (fun x => match all_pq x with conj px _ => px end)
-       (fun x => match all_pq x with conj _ qx => qx end).
+Definition forall_andD (T : Type) (P Q : T -> Prop) :
+  (forall x : T, P x /\ Q x) ->
+  (forall x : T, P x) /\ (forall x : T, Q x)
+:= 
+  fun all_pAq => 
+    conj
+      (fun (x : T) => match all_pAq x with conj pPx pQx => pPx end)
+      (fun (x : T) => match all_pAq x with conj pPx pQx => pQx end).
 
 (*|
 Existential quantifier
@@ -358,13 +364,12 @@ Notation "'exists' x .. y , p" :=
 (*| Here is a simple example of reasoning with the
 existential quantifier: |*)
 Definition exists_not_forall A (P : A -> Prop) :
-  (exists x, P x) -> ~ (forall x, ~ P x)
-:=
-  fun x_px : exists x, P x =>
-    fun all_npx : forall x, ~ P x =>
-      match x_px with
-      | ex_intro x px => all_npx x px
-      end.
+  (exists x, P x) -> (forall x, P x -> False) -> False
+:= fun x_px : exists x, P x =>
+    fun all_npx => 
+    match x_px with 
+    | ex_intro x px => all_npx x px
+    end.
 
 (*| Currying for dependent pairs: |*)
 Definition curry_dep A (P : A -> Prop) Q :
@@ -376,172 +381,3 @@ Definition curry_dep A (P : A -> Prop) Q :
         f (ex_intro P x px).
 
 (*| ------------------------------ exercises ------------------------------ |*)
-
-(*|
-Equality
-========
-|*)
-
-(*| Equality is one of the main topics of type
-theory and it has a hierarchy of notions of
-equality / equivalence there. |*)
-
-(*|
-Definitional equality
-^^^^^^^^^^^^^^^^^^^^^
-|*)
-
-(*| There is a builtin notion of equality between
-terms which lives at the meta-level. It's called
-*definitional* or judgemental equality and it says
-that any two *convertible* terms are
-non-distinguishable. Convertible here means you
-can transform the terms into each other by
-computation. It's important that the user cannot
-*prove* that two terms are definitionally equal
-because there cannot be any evidence of
-definitional equality in the language, i.e. one
-cannot build a proof artefact stating that two
-terms are definitionally equal. |*)
-
-(*|
-Propositional equality
-^^^^^^^^^^^^^^^^^^^^^^
-|*)
-
-(*| We can internalize definitional equality into
-our language using the notion of propositional
-equality. This is going to be our first encounter
-of *indexed* types. |*)
-
-(* Unset Implicit Arguments. *)
-
-Inductive eq (A : Type) (x : A) : A -> Prop :=
-  | eq_refl : eq x x.
-
-Check eq_refl.
-
-(* Set Implicit Arguments. *)
-
-(*| The only notion of equality we are putting in
-is *reflexivity*.
-
-In the definition above the unnamed type parameter
-`A` after the colon is called an *index*. The `x`
-identifier is called a *parameter*. There is a
-crucial difference between parameters and indices:
-parameters of an inductive type must stay constant
-for all constructors and indices are allowed to
-vary between constructors. In this case there is
-no variation because there is just one constructor
-and there are no other terms of type `A` except
-`x`. But the way pattern matching works for such
-*type families* as `eq` lets us simulate equality.
-|*)
-
-(*| First, let us define a convenient notation for
-the `eq` type. |*)
-Notation "x = y" := (eq x y) : type_scope.
-
-Arguments eq_refl {A x}, {A} x.
-
-(*| We are going to use `eq_refl` as the proof
-(witness) of propositions stating that two terms
-are equal. For example, we can check that terms
-that are equal modulo :math:`\beta`- and
-:math:`\iota`- reduction are propositionally equal
-(because those are equal definitionally too). |*)
-
-Check eq_refl 0 : 0 = 0.
-Check eq_refl : 0 = 0.
-Check eq_refl : (fun _ => 0) 42 = 0.
-Check eq_refl : 2 + 2 = 4.
-Check eq_refl 4 : 2 + 2 = 4.
-
-(*| The following does not work because here one
-can either build terms like `eq_refl 0` (of type
-`0 = 0`) or `eq_refl 1` (of type `1 = 1`) |*)
-Fail Check eq_refl : 0 = 1.
-
-(*| So what terms are considered definitionally
-equal? The `eq_refl` constructor lets us check
-that. Let's see some examples for functions: |*)
-
-Variables A B : Type.
-Variable f : A -> B.
-
-(*| Syntactically equal functions are
-definitionally equal |*)
-Check eq_refl : f = f.
-
-(*| :math:`\alpha`-renaming |*)
-Check eq_refl : (fun x => x) = (fun y => y).
-
-(*| :math:`\eta`-expansion: this equality is called the
-uniqueness principle in this case it means 'every
-element of a function type is a function'. |*)
-Check eq_refl : (fun x => f x) = f.
-
-
-(*| Let's prove propositional equality is an
-equivalence relation, i.e. reflexive, symmetric
-and transitive. |*)
-
-(*| The reflexivity case is trivial because we
-already defined our equality relation to be
-reflexive: |*)
-Definition eq_reflexive A (x : A) :
-  x = x
-:=
-  eq_refl x.
-
-(*|
-Dependent pattern matching
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-|*)
-
-(*| To prove symmetry, we need to use dependent
-pattern matching which lets us utilize the difference between parameters and indices: |*)
-Definition eq_sym_unannotated A (x y : A) :
-  x = y -> y = x
-:= fun (pf : x = y) =>
-   (match pf with
-    | eq_refl => (eq_refl x : x = x)  (* notice the type here *)
-    end) : y = x.                     (* and here *)
-
-(*| To understand the magic above one needs to use
-the fully annotated version of the
-`match`-expression. This time we need to add the
-`in` annotation which lets us reinterpret the type
-of the matchee and the `return` annotation which
-lets us specify the return type of the
-`match`-expression. What's important here is that
-the `in` annotation lets one bind *indices* to
-fresh variables with the intention those bind
-variables are going to be rewritten in the
-branches of `match`-expressions according to the
-definition of the (indexed) inductive type. |*)
-
-Definition eq_sym A (x y : A) :
-  x = y -> y = x
-:= fun (pf  : x = y) =>
-     match
-       pf in (_ = b)
-       return (b = x)
-     with
-     | eq_refl => eq_refl x
-     end.
-
-(*| Using the annotated version of the `match`-expression we can prove `eq` is transitive. Thus, we have established `eq` is an equivalence relation |*)
-Definition eq_trans A (x y z : A) :
-  x = y -> y = z -> x = z
-:=
-  fun pf_xy : x = y =>
-    match
-      pf_xy in (_ = b)
-      return (b = z -> x = z)
-    with
-    | eq_refl => fun (pf_xz : x = z) => pf_xz
-    end.
-
-End MyNamespace.
