@@ -44,7 +44,8 @@ Definition not_exists_forall_not :
 :=
 
 Definition exists_forall_not_ :
-(exists x, A -> P x) -> (forall x, ~P x) -> ~A.
+(exists x, A -> P x) -> (forall x, ~P x) -> ~A
+:=
 
 (** Extra exercise (feel free to skip): the dual Frobenius rule *)
 Definition LEM :=
@@ -67,7 +68,7 @@ End Quantifiers.
 Section Equality.
 
 (** exercise: *)
-Definition f_congr {A B} (f : A -> B) (x y : A) :
+Definition f_congr {A B} (f : A -> B) {x y : A} :
   x = y  ->  f x = f y
 :=
 
@@ -87,6 +88,7 @@ Definition pair_inj A B (a1 a2 : A) (b1 b2 : B) :
 End Equality.
 
 
+From mathcomp Require Import ssrfun.
 
 Section ExtensionalEqualityAndComposition.
 
@@ -136,7 +138,7 @@ Definition eq_compr :
 End ExtensionalEqualityAndComposition.
 
 
-From mathcomp Require Import ssreflect ssrfun ssrbool eqtype.
+From mathcomp Require Import ssreflect ssrbool eqtype.
 
 (* After importing `eqtype` you need to either use a qualified name for
 `eq_refl`: `Logic.eq_refl`, or use the `erefl` notation.
