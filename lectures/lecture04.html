@@ -309,7 +309,7 @@ two subgoals:</p>
 <li>we construct a term of type <code class="highlight coq"><span class="name">P</span> <span class="literal number integer">0</span></code>, i.e. we prove
 our property <code class="highlight coq"><span class="name">P</span></code> holds for the base case when
 <code class="highlight coq"><span class="name">n</span></code> is equal to zero;</li>
-<li>we constructr a term of type
+<li>we construct a term of type
 <code class="highlight coq"><span class="keyword reserved">forall</span> <span class="name variable">n</span> <span class="operator">:</span> <span class="name">nat</span><span class="operator">,</span> <span class="name">P</span> <span class="name">n</span> <span class="operator">-&gt;</span> <span class="name">P</span> <span class="name">n</span><span class="operator">.+</span><span class="literal number integer">1</span></code>, i.e. we do
 the inductive step and prove the property <code class="highlight coq"><span class="name">P</span></code> holds
 for any successor <code class="highlight coq"><span class="name">n</span><span class="operator">.+</span><span class="literal number integer">1</span></code> under the assumption it

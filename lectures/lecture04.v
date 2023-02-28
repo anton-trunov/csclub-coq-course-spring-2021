@@ -304,7 +304,7 @@ two subgoals:
 - we construct a term of type `P 0`, i.e. we prove
   our property `P` holds for the base case when
   `n` is equal to zero;
-- we constructr a term of type
+- we construct a term of type
   `forall n : nat, P n -> P n.+1`, i.e. we do
   the inductive step and prove the property `P` holds
   for any successor `n.+1` under the assumption it
